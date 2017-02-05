@@ -1,0 +1,24 @@
+.error-message{ color: red; font-size: 11px; }
+.error{ color: red; font-size: 11px; }
+.anyDiscount label{ display: inline-block; padding: 7px 10px 0px 0px; }
+#showFlasshMsgsDiv{ left: 45%; position: absolute; white-space: nowrap; width: auto; z-index: 999; }
+#busy-indicator { display:none; }
+.clear{ clear:both; }
+.displayValueField{ padding-top:4px; }
+#overlay_img {
+    background: none repeat scroll 0 0 #000000;
+    display: none;
+    position: fixed;
+    top: 0;
+    z-index: 1050;
+}
+
+#busy-indicator {
+    position: fixed;
+	display: block;
+}
+
+.radioGroupCnt label{ padding-right:5px; }
+.modulePermissions { padding-left: 25px; }
+
+#showFlasshMsgsDiv{ display: none; }
