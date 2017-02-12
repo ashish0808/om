@@ -12,7 +12,6 @@
     echo $this->Html->css('bootstrap-timepicker.min');
     echo $this->Html->css('bootstrap-datetimepicker');
     echo $this->Html->css('bootstrap-responsive.min');
-    echo $this->Html->css('dropzone');
     echo $this->Html->css('font-awesome.min');
 	echo $this->Html->css('datepicker');
 	echo $this->Html->css('chosen');
@@ -177,7 +176,6 @@
     echo $this->Html->script('jquery.bootstrap-duallistbox');
     echo $this->Html->script('jquery.raty');
     echo $this->Html->script('select2');
-    echo $this->Html->script('dropzone');
     ?>
 </body>
 </html>

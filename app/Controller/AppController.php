@@ -98,9 +98,14 @@ class AppController extends Controller {
 
     public function dateTimeSqlFormat($dateTime)
     {
-        $dateTime = strtotime($dateTime);
+	    if(!empty($dateTime)) {
 
-        return date('Y-m-d H:i:s', $dateTime);
+		    $dateTime = strtotime($dateTime);
+
+		    return date('Y-m-d H:i:s', $dateTime);
+	    }
+
+        return $dateTime;
     }
 
     public function dateTimeDisplayFormat($dateTime)
