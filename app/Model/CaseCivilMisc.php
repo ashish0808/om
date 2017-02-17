@@ -1,12 +1,20 @@
 <?php
 App::uses('AppModel', 'Model');
 /**
- * CasePayment Model
+ * CaseCivilMisc Model
  *
  * @property ClientCase $ClientCase
+ * @property User $User
  */
-class CasePayment extends AppModel {
-	
+class CaseCivilMisc extends AppModel {
+
+/**
+ * Use table
+ *
+ * @var mixed False or table name
+ */
+	public $useTable = 'case_civil_misc';
+
 	public $actsAs = array('Containable');
 
 /**
@@ -25,7 +33,7 @@ class CasePayment extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'mode_of_payment' => array(
+		'user_id' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -35,9 +43,9 @@ class CasePayment extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'amount' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
+		'cm_type' => array(
+			'notBlank' => array(
+				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -45,9 +53,9 @@ class CasePayment extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'date_of_payment' => array(
-			'date' => array(
-				'rule' => array('date'),
+		'cm_no' => array(
+			'notBlank' => array(
+				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -55,9 +63,9 @@ class CasePayment extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'is_verified' => array(
-			'boolean' => array(
-				'rule' => array('boolean'),
+		'status' => array(
+			'notBlank' => array(
+				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
 				//'allowEmpty' => false,
 				//'required' => false,
@@ -78,6 +86,13 @@ class CasePayment extends AppModel {
 		'ClientCase' => array(
 			'className' => 'ClientCase',
 			'foreignKey' => 'client_case_id',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
+		'User' => array(
+			'className' => 'User',
+			'foreignKey' => 'user_id',
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
