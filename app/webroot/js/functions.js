@@ -26,3 +26,11 @@ jQuery(function($) {
         jQuery(this).prev().focus();
     });
 });
+
+function showLoading() {
+    $('.loading-image, .load-lightbox').fadeIn();
+}
+
+function hideLoading() {
+    $('.loading-image, .load-lightbox').fadeOut();
+}

@@ -1,6 +1,4 @@
-
 function toggleIcon(e) {
-
 
     $(e.target)
         .prev('.widget-header')
@@ -13,10 +11,25 @@ function toggleIcon(e) {
 
 $(document).ready(function(){
 
-    $('#'+$('#getDefaultOpenTab').html()).collapse({
-        toggle: true
-    });
+    showLoading();
 
-    $('.panel-group').on('hidden.bs.collapse', toggleIcon);
-    $('.panel-group').on('shown.bs.collapse', toggleIcon);
+    $("body").on('hidden.bs.collapse', '.panel-group', toggleIcon);
+    $("body").on('shown.bs.collapse', '.panel-group', toggleIcon);
+
+    var editUrl = $('#ajaxEdit').html();
+
+    $.ajax({
+        type: "GET",
+        url: editUrl,
+        success: function(html) {
+
+            hideLoading();
+
+            $('#editPage-cnt').html(html)
+
+            $('#'+$('#getDefaultOpenTab').html()).collapse({
+                toggle: true
+            });
+        }
+    });
 });

@@ -187,6 +187,29 @@ class CasesController extends AppController
 		$this->set("courts", $courts);
 	}
 
+	public function ajaxEdit($caseId)
+	{
+		$this->layout = 'ajax';
+
+		$this->loadModel('ClientCase');
+
+		$this->ClientCase->editCaseRequiredModelJoins();
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+		$this->request->data['ClientCase'] = $caseDetails['ClientCase'];
+
+		$this->set('caseDetails',$caseDetails);
+		$this->set('caseId',$caseId);
+
+		$this->loadModel('CaseType');
+		$this->set("caseTypes", $this->CaseType->find('list', array(
+			'fields' => array('CaseType.id', 'CaseType.name'),
+			'order' => 'name ASC'
+		)));
+
+		$this->loadModel('Court');
+		$this->set("courts", $this->Court->listLawyerCourts($this->getLawyerId()));
+	}
+
 	function bulkAction($statusValue)
 	{
 		if (isset($statusValue) && !empty($statusValue)) {
