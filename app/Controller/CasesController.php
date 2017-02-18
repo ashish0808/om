@@ -103,8 +103,7 @@ class CasesController extends AppController
 			//pr($this->request->data); die;
 			if ($this->ClientCase->validates()) {
 
-				$this->request->data['ClientCase']['lawyer_id'] = $this->Session->read('UserInfo.lawyer_id');
-				$this->request->data['ClientCase']['date_fixed'] = $this->dateTimeSqlFormat($this->request->data['ClientCase']['date_fixed']);
+				$this->request->data['ClientCase']['user_id'] = $this->getLawyerId();
 
 				$this->ClientCases = $this->Components->load('ClientCases');
 				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase']);
@@ -115,8 +114,14 @@ class CasesController extends AppController
 
 					$this->Session->setFlash(CASE_INFORMATION_ADDED);
 					$this->redirect(array('controller' => 'cases', 'action' => 'edit', $caseId));
-				}
-			}
+				} /*else {
+
+					pr($this->ClientCase->validationErrors, true); die;
+				}*/
+			}/* else {
+
+				pr($this->validationErrors['ClientCase']); die;
+			}*/
 		}
 
 		$this->loadModel('CaseType');
@@ -127,7 +132,7 @@ class CasesController extends AppController
 		$this->set("caseTypes", $caseTypes);
 
 		$this->loadModel('Court');
-		$courts = $this->Court->listLawyerCourts($this->getLawyerId());
+		$courts = $this->Court->listCourts();
 		$this->set("courts", $courts);
 	}
 
@@ -151,8 +156,7 @@ class CasesController extends AppController
 			//pr($this->request->data); die;
 			if ($this->ClientCase->validates()) {
 
-				$this->request->data['ClientCase']['lawyer_id'] = $this->Session->read('UserInfo.lawyer_id');
-				$this->request->data['ClientCase']['date_fixed'] = $this->dateTimeSqlFormat($this->request->data['ClientCase']['date_fixed']);
+				$this->request->data['ClientCase']['user_id'] = $this->getLawyerId();
 
 				$this->ClientCases = $this->Components->load('ClientCases');
 				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase']);
@@ -183,7 +187,7 @@ class CasesController extends AppController
 		$this->set("caseTypes", $caseTypes);
 
 		$this->loadModel('Court');
-		$courts = $this->Court->listLawyerCourts($this->getLawyerId());
+		$courts = $this->Court->listCourts();
 		$this->set("courts", $courts);
 	}
 
@@ -207,7 +211,7 @@ class CasesController extends AppController
 		)));
 
 		$this->loadModel('Court');
-		$this->set("courts", $this->Court->listLawyerCourts($this->getLawyerId()));
+		$this->set("courts", $this->Court->listCourts());
 	}
 
 	function bulkAction($statusValue)

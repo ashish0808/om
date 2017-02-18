@@ -55,12 +55,9 @@ class Court extends AppModel {
 	 * @param  [type] $user_id [description]
 	 * @return [type]            [description]
 	 */
-	public function listLawyerCourts($user_id)
+	public function listCourts()
 	{
 		return $this->find('list', array(
-				'conditions' => array(
-					'user_id' => array(0, $user_id)
-				),
 				'fields' => array('id', 'name'),
 				'order' => 'name ASC'
 			)

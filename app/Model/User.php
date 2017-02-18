@@ -1,14 +1,23 @@
 <?php
-
 App::uses('AppModel', 'Model');
-
 /**
+ * User Model
  *
+ * @property CaseCivilMisc $CaseCivilMisc
+ * @property ClientCase $ClientCase
+ * @property Dispatch $Dispatch
+ * @property Todo $Todo
+ * @property UserCompany $UserCompany
  */
-class User extends AppModel
-{
-    public $actsAs = array('Containable');
+class User extends AppModel {
 
+	public $actsAs = array('Containable');
+
+	/**
+	 * Validation rules
+	 *
+	 * @var array
+	 */
     public $validate = array(
         'first_name' => array(
             'NotEmpty' => array(
@@ -62,6 +71,16 @@ class User extends AppModel
                 'message' => 'Please enter a password',
             ),
         ),
+		'is_app_access' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+        ),
         'confirm_password' => array(
             'ruleName' => array(
                 'rule' => 'notEmpty',
@@ -72,8 +91,48 @@ class User extends AppModel
                 'rule' => array('compareFields', 'user_pwd'),
                 'message' => 'Confirm password and password must be same',
             ),
-        )
-    );
+        ),
+		'user_type' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'is_forgot' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'status' => array(
+			'numeric' => array(
+				'rule' => array('numeric'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'is_deleted' => array(
+			'boolean' => array(
+				'rule' => array('boolean'),
+				//'message' => 'Your custom message here',
+				//'allowEmpty' => false,
+				//'required' => false,
+				//'last' => false, // Stop validation after this rule
+				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		)
+	);
 
     public $validateLogin = array(
         'login_email' => array(
@@ -129,6 +188,81 @@ class User extends AppModel
             ),
         ),
     );
+
+	// The Associations below have been created with all possible keys, those that are not needed can be removed
+
+	/**
+	 * hasMany associations
+	 *
+	 * @var array
+	 */
+	public $hasMany = array(
+		'CaseCivilMisc' => array(
+			'className' => 'CaseCivilMisc',
+			'foreignKey' => 'user_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'ClientCase' => array(
+			'className' => 'ClientCase',
+			'foreignKey' => 'user_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Dispatch' => array(
+			'className' => 'Dispatch',
+			'foreignKey' => 'user_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'Todo' => array(
+			'className' => 'Todo',
+			'foreignKey' => 'user_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		),
+		'UserCompany' => array(
+			'className' => 'UserCompany',
+			'foreignKey' => 'user_id',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
 
     public function equalToField($field = array(), $compare_field = null)
     {

@@ -10,7 +10,7 @@ class ClientCasesComponent extends Component
 
 		if(empty($data['is_existing'])) {
 
-			$data['file_number'] = $this->generateFileNumber($data['lawyer_id']);
+			$data['computer_file_no'] = $this->generateFileNumber($data['user_id']);
 		}
 
 		$data['complete_case_number'] = $this->generateCaseNumber($data);
@@ -54,7 +54,7 @@ class ClientCasesComponent extends Component
 		return $caseNumber;
 	}
 
-	public function generateFileNumber($lawyerId)
+	public function generateFileNumber($userId)
 	{
 		App::import('Model','ClientCase');
 		$caseObj = & new ClientCase();
@@ -63,17 +63,17 @@ class ClientCasesComponent extends Component
 
 		$clientCase = $caseObj->find('first', array(
 			'conditions' => array(
-				'lawyer_id' => $lawyerId,
+				'user_id' => $userId,
 				'is_existing' => 0,
-				'file_number LIKE' => '%/'.$currYear
+				'computer_file_no LIKE' => '%/'.$currYear
 			),
-			'fields' => array('id', 'file_number'),
-			'order' => 'file_number DESC'
+			'fields' => array('id', 'computer_file_no'),
+			'order' => 'computer_file_no DESC'
 		));
 
-		if(!empty($clientCase['ClientCase']['file_number'])) {
+		if(!empty($clientCase['ClientCase']['computer_file_no'])) {
 
-			$fileNumArr = explode('/', $clientCase['ClientCase']['file_number']);
+			$fileNumArr = explode('/', $clientCase['ClientCase']['computer_file_no']);
 
 			if(!empty($fileNumArr[0])) {
 

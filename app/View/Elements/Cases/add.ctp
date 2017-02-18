@@ -31,7 +31,7 @@
 			<div class="col-sm-12 col-xs-12 hide fileNumber">
 				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> File Number: </label>
 				<div class="col-sm-8">
-					<?php echo $this->Form->input('ClientCase.file_number', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
+					<?php echo $this->Form->input('ClientCase.computer_file_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
 				</div>
 			</div>
 		</div>
@@ -121,21 +121,9 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob">Presiding Officer: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Presiding Officer: </label>
 				<div class="col-sm-8">
 					<?php echo $this->Form->input('ClientCase.presiding_officer', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="row">
-	<div class="col-sm-6">
-		<div class="form-group">
-			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob">Date Fixed: </label>
-				<div class="col-sm-8">
-					<?php echo $this->Form->input('ClientCase.date_fixed', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'placeholder' => 'dd-mm-yyyy', 'data-date-format' => 'dd-mm-yyyy', 'readonly' => true)); ?>
 				</div>
 			</div>
 		</div>
