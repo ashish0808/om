@@ -55,6 +55,8 @@
 	</script>
 </head>
 <body>
+	<div class="loading-image" style="display:none;"></div>
+    <div class="load-lightbox" style="display:none;"></div>
 	<div id="overlay_img">
 		<?php echo $this->Html->image(
 			'ajax-loader.gif',
