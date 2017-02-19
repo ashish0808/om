@@ -52,8 +52,9 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
                         <?php 
                         echo $this->Form->input('CaseCivilMisc.cm_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application No'));
                         ?>
-                        <?php 
-                        echo $this->Form->input('CaseCivilMisc.cm_type', array('label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application Type','required' => false));
+                        <?php
+                        $applicationTypes = array('cm' => 'CM', 'crm' => 'CRM');
+											echo $this->Form->input('CaseCivilMisc.cm_type', array('options' => $applicationTypes, 'label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application Type','required' => false, 'autocomplete' => 'off'));
                         ?>
                         <?php 
                         echo $this->Form->input('CaseCivilMisc.status', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Status'));
