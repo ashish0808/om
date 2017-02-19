@@ -33,7 +33,7 @@ App::uses('Controller', 'Controller');
 class AppController extends Controller {
 
     public $isApi = false;
-    public $components = array('Session', 'Paginator');
+    public $components = array('Session', 'Paginator', 'Aws');
 
     public function beforeFilter()
     {
