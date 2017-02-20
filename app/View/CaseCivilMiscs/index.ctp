@@ -50,14 +50,18 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
                 <div class="widget-body">
                     <div class="widget-main">
                         <?php 
-                        echo $this->Form->input('CaseCivilMisc.cm_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application No'));
+                        echo $this->Form->input('CaseCivilMisc.cm_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application No', 'autocomplete' => 'off'));
+                        ?>
+                        <?php 
+                        echo $this->Form->input('CaseCivilMisc.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Computer File No', 'autocomplete' => 'off'));
                         ?>
                         <?php
                         $applicationTypes = array('cm' => 'CM', 'crm' => 'CRM');
-											echo $this->Form->input('CaseCivilMisc.cm_type', array('options' => $applicationTypes, 'label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application Type','required' => false, 'autocomplete' => 'off'));
+						echo $this->Form->input('CaseCivilMisc.cm_type', array('options' => $applicationTypes, 'empty' => 'Application Type','label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application Type','required' => false, 'autocomplete' => 'off'));
                         ?>
                         <?php 
-                        echo $this->Form->input('CaseCivilMisc.status', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Status'));
+                        $applicationStatus = array('pending' => 'Pending', 'decided' => 'Decided');
+						echo $this->Form->input('CaseCivilMisc.status', array('options' => $applicationStatus, 'empty' => 'Application Status','label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application Type','required' => false, 'autocomplete' => 'off'));
                         ?>
                         <?php
                         echo $this->Form->button("<i class='icon-search icon-on-right bigger-110'></i>Search",
@@ -78,105 +82,122 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
     </div>
 </div>
 
-
 <div class="row-fluid">
-<div class="span12">
+	<div class="span12">
+	</div>
+</div>
+<div class="row-fluid">
+	<div class="span12">
         <div class="row-fluid">
 			<div role="grid" class="dataTables_wrapper" id="sample-table-2_wrapper">
 			<table class="table table-striped table-bordered table-hover dataTable" id="sample-table-2"
 				   aria-describedby="sample-table-2_info">
-			<thead>
-			<tr role="row">
-				<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-					<?php echo $this->Paginator->sort('CaseCivilMisc.cm_no', 'Application No', array());?>
-				</th>
-				<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-					<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Application Type', array());?>
-				</th>
-				<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-					<?php echo $this->Paginator->sort('CaseCivilMisc.remarks', 'Remarks', array());?>
-				</th>
-				<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
-					<?php echo $this->Paginator->sort('CaseCivilMisc.status', 'Status', array());?>
-				</th>
-				<th class="sorting_disabled" role="columnheader" rowspan="1" colspan="1" style="width: 146px; " aria-label=""></th>
-			</tr>
-			</thead>
-			<tbody role="alert" aria-live="polite" aria-relevant="all">
-			<?php $i = ($this->params['paging']['CaseCivilMisc']['page']-1) * LIMIT + 1;
-			if (isset($caseCivilMiscs) && !empty($caseCivilMiscs)) {
-				foreach ($caseCivilMiscs as $record){ ?>
-				<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-					<td class=" ">
-						<?php echo $record['CaseCivilMisc']['cm_no'];?>
-					</td>
-					<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
-					<td class=" ">
-						<?php echo $record['CaseCivilMisc']['remarks'];?>
-					</td>
-					<td class=" ">
-						<?php echo $record['CaseCivilMisc']['status'];?>
-					</td>
-					<td class=" ">
-						<div class="hidden-phone visible-desktop action-buttons">
-							<?php echo $this->Html->link('<i class="icon-tasks bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green'))?>
-							<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red'),"Are you sure you want to delete this application?")?>
-
-						</div>
-						<div class="hidden-desktop visible-phone">
-							<div class="inline position-relative">
-								<button data-toggle="dropdown" class="btn btn-minier btn-yellow dropdown-toggle">
-									<i class="icon-caret-down icon-only bigger-120"></i>
-								</button>
-
-								<ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
-									<li>
-										<a title="" data-rel="tooltip" class="tooltip-info" href="#" data-original-title="View">
-											<span class="blue">
-												<i class="icon-tasks bigger-120"></i>
-											</span>
-										</a>
-									</li>
-
-									<li>
-										<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green'))?>
-									</li>
-
-									<li>
-										<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red'),"Are you sure you want to delete this application?")?>
-									</li>
-								</ul>
-							</div>
-						</div>
-					</td>
-				</tr>
-				<?php
-					$i++;
-				}
-				?>
-				<tFoot>
+				<thead>
 					<tr role="row">
-						<th role="columnheader" colspan="8" style="border-left: none !important;">
+						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Application No
+						</th>
+						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Application Type', array());?>
+						</th>
+						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Remarks
+						</th>
+						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+							<?php echo $this->Paginator->sort('CaseCivilMisc.status', 'Status', array());?>
+						</th>
+						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Attachment
+						</th>
+						<th class="sorting_disabled" role="columnheader" rowspan="1" colspan="1" style="width: 146px; " aria-label=""></th>
+					</tr>
+				</thead>
+				<tbody role="alert" aria-live="polite" aria-relevant="all">
+				<?php $i = ($this->params['paging']['CaseCivilMisc']['page']-1) * LIMIT + 1;
+				if (isset($caseCivilMiscs) && !empty($caseCivilMiscs)) {
+					foreach ($caseCivilMiscs as $record){ ?>
+					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
+						<td class=" ">
+							<?php echo $record['CaseCivilMisc']['cm_no'];?>
+						</td>
+						<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
+						<td class=" ">
+							<?php echo $record['CaseCivilMisc']['remarks'];?>
+						</td>
+						<td class=" ">
+							<?php echo $record['CaseCivilMisc']['status'];?>
+						</td>
+						<td class=" ">
 							<?php 
-							if ($this->params['paging']['CaseCivilMisc']['count'] > 1) {
-								echo $this->Element('pagination');
+							if (!empty($record['CaseCivilMisc']['attachment'])) {
+							?>
+							<a href="<?php echo $record['CaseCivilMisc']['attachment'];?>" target="_blank" 'class'='col-sm-12 col-xs-12'>Application Copy</a>
+							<?php 
+							} else {
+								echo "Not Available";
 							}
 							?>
-						</th>
-					</tr>
-				</tFoot>
-			<?php } else {
-				?>
-					<tr>
-						<td class="center" colspan="7">
-							<label>
-								<span class="notify_message"><?php echo NO_RECORD;?></span>
-							</label>
+						</td>
+						<td class=" ">
+							<div class="hidden-phone visible-desktop action-buttons">
+								<?php echo $this->Html->link('<i class="icon-tasks bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green'))?>
+								<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red'),"Are you sure you want to delete this application?")?>
+
+							</div>
+							<div class="hidden-desktop visible-phone">
+								<div class="inline position-relative">
+									<button data-toggle="dropdown" class="btn btn-minier btn-yellow dropdown-toggle">
+										<i class="icon-caret-down icon-only bigger-120"></i>
+									</button>
+
+									<ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+										<li>
+											<a title="" data-rel="tooltip" class="tooltip-info" href="#" data-original-title="View">
+												<span class="blue">
+													<i class="icon-tasks bigger-120"></i>
+												</span>
+											</a>
+										</li>
+
+										<li>
+											<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green'))?>
+										</li>
+
+										<li>
+											<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red'),"Are you sure you want to delete this application?")?>
+										</li>
+									</ul>
+								</div>
+							</div>
 						</td>
 					</tr>
-				<?php
-			}?>
-			</tbody>
+					<?php
+						$i++;
+					}
+					?>
+					<tFoot>
+						<tr role="row">
+							<th role="columnheader" colspan="8" style="border-left: none !important;">
+								<?php 
+								if ($this->params['paging']['CaseCivilMisc']['count'] > 1) {
+									echo $this->Element('pagination');
+								}
+								?>
+							</th>
+						</tr>
+					</tFoot>
+				<?php } else {
+					?>
+						<tr>
+							<td class="center" colspan="7">
+								<label>
+									<span class="notify_message"><?php echo NO_RECORD;?></span>
+								</label>
+							</td>
+						</tr>
+					<?php
+				}?>
+				</tbody>
 			</table>
 			</div>
         </div>

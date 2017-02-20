@@ -34,10 +34,15 @@ class CaseCivilMiscsController extends AppController
         $fields = [];
 
         $criteria = [];
+        $containCriteria = [];
         if (!empty($this->request->data)) {
         	foreach ($this->request->data['CaseCivilMisc'] as $key => $value) {
         		if (!empty($value)) {
-        			$criteria[$key] = $value;
+                    if ($key == 'cm_no') {
+                        $criteria[$key.' LIKE'] = '%'.$value.'%';
+                    } else {
+                        $criteria[$key] = $value;
+                    }
         			$this->request->params['named'][$key] = $value;
         		}
         	}
@@ -45,10 +50,14 @@ class CaseCivilMiscsController extends AppController
 
         if (!empty($this->request->params['named'])) {
 		    foreach ($this->request->params['named'] as $key => $value) {
-		    	if ($key != 'page') {
+		    	if (!in_array($key, ['page', 'sort', 'direction'])) {
 				    if (!empty($value)) {
-		        			$criteria[$key] = $value;
-		        			$this->request->data['CaseCivilMisc'][$key] = $value;
+	        			if ($key == 'cm_no') {
+                            $criteria[$key.' LIKE'] = '%'.$value.'%';
+                        } else {
+                            $criteria[$key] = $value;
+                        }
+	        			$this->request->data['CaseCivilMisc'][$key] = $value;
 				    }
 				}
 		    }
@@ -58,18 +67,27 @@ class CaseCivilMiscsController extends AppController
         	$criteria = "1=1";
         }
 
-        // pr($criteria);die;
-
         $this->Paginator->settings = array(
 		    'page' => 1,
 		    'limit' => LIMIT,
 		    'fields' => $fields,
 		    'order' => array('CaseCivilMisc.id' => 'desc'),
-		    //'contain' => array('Customer' => array('Country', 'State', 'City'))
+		    'contain' => array('ClientCase')
 	    );
+
+        if (!empty($containCriteria)) {
+            $this->Paginator->settings['contain'] = array('ClientCase' => array('conditions' => array($containCriteria)));
+        }
 	    $this->set('paginateLimit', LIMIT);
-        // $this->CaseCivilMisc->recursive = 0;
-        $this->set('caseCivilMiscs', $this->Paginator->paginate('CaseCivilMisc', $criteria));
+        $records = $this->Paginator->paginate('CaseCivilMisc', $criteria);
+        foreach ($records as $key => $value) {
+            if (!empty($value['CaseCivilMisc']['attachment'])) {
+                $records[$key]['CaseCivilMisc']['attachment'] = $this->Aws->getObjectUrl($value['CaseCivilMisc']['attachment']);
+            } else {
+                $records[$key]['CaseCivilMisc']['attachment'] = '';
+            }
+        }
+        $this->set('caseCivilMiscs', $records );
     }
 
     /**
