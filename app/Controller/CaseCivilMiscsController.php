@@ -28,7 +28,7 @@ class CaseCivilMiscsController extends AppController
         } else {
             $this->layout = 'basic';
         }
-        $this->pageTitle = 'Manage CM/CRM';
+        $this->pageTitle = 'Manage '.ucfirst($status).' CM/CRM';
         $this->set('pageTitle', $this->pageTitle);
 
         $fields = [];

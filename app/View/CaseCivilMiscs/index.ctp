@@ -65,12 +65,12 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
                         ?>
                         <?php
                         echo $this->Form->button("<i class='icon-search icon-on-right bigger-110'></i>Search",
-                            array("class"=>"btn btn-purple btn-small","escape"=>false,
+                            array("class"=>"btn btn-purple btn-sm","escape"=>false,
                                 "type"=>"submit", "div" => false));
                                 ?>
                         <?php
                         echo $this->Form->button("<i class='icon-on-right bigger-110'></i>Reset",
-                            array("class"=>"btn btn-small","escape"=>false,
+                            array("class"=>"btn btn-sm","escape"=>false,
                                 "type"=>"reset", "div" => false));
                         echo $this->Form->end();
 						echo $this->Js->writeBuffer();
@@ -94,20 +94,17 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Case Title
 						</th>
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							CM/CRM No
 						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Type', array());?>
 						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.application_date', 'Date', array());?>
-						</th>
-						<th class="col-xs-4" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Remarks
 						</th>
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.status', 'Status', array());?>
@@ -115,7 +112,7 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Attachment
 						</th>
-						<th class="col-xs-1" role="columnheader" rowspan="1" colspan="1" style="width: 146px; " aria-label="">Action</th>
+						<th class="col-xs-2" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
 					</tr>
 				</thead>
 				<tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -126,9 +123,20 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 						<td class=" "><?php echo $record['ClientCase']['case_title']; ?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_no'];?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
-						<td class=" "><?php echo $record['CaseCivilMisc']['application_date']; ?></td>
-						<td class=" "><?php echo $record['CaseCivilMisc']['remarks'];?></td>
-						<td class=" "><?php echo $record['CaseCivilMisc']['status'];?></td>
+						<td class=""><?php echo $this->Time->format('F j, Y',$record['CaseCivilMisc']['application_date']); ?></td>
+						<td class=" ">
+						<?php 
+						if ($record['CaseCivilMisc']['status'] == 'pending') { ?>
+							<div class="label label-warning arrowed-in arrowed-in-right">
+							<?php
+						} else {
+						?>
+							<div class="label label-success arrowed-in arrowed-in-right">
+						<?php
+						}
+						echo strtoupper($record['CaseCivilMisc']['status']);
+						?>
+						</td>
 						<td class=" ">
 							<?php 
 							if (!empty($record['CaseCivilMisc']['attachment'])) {

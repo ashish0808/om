@@ -21,19 +21,19 @@ class DispatchesController extends AppController
     /**
      * index method.
      */
-    public function index($status = 'pending')
+    public function index()
     {
         if ($this->request->isAjax()) {
             $this->layout = 'ajax';
         } else {
             $this->layout = 'basic';
         }
-        $this->pageTitle = 'Manage CM/CRM';
+        $this->pageTitle = 'Manage Dispatches';
         $this->set('pageTitle', $this->pageTitle);
 
         $fields = [];
 
-        $criteria = ['status' => $status];
+        $criteria = [];
         $containCriteria = [];
         if (!empty($this->request->data)) {
             foreach ($this->request->data['Dispatch'] as $key => $value) {
@@ -63,6 +63,10 @@ class DispatchesController extends AppController
             }
         }
 
+        if (empty($criteria)) {
+            $criteria = "1=1";
+        }
+
         $this->Paginator->settings = array(
             'page' => 1,
             'limit' => LIMIT,
@@ -83,8 +87,7 @@ class DispatchesController extends AppController
                 $records[$key]['Dispatch']['attachment'] = '';
             }
         }
-        $this->set('dispatches', $records);
-        $this->set('status', $status);
+        $this->set('Dispatches', $records);
     }
 
     /**
@@ -144,7 +147,7 @@ class DispatchesController extends AppController
     public function edit($id = null)
     {
         $this->layout = 'basic';
-        $this->pageTitle = 'Edit CM/CRM';
+        $this->pageTitle = 'Edit Dispatch';
         $this->set('pageTitle', $this->pageTitle);
 
         $cmData = $this->Dispatch->find('first', array('contain' => array('ClientCase'), 'conditions' => array('Dispatch.user_id' => $this->Session->read('UserInfo.uid'), 'Dispatch.id' => $id)));
@@ -158,6 +161,10 @@ class DispatchesController extends AppController
             }
 
             if ($this->request->is(array('post', 'put'))) {
+                if (empty($this->request->data['ClientCase']['computer_file_no'])) {
+                    $this->request->data['Dispatch']['client_case_id'] = null;
+                }
+
                 // If computer file_no has been updated then find the associated case_id and update in CM/CRM
                 if ($cmData['ClientCase']['computer_file_no'] != $this->request->data['ClientCase']['computer_file_no'] && !empty($this->request->data['ClientCase']['computer_file_no'])) {
                     $caseData = $this->Dispatch->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['ClientCase']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
@@ -229,5 +236,28 @@ class DispatchesController extends AppController
         }
 
         return $this->redirect(array('action' => 'index'));
+    }
+
+    /**
+     * view the details of the given application ID
+     *
+     * @param string $id
+     */
+    public function view($id = null)
+    {
+        $this->layout = 'basic';
+        $this->pageTitle = 'Dispatch Details';
+        $this->set('pageTitle', $this->pageTitle);
+        $cmData = $this->Dispatch->find('first', array('contain' => array('ClientCase'),'conditions' => array('Dispatch.user_id' => $this->Session->read('UserInfo.uid'), 'Dispatch.id' => $id)));
+        if (!empty($cmData)) {
+            // Get S3 url for the attachment if it was uploaded
+            if (!empty($cmData['Dispatch']['attachment'])) {
+                $cmData['Dispatch']['attachment'] = $this->Aws->getObjectUrl($cmData['Dispatch']['attachment']);
+            }
+            $this->set('Dispatch',$cmData);
+        } else {
+            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
+            return $this->redirect(array('action' => 'index'));
+        }
     }
 }

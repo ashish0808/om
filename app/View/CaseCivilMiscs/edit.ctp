@@ -9,7 +9,7 @@
 		<div class="col-sm-12 col-xs-12">
 			<div class="widget-box">
 				<div class="widget-header">
-					<h4 class="widget-title">CM/CRM Details</h4>
+					<h4 class="widget-title">Update CM/CRM Details</h4>
 				</div>
 				<div class="widget-body">
 					<div class="widget-main">

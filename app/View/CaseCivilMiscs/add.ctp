@@ -33,7 +33,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Application No: </label>
 										<div class="col-sm-8">
 											<?php
-											echo $this->Form->input('CaseCivilMisc.cm_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'required' => 'required'));
+											echo $this->Form->input('CaseCivilMisc.cm_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'required' => 'required', 'autocomplete' => 'off'));
 											?>
 										</div>
 									</div>
@@ -47,7 +47,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Remarks: </label>
 										<div class="col-sm-8">
 											<?php
-											echo $this->Form->textarea('CaseCivilMisc.remarks', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12'));
+											echo $this->Form->textarea('CaseCivilMisc.remarks', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
 											?>
 										</div>
 									</div>
@@ -74,7 +74,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <span class="required">*</span>Compute File No: </label>
 										<div class="col-sm-8">
 											<?php
-											echo $this->Form->input('CaseCivilMisc.computer_file_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'value' => $computer_file_no, 'required' => 'required'));
+											echo $this->Form->input('CaseCivilMisc.computer_file_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'value' => $computer_file_no, 'required' => 'required', 'autocomplete' => 'off'));
 											?>
 										</div>
 									</div>
@@ -100,7 +100,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Application Date: </label>
 										<div class="col-sm-8">
 											<?php 
-											echo $this->Form->input('CaseCivilMisc.application_date', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-sm-12 col-xs-12 date-picker', 'placeholder' => 'Application Date', 'data-date-format' => 'yyyy-mm-dd'));
+											echo $this->Form->input('CaseCivilMisc.application_date', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-sm-12 col-xs-12 date-picker', 'placeholder' => 'Application Date', 'data-date-format' => 'yyyy-mm-dd', 'autocomplete' => 'off'));
 											?>
 										</div>
 									</div>
@@ -112,7 +112,7 @@
 								<div class="clearfix pull-right">
 									<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Submit", array("class" => "btn btn-primary", "escape" => false, "type" => "submit", "name" => "data[CaseCivilMisc][submit]", "value" => "submit"));
 									?>
-									<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Reset", array("class" => "btn btn-info", "escape" => false, "type" => "reset", "name" => "data[CaseCivilMiscs][submit]", "value" => "reset"));
+									<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Reset", array("class" => "btn btn-info", "escape" => false, "type" => "reset", "name" => "data[CaseCivilMisc][reset]", "value" => "reset"));
 									?>
 								</div>
 							</div>
