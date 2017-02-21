@@ -94,25 +94,28 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-md-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Application No
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Case Title
 						</th>
-						<th class="col-md-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							CM/CRM No
+						</th>
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Type', array());?>
 						</th>
-						<th class="col-md-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.application_date', 'Date', array());?>
 						</th>
-						<th class="col-md-4" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-4" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Remarks
 						</th>
-						<th class="col-md-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.status', 'Status', array());?>
 						</th>
-						<th class="col-md-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Attachment
 						</th>
-						<th class="col-md-1" role="columnheader" rowspan="1" colspan="1" style="width: 146px; " aria-label="">Action</th>
+						<th class="col-xs-1" role="columnheader" rowspan="1" colspan="1" style="width: 146px; " aria-label="">Action</th>
 					</tr>
 				</thead>
 				<tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -120,17 +123,12 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 				if (isset($caseCivilMiscs) && !empty($caseCivilMiscs)) {
 					foreach ($caseCivilMiscs as $record){ ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" ">
-							<?php echo $record['CaseCivilMisc']['cm_no'];?>
-						</td>
+						<td class=" "><?php echo $record['ClientCase']['case_title']; ?></td>
+						<td class=" "><?php echo $record['CaseCivilMisc']['cm_no'];?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['application_date']; ?></td>
-						<td class=" ">
-							<?php echo $record['CaseCivilMisc']['remarks'];?>
-						</td>
-						<td class=" ">
-							<?php echo $record['CaseCivilMisc']['status'];?>
-						</td>
+						<td class=" "><?php echo $record['CaseCivilMisc']['remarks'];?></td>
+						<td class=" "><?php echo $record['CaseCivilMisc']['status'];?></td>
 						<td class=" ">
 							<?php 
 							if (!empty($record['CaseCivilMisc']['attachment'])) {
@@ -144,8 +142,9 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 						</td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">
-								<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green', 'title' => 'Edit Application'))?>
-								<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red', 'title' => 'Delete Application'),"Are you sure you want to delete this application?")?>
+								<?php echo $this->Html->link('<i class="icon-tasks bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'view',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View CM/CRM'))?>
+								<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'blue tooltip-info', 'data-rel' => 'tooltip', 'data-original-title'=>'Edit CM/CRM'))?>
+								<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red tooltip-error', 'data-rel' => 'tooltip', 'data-original-title'=>'Delete CM/CRM'),"Are you sure you want to delete this application?")?>
 
 							</div>
 							<div class="hidden-desktop visible-phone">
@@ -164,11 +163,14 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 										</li>
 
 										<li>
-											<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green', 'title' => 'Edit Application'))?>
+											<?php echo $this->Html->link('<i class="icon-tasks bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'view',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View CM/CRM'))?>
+										</li>
+										<li>
+											<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'blue tooltip-info', 'data-rel' => 'tooltip', 'data-original-title'=>'Edit CM/CRM'))?>
 										</li>
 
 										<li>
-											<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red', 'title' => 'Delete Application'),"Are you sure you want to delete this application?")?>
+											<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red tooltip-error', 'data-rel' => 'tooltip', 'data-original-title'=>'Delete CM/CRM'),"Are you sure you want to delete this application?")?>
 										</li>
 									</ul>
 								</div>
@@ -207,4 +209,7 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
         </div>
     </div>
 </div>
+<script type="text/javascript">
+	$('[data-rel=tooltip]').tooltip();
+</script>
 <?php echo $this->Form->end(); ?>

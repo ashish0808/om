@@ -34,6 +34,7 @@ class AppController extends Controller {
 
     public $isApi = false;
     public $components = array('Session', 'Paginator', 'Aws');
+    public $helpers = array('Time');
 
     public function beforeFilter()
     {
