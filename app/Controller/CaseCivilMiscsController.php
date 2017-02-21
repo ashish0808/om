@@ -21,7 +21,7 @@ class CaseCivilMiscsController extends AppController
     /**
      * index method.
      */
-    public function index()
+    public function index($status='pending')
     {
     	if ($this->request->isAjax()) {
 		    $this->layout = 'ajax';
@@ -33,7 +33,7 @@ class CaseCivilMiscsController extends AppController
 
         $fields = [];
 
-        $criteria = [];
+        $criteria = ['status' => $status];
         $containCriteria = [];
         if (!empty($this->request->data)) {
         	foreach ($this->request->data['CaseCivilMisc'] as $key => $value) {
@@ -63,15 +63,11 @@ class CaseCivilMiscsController extends AppController
 		    }
 	    }
 
-        if (empty($criteria)) {
-        	$criteria = "1=1";
-        }
-
         $this->Paginator->settings = array(
 		    'page' => 1,
 		    'limit' => LIMIT,
 		    'fields' => $fields,
-		    'order' => array('CaseCivilMisc.id' => 'desc'),
+		    'order' => array('CaseCivilMisc.application_date' => 'desc'),
 		    'contain' => array('ClientCase')
 	    );
 
@@ -88,22 +84,6 @@ class CaseCivilMiscsController extends AppController
             }
         }
         $this->set('caseCivilMiscs', $records );
-    }
-
-    /**
-     * view method.
-     *
-     * @throws NotFoundException
-     *
-     * @param string $id
-     */
-    public function view($id = null)
-    {
-        if (!$this->CaseCivilMisc->exists($id)) {
-            throw new NotFoundException(__('Invalid case civil misc'));
-        }
-        $options = array('conditions' => array('CaseCivilMisc.'.$this->CaseCivilMisc->primaryKey => $id));
-        $this->set('caseCivilMisc', $this->CaseCivilMisc->find('first', $options));
     }
 
     /**
@@ -142,7 +122,7 @@ class CaseCivilMiscsController extends AppController
                     if ($this->CaseCivilMisc->validates()) {
                         if ($this->CaseCivilMisc->save($this->request->data)) {
                             $this->Flash->success(__('The case civil misc has been saved.'));
-                            // return $this->redirect(array('action' => 'index'));
+                            return $this->redirect(array('action' => 'index'));
                         } else {
                             $this->Flash->error(__('The case civil misc could not be saved. Please, try again.'));
                         }

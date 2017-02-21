@@ -49,19 +49,19 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
                 </div>
                 <div class="widget-body">
                     <div class="widget-main">
-                        <?php 
-                        echo $this->Form->input('CaseCivilMisc.cm_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application No', 'autocomplete' => 'off'));
-                        ?>
-                        <?php 
+                        <?php
                         echo $this->Form->input('CaseCivilMisc.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Computer File No', 'autocomplete' => 'off'));
                         ?>
                         <?php
                         $applicationTypes = array('cm' => 'CM', 'crm' => 'CRM');
 						echo $this->Form->input('CaseCivilMisc.cm_type', array('options' => $applicationTypes, 'empty' => 'Application Type','label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application Type','required' => false, 'autocomplete' => 'off'));
+                        
                         ?>
-                        <?php 
-                        $applicationStatus = array('pending' => 'Pending', 'decided' => 'Decided');
-						echo $this->Form->input('CaseCivilMisc.status', array('options' => $applicationStatus, 'empty' => 'Application Status','label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application Type','required' => false, 'autocomplete' => 'off'));
+                        <?php
+                        echo $this->Form->input('CaseCivilMisc.cm_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application No', 'autocomplete' => 'off'));
+                        ?>
+                        <?php
+                        echo $this->Form->input('CaseCivilMisc.application_date', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'input-medium search-query date-picker', 'placeholder' => 'Application Date', 'data-date-format' => 'yyyy-mm-dd', 'autocomplete' => 'off'));
                         ?>
                         <?php
                         echo $this->Form->button("<i class='icon-search icon-on-right bigger-110'></i>Search",
@@ -94,22 +94,25 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-md-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Application No
 						</th>
-						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Application Type', array());?>
+						<th class="col-md-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Type', array());?>
 						</th>
-						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-md-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							<?php echo $this->Paginator->sort('CaseCivilMisc.application_date', 'Date', array());?>
+						</th>
+						<th class="col-md-4" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Remarks
 						</th>
-						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+						<th class="col-md-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.status', 'Status', array());?>
 						</th>
-						<th role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-md-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Attachment
 						</th>
-						<th class="sorting_disabled" role="columnheader" rowspan="1" colspan="1" style="width: 146px; " aria-label=""></th>
+						<th class="col-md-1" role="columnheader" rowspan="1" colspan="1" style="width: 146px; " aria-label="">Action</th>
 					</tr>
 				</thead>
 				<tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -121,6 +124,7 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
 							<?php echo $record['CaseCivilMisc']['cm_no'];?>
 						</td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
+						<td class=" "><?php echo $record['CaseCivilMisc']['application_date']; ?></td>
 						<td class=" ">
 							<?php echo $record['CaseCivilMisc']['remarks'];?>
 						</td>
@@ -140,8 +144,8 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
 						</td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">
-								<?php echo $this->Html->link('<i class="icon-tasks bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green'))?>
-								<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red'),"Are you sure you want to delete this application?")?>
+								<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green', 'title' => 'Edit Application'))?>
+								<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red', 'title' => 'Delete Application'),"Are you sure you want to delete this application?")?>
 
 							</div>
 							<div class="hidden-desktop visible-phone">
@@ -160,11 +164,11 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
 										</li>
 
 										<li>
-											<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green'))?>
+											<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'edit',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'green', 'title' => 'Edit Application'))?>
 										</li>
 
 										<li>
-											<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red'),"Are you sure you want to delete this application?")?>
+											<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'CaseCivilMiscs','action'=>'delete',$record['CaseCivilMisc']['id']), array('escape' => false, 'class' => 'red', 'title' => 'Delete Application'),"Are you sure you want to delete this application?")?>
 										</li>
 									</ul>
 								</div>

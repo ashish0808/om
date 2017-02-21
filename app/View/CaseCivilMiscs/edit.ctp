@@ -114,6 +114,18 @@
 									</div>
 								</div>
 							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <span class="required">*</span>Application Date: </label>
+										<div class="col-sm-8">
+											<?php 
+											echo $this->Form->input('CaseCivilMisc.application_date', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-sm-12 col-xs-12 date-picker', 'placeholder' => 'Application Date', 'data-date-format' => 'yyyy-mm-dd')); 
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="row">
 							<div class="col-sm-12">

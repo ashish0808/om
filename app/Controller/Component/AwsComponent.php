@@ -21,7 +21,7 @@ class AwsComponent extends Component
         $this->s3 = S3Client::factory(array(
             'credentials' => array(
                 'key' => '',
-                'secret' => '',
+                'secret'  => '',
             ),
             'region' => 'ap-south-1',
             'version' => 'latest',
