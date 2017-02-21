@@ -17,7 +17,7 @@ $data = $this->Js->get('#caseCivilMiscSearchForm')->serializeForm(array('isForm'
 $this->Js->get('#caseCivilMiscSearchForm')->event(
     'submit',
     $this->Js->request(
-        array('action' => 'index'),
+        array('action' => 'index/'.$status),
         array(
             'update' => '#content',
             'data' => $data,
@@ -30,7 +30,7 @@ $this->Js->get('#caseCivilMiscSearchForm')->event(
 $this->Js->get('#caseCivilMiscSearchForm')->event(
     'reset',
     $this->Js->request(
-        array('action' => 'index'),
+        array('action' => 'index/'.$status),
         array(
             'update' => '#content',
             'async' => true,
@@ -39,7 +39,7 @@ $this->Js->get('#caseCivilMiscSearchForm')->event(
         )
     )
 );
-echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index','id'=>'caseCivilMiscSearchForm','name'=>'caseCivilMiscSearchForm'));?>
+echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/'.$status,'id'=>'caseCivilMiscSearchForm','name'=>'caseCivilMiscSearchForm'));?>
 <div class="row-fluid">
     <div class="span12">
         <div class="row-fluid">
@@ -50,9 +50,6 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
                 <div class="widget-body">
                     <div class="widget-main">
                         <?php
-                        echo $this->Form->input('CaseCivilMisc.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Computer File No', 'autocomplete' => 'off'));
-                        ?>
-                        <?php
                         $applicationTypes = array('cm' => 'CM', 'crm' => 'CRM');
 						echo $this->Form->input('CaseCivilMisc.cm_type', array('options' => $applicationTypes, 'empty' => 'Application Type','label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Application Type','required' => false, 'autocomplete' => 'off'));
                         
@@ -62,6 +59,9 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index'
                         ?>
                         <?php
                         echo $this->Form->input('CaseCivilMisc.application_date', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'input-medium search-query date-picker', 'placeholder' => 'Application Date', 'data-date-format' => 'yyyy-mm-dd', 'autocomplete' => 'off'));
+                        ?>
+                        <?php
+                        echo $this->Form->input('CaseCivilMisc.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Computer File No', 'autocomplete' => 'off'));
                         ?>
                         <?php
                         echo $this->Form->button("<i class='icon-search icon-on-right bigger-110'></i>Search",

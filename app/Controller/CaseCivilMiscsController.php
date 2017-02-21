@@ -84,6 +84,7 @@ class CaseCivilMiscsController extends AppController
             }
         }
         $this->set('caseCivilMiscs', $records );
+        $this->set('status', $status );
     }
 
     /**
