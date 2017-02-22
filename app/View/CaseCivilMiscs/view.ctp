@@ -132,7 +132,7 @@
 							<div class="col-sm-12">
 								<div class="clearfix pull-right">
 									<?php echo $this->Html->link("Edit", array('controller' => 'CaseCivilMiscs', 'action' => 'edit/'.$CaseCivilMisc['CaseCivilMisc']['id']), array('class' => 'btn btn-primary'));?>
-									<?php echo $this->Html->link("Back", array('controller' => 'CaseCivilMiscs', 'action' => 'index'), array('class' => 'btn btn-info'));?>
+									<?php echo $this->Html->link("Back", array('controller' => 'CaseCivilMiscs', 'action' => 'index/'.$CaseCivilMisc['CaseCivilMisc']['status']), array('class' => 'btn btn-info'));?>
 								</div>
 							</div>
 						</div>

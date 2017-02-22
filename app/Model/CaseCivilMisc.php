@@ -74,6 +74,16 @@ class CaseCivilMisc extends AppModel
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
+        'computer_file_no' => array(
+            'notBlank' => array(
+                'rule' => array('notBlank'),
+                //'message' => 'Your custom message here',
+                'allowEmpty' => false,
+                'required' => true,
+                //'last' => false, // Stop validation after this rule
+                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+            ),
+        ),
         'attachment' => array(
 	        'rule' => array(
 	            'extension',

@@ -123,7 +123,7 @@ class CaseCivilMiscsController extends AppController
                     if ($this->CaseCivilMisc->validates()) {
                         if ($this->CaseCivilMisc->save($this->request->data)) {
                             $this->Flash->success(__('CM/CRM has been saved successfully.'));
-                            return $this->redirect(array('action' => 'index'));
+                            return $this->redirect(array('action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
                         } else {
                             $this->Flash->error(__('The CM/CRM could not be saved. Please, try again.'));
                         }
@@ -159,8 +159,8 @@ class CaseCivilMiscsController extends AppController
 
             if ($this->request->is(array('post', 'put'))) {
                 // If computer file_no has been updated then find the associated case_id and update in CM/CRM
-                if ($cmData['ClientCase']['computer_file_no'] != $this->request->data['ClientCase']['computer_file_no']) {
-                    $caseData = $this->CaseCivilMisc->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['ClientCase']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                if ($cmData['ClientCase']['computer_file_no'] != $this->request->data['CaseCivilMisc']['computer_file_no']) {
+                    $caseData = $this->CaseCivilMisc->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CaseCivilMisc']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
                     if (!empty($caseData)) {
                         $this->request->data['CaseCivilMisc']['client_case_id'] = $caseData['ClientCase']['id'];
                     } else {
@@ -185,11 +185,12 @@ class CaseCivilMiscsController extends AppController
                     $this->CaseCivilMisc->id = $id;
                     if ($this->CaseCivilMisc->save($this->request->data)) {
                         $this->Flash->success(__('CM/CRM has been saved successfully.'));
-                        return $this->redirect(array('action' => 'index'));
+                        return $this->redirect(array('action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
                     } else {
                         $this->Flash->error(__('The CM/CRM could not be saved. Please, try again.'));
                     }
                 }
+                $this->request->data = $cmData;
             } else {
                 $this->request->data = $cmData;
             }
@@ -249,6 +250,6 @@ class CaseCivilMiscsController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
         }
 
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(array('action' => 'index/'.$cmData['CaseCivilMisc']['status']));
     }
 }
