@@ -29,27 +29,27 @@ class CaseCivilMisc extends AppModel
                 'rule' => array('numeric'),
                 //'message' => 'Your custom message here',
                 //'allowEmpty' => false,
-                //'required' => false,
+                'required' => true,
                 //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+                'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
         'user_id' => array(
             'numeric' => array(
                 'rule' => array('numeric'),
                 //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
+                'allowEmpty' => false,
+                'required' => true,
                 //'last' => false, // Stop validation after this rule
-                //'on' => 'create', // Limit validation to 'create' or 'update' operations
+                'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
         ),
         'cm_type' => array(
             'notBlank' => array(
                 'rule' => array('notBlank'),
                 //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
+                'allowEmpty' => false,
+                'required' => true,
                 //'last' => false, // Stop validation after this rule
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
@@ -58,8 +58,8 @@ class CaseCivilMisc extends AppModel
             'notBlank' => array(
                 'rule' => array('notBlank'),
                 //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
+                'allowEmpty' => false,
+                'required' => true,
                 //'last' => false, // Stop validation after this rule
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
@@ -68,8 +68,8 @@ class CaseCivilMisc extends AppModel
             'notBlank' => array(
                 'rule' => array('notBlank'),
                 //'message' => 'Your custom message here',
-                //'allowEmpty' => false,
-                //'required' => false,
+                'allowEmpty' => false,
+                'required' => true,
                 //'last' => false, // Stop validation after this rule
                 //'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
@@ -77,8 +77,10 @@ class CaseCivilMisc extends AppModel
         'attachment' => array(
 	        'rule' => array(
 	            'extension',
-	            array('gif', 'jpeg', 'png', 'jpg', 'pdf', 'doc', 'docx', 'rtf', 'odt', 'xls', 'xlsx'),
+	            array('gif', 'jpeg', 'png', 'jpg', 'pdf', 'doc', 'docx', 'rtf', 'odt', 'xls', 'xlsx', 'txt'),
 	        ),
+	        'required' => false,
+	        'allowEmpty' => true,
 	        'message' => 'Please supply a valid image.',
 	    ),
     );
