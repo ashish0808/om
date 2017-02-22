@@ -83,7 +83,7 @@ class CasesController extends AppController
 			//'contain' => array('Customer' => array('Country', 'State', 'City'))
 		);
 		$records = $this->Paginator->paginate('ClientCase', $criteria);
-		//echo '<pre>'; print_r($records); die;
+
 		$this->set('records', $records);
 		$this->set('paginateLimit', $paginateLimit);
 	}
@@ -92,68 +92,11 @@ class CasesController extends AppController
 	{
 		$this->layout = 'basic';
 		$this->pageTitle = 'Add Case';
-
 		$this->set("pageTitle", $this->pageTitle);
-
 		$this->loadModel('ClientCase');
-		//$this->loadModel('CaseHearing');
-		$this->loadModel('CasePayment');
 
 		if ($this->request->data) {
-			//pr($this->request->data); die;
-			if ($this->ClientCase->validates()) {
 
-				$this->request->data['ClientCase']['user_id'] = $this->getLawyerId();
-
-				$this->ClientCases = $this->Components->load('ClientCases');
-				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase']);
-
-				if ($this->ClientCase->save($data)) {
-
-					$caseId = $this->ClientCase->getLastInsertId();
-
-					$this->Session->setFlash(CASE_INFORMATION_ADDED);
-					$this->redirect(array('controller' => 'cases', 'action' => 'edit', $caseId));
-				} /*else {
-
-					pr($this->ClientCase->validationErrors, true); die;
-				}*/
-			}/* else {
-
-				pr($this->validationErrors['ClientCase']); die;
-			}*/
-		}
-
-		$this->loadModel('CaseType');
-		$caseTypes = $this->CaseType->find('list', array(
-			'fields' => array('CaseType.id', 'CaseType.name'),
-			'order' => 'name ASC'
-		));
-		$this->set("caseTypes", $caseTypes);
-
-		$this->loadModel('Court');
-		$courts = $this->Court->listCourts();
-		$this->set("courts", $courts);
-	}
-
-	public function getLawyerId()
-	{
-		return $this->Session->read('UserInfo.lawyer_id');
-	}
-
-	public function edit($caseId)
-	{
-		$this->layout = 'basic';
-		$this->pageTitle = 'Edit Case';
-
-		$this->set("pageTitle", $this->pageTitle);
-
-		$this->loadModel('ClientCase');
-		//$this->loadModel('CaseHearing');
-		$this->loadModel('CasePayment');
-
-		if ($this->request->data) {
-			//pr($this->request->data); die;
 			if ($this->ClientCase->validates()) {
 
 				$this->request->data['ClientCase']['user_id'] = $this->getLawyerId();
@@ -171,14 +114,6 @@ class CasesController extends AppController
 			}
 		}
 
-
-		$this->ClientCase->editCaseRequiredModelJoins();
-		$caseDetails = $this->ClientCase->read(null, $caseId);
-		$this->request->data['ClientCase'] = $caseDetails['ClientCase'];
-
-		$this->set('caseDetails',$caseDetails);
-		$this->set('caseId',$caseId);
-
 		$this->loadModel('CaseType');
 		$caseTypes = $this->CaseType->find('list', array(
 			'fields' => array('CaseType.id', 'CaseType.name'),
@@ -191,14 +126,25 @@ class CasesController extends AppController
 		$this->set("courts", $courts);
 	}
 
+	public function edit($caseId)
+	{
+		$this->layout = 'basic';
+		$this->pageTitle = 'Edit Case';
+		$this->set("pageTitle", $this->pageTitle);
+		$this->set('caseId',$caseId);
+	}
+
 	public function ajaxEdit($caseId)
 	{
 		$this->layout = 'ajax';
 
 		$this->loadModel('ClientCase');
 
-		$this->ClientCase->editCaseRequiredModelJoins();
+		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
+
+		//pr($caseDetails); die;
+
 		$this->request->data['ClientCase'] = $caseDetails['ClientCase'];
 
 		$this->set('caseDetails',$caseDetails);
@@ -212,36 +158,165 @@ class CasesController extends AppController
 
 		$this->loadModel('Court');
 		$this->set("courts", $this->Court->listCourts());
+
+		$this->loadModel('UserCompany');
+		$this->set("userCompanies", $this->UserCompany->find('list', array(
+			'conditions' => array(
+				'user_id' => $this->getLawyerId()
+			),
+			'fields' => array('UserCompany.id', 'UserCompany.name'),
+			'order' => 'name ASC'
+		)));
+
+		$this->loadModel('PaymentMethod');
+		$this->set("paymentMethods", $this->PaymentMethod->find('list', array(
+			'fields' => array('id', 'method'),
+			'order' => 'method ASC'
+		)));
+
+		$defaultCollapseIn = '';
+		if(!empty($_REQUEST['defaultCollapseIn'])) {
+
+			$defaultCollapseIn = $_REQUEST['defaultCollapseIn'];
+		}
+
+		$this->set("defaultCollapseIn", $defaultCollapseIn);
 	}
 
-	function bulkAction($statusValue)
+	public function editBasicDetails($caseId)
 	{
-		if (isset($statusValue) && !empty($statusValue)) {
-			$data = array();
-			$data['Case']['stage'] = $statusValue;
+		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
 
-			for ($i = 0; $i < count($_POST['box']); $i++) {
-				$this->Case->id = $_POST['box'][$i];
-				$this->Case->save($data, array('validate' => false));
+		$result = array('status' => 'error', 'message' => 'Unable to process data');
+		if ($this->request->data) {
+
+			$this->ClientCase->set($this->request->data);
+			if ($this->ClientCase->validates()) {
+
+				$this->ClientCases = $this->Components->load('ClientCases');
+				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase']);
+
+				if ($this->ClientCase->save($data)) {
+
+					$this->setFlashCaeUpdated($this->request->data);
+					$result = array('status' => 'success');
+				}
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
 			}
-
-			$this->Session->setFlash('<span class="setFlash success">Case ' . $statusValue . ' successfully.</span>');
-		} else {
-			$this->Session->setFlash(ERROR_OCCURRED);
 		}
-		$this->redirect($this->referer());
+
+		echo json_encode($result);
+		exit;
 	}
 
-	function delete($id = null)
+	public function editClientInfo($caseId)
 	{
-		$this->loadModel('Case');
-		$this->Case->id = $id;
-		$data['Case']['is_deleted'] = 1;
-		if ($this->Case->save($data, array('validate' => false))) {
-			$this->Session->setFlash(CASE_DELETED);
-		} else {
-			$this->Session->setFlash(ERROR_OCCURRED);
+		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
+
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+
+		$result = array('status' => 'error', 'message' => 'Unable to process data');
+
+
+		if ($this->request->data) {
+
+			$this->ClientCase->set($this->request->data);
+
+			$this->ClientCase->validate = $this->ClientCase->validateClientInfo;
+
+			if ($this->ClientCase->validate) {
+
+				$data = $this->request->data['ClientCase'];
+				$data = $this->ifSavedIncomplete($data);
+
+				if($caseDetails['ClientCase']['completed_step'] < 2) {
+
+					$data['completed_step'] = 2;
+				}
+
+				if ($this->ClientCase->save($data)) {
+
+					$this->setFlashCaeUpdated($this->request->data);
+					$result = array('status' => 'success');
+				} else {
+
+					$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
+				}
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
+			}
 		}
-		$this->redirect($this->referer());
+
+		echo json_encode($result);
+		exit;
+	}
+
+	public function addPayment($caseId, $casePaymentId)
+	{
+		$this->layout = 'ajax';
+
+		$this->loadModel('CasePayment');
+
+		if ($this->request->data) {
+
+			$this->CasePayment->set($this->request->data);
+			if ($this->CasePayment->validates()) {
+
+				$data = $this->request->data['CasePayment'];
+
+				if ($this->ClientCase->save($data)) {
+
+					$this->setFlashCaeUpdated($this->request->data);
+					$result = array('status' => 'success');
+				}
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
+			}
+		}
+
+
+
+		if(!empty($casePaymentId)) {
+
+			$this->request->data['CasePayment'] = $this->CasePayment->find('first', array(
+				'conditions' => array(
+					'client_case_id' => $caseId,
+					'id' => $casePaymentId
+				)
+			));
+		}
+
+		$this->set('caseId',$caseId);
+		$this->set('casePaymentId',$casePaymentId);
+	}
+
+	public function getLawyerId()
+	{
+		return $this->Session->read('UserInfo.lawyer_id');
+	}
+
+	private function setFlashCaeUpdated($data)
+	{
+		$formBtn = $data['ClientCase']['submit'];
+		if($formBtn!='next') {
+
+			$this->Session->setFlash('<span class="setFlash success">Case updated successfully.</span>');
+		}
+	}
+
+	private function ifSavedIncomplete($data)
+	{
+		if($data['submit']=='saveIncomplete') {
+
+			$data['saved_incomplete'] = 1;
+		}
+
+		return $data;
 	}
 }

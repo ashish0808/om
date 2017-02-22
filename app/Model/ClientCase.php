@@ -17,11 +17,13 @@ App::uses('AppModel', 'Model');
  */
 class ClientCase extends AppModel {
 
-/**
- * Validation rules
- *
- * @var array
- */
+	public $actsAs = array('Containable');
+
+	/**
+	 * Validation rules
+	 *
+	 * @var array
+	 */
 	public $validate = array(
 		'user_id' => array(
 			'numeric' => array(
@@ -121,7 +123,7 @@ class ClientCase extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'fee_settlled' => array(
+		'fee_settled' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
@@ -273,22 +275,33 @@ class ClientCase extends AppModel {
 		),*/
 	);
 
-	public function editCaseRequiredModelJoins()
-	{
-		$this->bindModel(array
-		(
-			'hasMany' => array
-			(
-				'CasePayment' => array
-				(
-					'className'  => 'CasePayment',
-					'foreignKey' => "case_id",
-					'conditions' => array(),
-					'fields' => array()
-				)
+
+	public $validateClientInfo = array(
+		'party_type' => array(
+			'required' => array(
+				'rule' => 'notBlank',
+				'message' => 'Please select party type'
 			)
-		), false);
-	}
+		),
+		'user_companies_id' => array(
+			'ruleCaseType' => array(
+				'rule' => array('validateWithPartyTypeCompany', 'party_type'),
+				'message' => 'Please select company',
+			),
+		),
+		'reference_no' => array(
+			'ruleCaseNumber' => array(
+				'rule' => array('validateWithPartyTypeCompany', 'party_type'),
+				'message' => 'Please enter reference number',
+			),
+		),
+		'client_phone' => array(
+			'ruleCaseNumber' => array(
+				'rule' => array('validateWithPartyTypeClient', 'party_type'),
+				'message' => 'Please enter phone number',
+			),
+		)
+	);
 
 	public function validateWithClientType($field = array(), $compare_field = null)
 	{
@@ -342,6 +355,37 @@ class ClientCase extends AppModel {
 		}
 	}
 
+	public function validateWithPartyTypeCompany($field = array(), $compare_field = null)
+	{
+		foreach ($field as $key => $value) {
+
+			$v1 = trim($value);
+			$v2 = trim($this->data[$this->name][$compare_field]);
+
+			if($v2=='Company' && empty($v1)) {
+
+				return false;
+			}
+
+			return true;
+		}
+	}
+
+	public function validateWithPartyTypeClient($field = array(), $compare_field = null)
+	{
+		foreach ($field as $key => $value) {
+
+			$v1 = trim($value);
+			$v2 = trim($this->data[$this->name][$compare_field]);
+
+			if($v2=='Private Client' && empty($v1)) {
+
+				return false;
+			}
+
+			return true;
+		}
+	}
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
 
@@ -479,4 +523,8 @@ class ClientCase extends AppModel {
 			'counterQuery' => ''
 		)
 	);
+
+	//ALTER TABLE `client_cases` CHANGE `case_number` `case_number` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `complete_case_number` `complete_case_number` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `case_year` `case_year` INT(5) NULL, CHANGE `case_title` `case_title` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `party_type` `party_type` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL COMMENT 'Private Client or Company';
+
+	//ALTER TABLE `client_cases` CHANGE `fee_settlled` `fee_settled` FLOAT(9,2) NOT NULL DEFAULT '0.00';
 }

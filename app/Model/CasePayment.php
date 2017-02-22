@@ -81,6 +81,13 @@ class CasePayment extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
+		),
+		'PaymentMethod' => array(
+			'className' => 'PaymentMethod',
+			'foreignKey' => 'mode_of_payment',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
 		)
 	);
 }

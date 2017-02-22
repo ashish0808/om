@@ -14,6 +14,14 @@
 				<div class="widget-body">
 					<div class="widget-main">
 						<?php echo $this->element('Cases/add');?>
+						<div class="row">
+                        	<div class="col-sm-12">
+                        		<div class="clearfix pull-right custom-form-actions">
+                        			<?php echo $this->Form->button("<i class='icon-arrow-right bigger-110'></i>Next", array("class" => "btn btn-success btn-next", "escape" => false, "type" => "submit", "name" => "data[ClientCase][submit]", "value" => "next"));?>
+                        			<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Save Incomplete Info", array("class" => "btn btn-info", "escape" => false, "type" => "submit", "name" => "data[ClientCase][submit]", "value" => "saveIncomplete"));?>
+                        		</div>
+                        	</div>
+                        </div>
 					</div>
 				</div>
 			</div>

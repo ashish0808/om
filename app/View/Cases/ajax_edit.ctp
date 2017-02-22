@@ -1,21 +1,24 @@
 <?php
 
-$defaultCollapseIn = 'basicDetails';
-if(!empty($caseDetails['ClientCase']['completed_step'])) {
+if(empty($defaultCollapseIn)) {
 
-	if($caseDetails['ClientCase']['completed_step']==1) {
+	$defaultCollapseIn = 'basicDetails';
+    if(!empty($caseDetails['ClientCase']['completed_step'])) {
 
-		$defaultCollapseIn = 'clientInformation';
-	}
+    	if($caseDetails['ClientCase']['completed_step']==1) {
 
-	if($caseDetails['ClientCase']['completed_step']==2) {
+    		$defaultCollapseIn = 'clientInformation';
+    	}
 
-		$defaultCollapseIn = 'feesInformation';
-    }
+    	if($caseDetails['ClientCase']['completed_step']==2) {
 
-    if($caseDetails['ClientCase']['completed_step']==3) {
+    		$defaultCollapseIn = 'feesInformation';
+        }
 
-		$defaultCollapseIn = 'remarks';
+        if($caseDetails['ClientCase']['completed_step']==3) {
+
+    		$defaultCollapseIn = 'remarks';
+        }
     }
 }
 ?>
@@ -31,8 +34,18 @@ if(!empty($caseDetails['ClientCase']['completed_step'])) {
 	</div>
 	<div class="widget-body panel-collapse collapse" id="basicDetails">
 		<div class="widget-main">
-			<?php echo $this->Form->create('ClientCase', array('url' => '/cases/edit/', 'class' => 'form-horizontal', 'name' => 'edit', 'id' => 'edit', 'novalidate' => true)); ?>
+			<?php echo $this->Form->create('ClientCase', array('url' => '/cases/editBasicDetails/'.$caseId, 'class' => 'form-horizontal', 'name' => 'editBasicDetails', 'id' => 'editBasicDetails', 'novalidate' => true)); ?>
 				<?php echo $this->element('Cases/add');?>
+				<?php echo $this->Form->input('ClientCase.id', array('label' => false, 'div' => false, 'type' => 'hidden')); ?>
+				<input type="hidden" name="data[ClientCase][submit]" value="" id ="basicDetailsHiddenSubmit">
+				<div class="row">
+                	<div class="col-sm-12">
+                		<div class="clearfix pull-right custom-form-actions">
+                			<?php echo $this->Form->button("<i class='icon-arrow-right bigger-110'></i>Next", array("class" => "btn btn-success btn-next saveBasicDetails", "escape" => false, "type" => "submit", "value" => "next"));?>
+                			<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Save Incomplete Info", array("class" => "btn btn-info saveBasicDetails", "escape" => false, "type" => "submit", "value" => "saveIncomplete"));?>
+                		</div>
+                	</div>
+                </div>
 			<?php echo $this->Form->end(); ?>
 		</div>
 	</div>
@@ -48,7 +61,19 @@ if(!empty($caseDetails['ClientCase']['completed_step'])) {
 	</div>
 	<div class="widget-body panel-collapse collapse" id="clientInformation">
 		<div class="widget-main">
-
+			<?php echo $this->Form->create('ClientCase', array('url' => '/cases/editClientInfo/'.$caseId, 'class' => 'form-horizontal', 'name' => 'editClientInfo', 'id' => 'editClientInfo', 'novalidate' => true)); ?>
+				<?php echo $this->element('Cases/client_info_fields');?>
+				<?php echo $this->Form->input('ClientCase.id', array('label' => false, 'div' => false, 'type' => 'hidden')); ?>
+				<input type="hidden" name="data[ClientCase][submit]" value="" id ="clientInfoHiddenSubmit">
+				<div class="row">
+                	<div class="col-sm-12">
+                		<div class="clearfix pull-right custom-form-actions">
+                			<?php echo $this->Form->button("<i class='icon-arrow-right bigger-110'></i>Next", array("class" => "btn btn-success btn-next saveClientInfo", "escape" => false, "type" => "submit", "value" => "next"));?>
+                			<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Save Incomplete Info", array("class" => "btn btn-info saveClientInfo", "escape" => false, "type" => "submit", "value" => "saveIncomplete"));?>
+                		</div>
+                	</div>
+                </div>
+			<?php echo $this->Form->end(); ?>
 		</div>
 	</div>
 	<?php } ?>
@@ -64,7 +89,7 @@ if(!empty($caseDetails['ClientCase']['completed_step'])) {
 	</div>
 	<div class="widget-body panel-collapse collapse" id="feesInformation">
 		<div class="widget-main">
-
+			<?php echo $this->element('Cases/payments');?>
 		</div>
 	</div>
 	<?php } ?>
@@ -85,3 +110,4 @@ if(!empty($caseDetails['ClientCase']['completed_step'])) {
 	</div>
 	<?php } ?>
 </div>
+<?php echo $this->Html->script('pages/ajax_edit_case.js'); ?>

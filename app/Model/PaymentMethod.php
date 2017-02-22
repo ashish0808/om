@@ -25,4 +25,25 @@ class PaymentMethod extends AppModel {
 			),
 		),
 	);
+
+	/**
+	 * hasMany associations
+	 *
+	 * @var array
+	 */
+	public $hasMany = array(
+		'CasePayment' => array(
+			'className' => 'CasePayment',
+			'foreignKey' => 'mode_of_payment',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
 }

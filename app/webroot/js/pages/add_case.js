@@ -44,38 +44,5 @@ $(document).ready(function(){
     changeClientType(client_type)
 
     var isExistingCase = $("input[name='data[ClientCase][is_existing]']:checked").val();
-    getFileNumberField(isExistingCase)
-
-    /*$('#saveQuickClient').on('click', function(){
-        $.ajax({
-            url: $('#addQuickClient').attr('action'),
-            type:"POST",
-            data: $('#addQuickClient').serialize(),
-            dataType:'json',
-            success: function(data) {
-                $('.addQuickClientError').hide();
-                if(data.status=='error') {
-
-                    $.each(data.message, function (i, v) {
-
-                        if($('#error_'+i).length > 0) {
-
-                            $('#error_'+i).html(v);
-                            $('#error_'+i).show();
-                        }
-                    });
-                } else if(data.status=='success') {
-
-                    var $el = $("#ClientCaseClientId");
-                    $el.empty(); // remove old options
-                    $.each(data.clients, function(key,value) {
-                        $el.append($("<option></option>")
-                            .attr("value", key).text(value));
-                    });
-
-                    $('#myModal').modal('hide');
-                }
-            }
-        });
-    });*/
+    getFileNumberField(isExistingCase);
 });
