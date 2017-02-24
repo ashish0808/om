@@ -21,7 +21,7 @@ class Dispatch extends AppModel {
 				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
 				'allowEmpty' => false,
-				'required' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -31,7 +31,7 @@ class Dispatch extends AppModel {
 				'rule' => array('date'),
 				//'message' => 'Your custom message here',
 				'allowEmpty' => false,
-				'required' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -46,6 +46,15 @@ class Dispatch extends AppModel {
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
+		'attachment' => array(
+	        'rule' => array(
+	            'extension',
+	            array('gif', 'jpeg', 'png', 'jpg', 'pdf', 'doc', 'docx', 'rtf', 'odt', 'xls', 'xlsx', 'txt'),
+	        ),
+	        'required' => false,
+	        'allowEmpty' => true,
+	        'message' => 'Please supply a valid image.',
+	    ),
 	);
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed

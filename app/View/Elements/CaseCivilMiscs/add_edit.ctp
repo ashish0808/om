@@ -32,7 +32,7 @@
 				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <span class="required">*</span>Compute File No: </label>
 				<div class="col-sm-8">
 					<?php
-					echo $this->Form->input('CaseCivilMisc.computer_file_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'value' => isset($computer_file_no) ? $computer_file_no : $this->request->data['CaseCivilMisc']['computer_file_no'], 'required' => 'required', 'autocomplete' => 'off'));
+					echo $this->Form->input('CaseCivilMisc.computer_file_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'value' => $computer_file_no, 'required' => 'required', 'autocomplete' => 'off'));
 					?>
 				</div>
 			</div>

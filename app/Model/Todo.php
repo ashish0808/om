@@ -20,28 +20,28 @@ class Todo extends AppModel {
 			'notBlank' => array(
 				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
-		'proiority' => array(
+		'priority' => array(
 			'notBlank' => array(
 				'rule' => array('notBlank'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
 		'completion_date' => array(
-			'datetime' => array(
-				'rule' => array('datetime'),
+			'date' => array(
+				'rule' => array('date'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
@@ -50,10 +50,10 @@ class Todo extends AppModel {
 			'numeric' => array(
 				'rule' => array('numeric'),
 				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
+				'allowEmpty' => false,
+				'required' => true,
 				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'on' => 'create', // Limit validation to 'create' or 'update' operations
 			),
 		),
 	);
