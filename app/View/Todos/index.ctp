@@ -181,7 +181,7 @@ echo $this->Form->create('Todo',array('url' => '/Todos/index','id'=>'TodoSearchF
 										</li>
 
 										<li>
-											<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'Todos','action'=>'delete',$record['Todo']['id']), array('escape' => false, 'class' => 'red tooltip-error', 'data-rel' => 'tooltip', 'data-original-title'=>'Delete Todo'),"Are you sure you want to delete this application?")?>
+											<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', array('controller'=>'Todos','action'=>'delete',$record['Todo']['id']), array('escape' => false, 'class' => 'red tooltip-error', 'data-rel' => 'tooltip', 'data-original-title'=>'Delete Todo'),"Are you sure you want to delete this Todo?")?>
 										</li>
 									</ul>
 								</div>

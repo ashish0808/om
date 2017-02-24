@@ -72,13 +72,6 @@ class TodosController extends AppController
         }
         $this->set('paginateLimit', LIMIT);
         $records = $this->Paginator->paginate('Todo', $criteria);
-        foreach ($records as $key => $value) {
-            if (!empty($value['Todo']['attachment'])) {
-                $records[$key]['Todo']['attachment'] = $this->Aws->getObjectUrl($value['Todo']['attachment']);
-            } else {
-                $records[$key]['Todo']['attachment'] = '';
-            }
-        }
         $this->set('Todos', $records);
     }
 
@@ -115,8 +108,6 @@ class TodosController extends AppController
                     } else {
                         $this->Flash->error(__('The Todo could not be saved. Please, try again.'));
                     }
-                } else {
-                    pr($this->Todo->validationErrors);die;
                 }
             }
         }
@@ -169,8 +160,6 @@ class TodosController extends AppController
                         } else {
                             $this->Flash->error(__('The Todo could not be saved. Please, try again.'));
                         }
-                    } else {
-                        pr($this->Todo->validationErrors);die;
                     }
                 }
             } else {
@@ -227,6 +216,16 @@ class TodosController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
 
             return $this->redirect(array('action' => 'index'));
+        }
+    }
+
+    public function checkList()
+    {
+        # code...
+        // If attachment has been given upload it to aws S3
+        if (!empty($this->request->data['Todo']['attachment']['name'])) {
+            $str = file_get_contents($this->request->data['Todo']['attachment']['tmp_name']);
+            pr($str);die;
         }
     }
 }
