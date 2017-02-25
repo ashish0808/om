@@ -15,20 +15,10 @@ class CasePayment extends AppModel {
  * @var array
  */
 	public $validate = array(
-		'client_case_id' => array(
+		'fee_settled' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
-		'mode_of_payment' => array(
-			'numeric' => array(
-				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
+				'message' => 'Please enter fee amount',
 				//'allowEmpty' => false,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
@@ -38,42 +28,39 @@ class CasePayment extends AppModel {
 		'amount' => array(
 			'numeric' => array(
 				'rule' => array('numeric'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
+				'message' => 'Please enter amount in numeric',
+				'allowEmpty' => true,
 				//'required' => false,
 				//'last' => false, // Stop validation after this rule
 				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+			),
+		),
+		'mode_of_payment' => array(
+			'ruleCaseType' => array(
+				'rule' => array('validateWithPayment', 'amount'),
+				'message' => 'Please select mode of payment',
 			),
 		),
 		'date_of_payment' => array(
+			'ruleCaseNumber' => array(
+				'rule' => array('validateWithPayment', 'amount'),
+				'message' => 'Please enter date of payment',
+			),
 			'date' => array(
 				'rule' => array('date'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
+				'allowEmpty' => true,
+				'message' => 'Please enter date in format (Y-m-d)',
 			),
-		),
-		'is_verified' => array(
-			'boolean' => array(
-				'rule' => array('boolean'),
-				//'message' => 'Your custom message here',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
-		),
+		)
 	);
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
 
-/**
- * belongsTo associations
- *
- * @var array
- */
+	/**
+	 * belongsTo associations
+	 *
+	 * @var array
+	 */
 	public $belongsTo = array(
 		'ClientCase' => array(
 			'className' => 'ClientCase',
@@ -90,4 +77,20 @@ class CasePayment extends AppModel {
 			'order' => ''
 		)
 	);
+
+	public function validateWithPayment($field = array(), $compare_field = null)
+	{
+		foreach ($field as $key => $value) {
+
+			$v1 = trim($value);
+			$v2 = trim($this->data[$this->name][$compare_field]);
+
+			if(!empty($v2) && empty($v1)) {
+
+				return false;
+			}
+
+			return true;
+		}
+	}
 }

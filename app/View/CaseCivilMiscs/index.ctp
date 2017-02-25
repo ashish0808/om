@@ -17,9 +17,13 @@ $data = $this->Js->get('#caseCivilMiscSearchForm')->serializeForm(array('isForm'
 $this->Js->get('#caseCivilMiscSearchForm')->event(
     'submit',
     $this->Js->request(
-        array('action' => 'index/'.$status),
+        array(
+        	'action' => 'index/'.$status,
+        ),
         array(
             'update' => '#content',
+            'before'   => '$("#overlay_img").fadeIn()',
+            'complete' => '$("#overlay_img").fadeOut()',
             'data' => $data,
             'async' => true,
             'dataExpression'=>true,
@@ -33,6 +37,8 @@ $this->Js->get('#caseCivilMiscSearchForm')->event(
         array('action' => 'index/'.$status),
         array(
             'update' => '#content',
+            'before'   => '$("#overlay_img").fadeIn()',
+            'complete' => '$("#overlay_img").fadeOut()',
             'async' => true,
             'dataExpression'=>true,
             'method' => 'POST'

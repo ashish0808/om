@@ -13,15 +13,12 @@ $(document).ready(function(){
         changePaymentType($(this).val())
     });*/
 
-    $("body").on('click', '.addCasePayment', function() {
+    $("body").on('blur', '#casePayments :input', function() {
 
-        var pageTitle = $(this).attr('pageTitle');
-        var pageName = $(this).attr('pageName');
-        $(".modal .modal-title").html(pageTitle);
-        $(".modal .modal-body").html("Content loading please wait...");
-        $(".modal").modal("show");
-        $(".modal .modal-body").load(pageName);
+        paymentUpdated();
     });
+
+    paymentUpdated();
 });
 
 function showPartTypeFields(partyType) {
@@ -35,6 +32,19 @@ function showPartTypeFields(partyType) {
     } else if(partyType=='Private Client') {
 
         $('.clientField').removeClass('hide');
+    }
+}
+
+function paymentUpdated()
+{
+    var amountPaid = $('#CasePaymentAmount').val();
+
+    if($.isNumeric(amountPaid) && amountPaid > 0) {
+
+        $('.paymentRequired').removeClass('hide');
+    } else {
+
+        $('.paymentRequired').addClass('hide');
     }
 }
 

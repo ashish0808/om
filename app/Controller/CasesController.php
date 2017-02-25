@@ -143,8 +143,6 @@ class CasesController extends AppController
 		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 
-		//pr($caseDetails); die;
-
 		$this->request->data['ClientCase'] = $caseDetails['ClientCase'];
 
 		$this->set('caseDetails',$caseDetails);
@@ -199,7 +197,7 @@ class CasesController extends AppController
 
 				if ($this->ClientCase->save($data)) {
 
-					$this->setFlashCaeUpdated($this->request->data);
+					$this->setFlashCaseUpdated($this->request->data['ClientCase']);
 					$result = array('status' => 'success');
 				}
 			} else {
@@ -240,7 +238,7 @@ class CasesController extends AppController
 
 				if ($this->ClientCase->save($data)) {
 
-					$this->setFlashCaeUpdated($this->request->data);
+					$this->setFlashCaseUpdated($this->request->data['ClientCase']);
 					$result = array('status' => 'success');
 				} else {
 
@@ -256,10 +254,39 @@ class CasesController extends AppController
 		exit;
 	}
 
-	public function addPayment($caseId, $casePaymentId)
+	public function editRemarks($caseId)
 	{
 		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
 
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+
+		$result = array('status' => 'error', 'message' => 'Unable to process data');
+
+		if ($this->request->data) {
+
+			$data = $this->request->data['ClientCase'];
+			$data = $this->ifSavedIncomplete($data);
+
+			if ($caseDetails['ClientCase']['completed_step'] < 4) {
+
+				$data['completed_step'] = 4;
+			}
+
+			if ($this->ClientCase->save($data, false)) {
+
+				$this->setFlashCaseUpdated($this->request->data['ClientCase']);
+				$result = array('status' => 'success');
+			}
+		}
+
+		echo json_encode($result);
+		exit;
+	}
+
+	public function addPayment($caseId)
+	{
+		$this->layout = 'ajax';
 		$this->loadModel('CasePayment');
 
 		if ($this->request->data) {
@@ -268,32 +295,131 @@ class CasesController extends AppController
 			if ($this->CasePayment->validates()) {
 
 				$data = $this->request->data['CasePayment'];
+				$data['client_case_id'] = $caseId;
+				unset($data['fee_settled']);
 
-				if ($this->ClientCase->save($data)) {
+				if(!empty($data['amount'])) {
 
-					$this->setFlashCaeUpdated($this->request->data);
+					$this->CasePayment->save($data);
+				}
+
+				$this->addPaymentUpdateCase($caseId, $this->request->data['CasePayment']);
+
+				$this->setFlashCaseUpdated($this->request->data['CasePayment']);
+				$result = array('status' => 'success');
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->CasePayment->validationErrors);
+			}
+		}
+
+		echo json_encode($result);
+		exit;
+	}
+
+	public function editPayment($caseId, $casePaymentId)
+	{
+		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
+		$this->loadModel('CasePayment');
+
+		if ($this->request->data) {
+
+			$result = array('status' => 'error');
+			$this->CasePayment->set($this->request->data);
+			if ($this->CasePayment->validates()) {
+
+				$data = $this->request->data['CasePayment'];
+				if(!empty($data['amount'])) {
+
+					$this->CasePayment->save($data);
+
+					$this->ClientCase->contain('CasePayment');
+					$caseDetails = $this->ClientCase->read(null, $caseId);
+					$caseData = $this->getPaymentStatus($caseDetails);
+					$this->ClientCase->updateAll($caseData, array('ClientCase.id'=> $caseId));
+
 					$result = array('status' => 'success');
 				}
 			} else {
 
-				$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
+				$result = array('status' => 'error', 'message' => $this->CasePayment->validationErrors);
+			}
+
+			echo json_encode($result);
+			exit;
+		}
+
+		$caseDetails = $this->CasePayment->read(null, $casePaymentId);
+		$this->request->data['CasePayment'] = $caseDetails['CasePayment'];
+
+		$this->set("caseId", $caseId);
+		$this->set("casePaymentId", $casePaymentId);
+
+		$this->loadModel('PaymentMethod');
+		$this->set("paymentMethods", $this->PaymentMethod->find('list', array(
+			'fields' => array('id', 'method'),
+			'order' => 'method ASC'
+		)));
+	}
+
+	private function addPaymentUpdateCase($caseId, $data)
+	{
+		$this->loadModel('ClientCase');
+
+		$this->ClientCase->contain('CasePayment');
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+
+		$caseData = array();
+
+		$caseData['fee_settled'] = $data['fee_settled'];
+		$caseData['submit'] = $data['submit'];
+
+		if($caseDetails['ClientCase']['completed_step'] < 3) {
+
+			$caseData['completed_step'] = 3;
+		}
+
+		$caseData = $this->getPaymentStatus($caseDetails, $caseData);
+
+		$caseData = $this->ifSavedIncomplete($caseData);
+		unset($caseData['submit']);
+
+		$this->ClientCase->updateAll($caseData, array('ClientCase.id'=> $caseId));
+	}
+
+	public function getPaymentStatus($caseDetails, $caseData = array())
+	{
+		$caseData['ClientCase.payment_status'] = "'nil'";
+		if(!empty($caseDetails['CasePayment'])) {
+
+			$amount_paid = 0;
+			$feeSettled = $caseDetails['ClientCase']['fee_settled'];
+
+			if(isset($caseData['fee_settled'])) {
+
+				$feeSettled = $caseData['fee_settled'];
+			}
+
+			foreach($caseDetails['CasePayment'] as $casePayment) {
+
+				$amount_paid = $amount_paid+$casePayment['amount'];
+			}
+
+			if(!empty($amount_paid)) {
+
+				$caseData['ClientCase.payment_status'] = "'Part'";
+				if($amount_paid >= $feeSettled) {
+
+					$caseData['ClientCase.payment_status'] = "'full'";
+				} elseif($amount_paid == ($feeSettled / 2)) {
+
+				$caseData['ClientCase.payment_status'] = "'Half'";
+				}
 			}
 		}
 
-
-
-		if(!empty($casePaymentId)) {
-
-			$this->request->data['CasePayment'] = $this->CasePayment->find('first', array(
-				'conditions' => array(
-					'client_case_id' => $caseId,
-					'id' => $casePaymentId
-				)
-			));
-		}
-
-		$this->set('caseId',$caseId);
-		$this->set('casePaymentId',$casePaymentId);
+		return $caseData;
 	}
 
 	public function getLawyerId()
@@ -301,9 +427,9 @@ class CasesController extends AppController
 		return $this->Session->read('UserInfo.lawyer_id');
 	}
 
-	private function setFlashCaeUpdated($data)
+	private function setFlashCaseUpdated($data)
 	{
-		$formBtn = $data['ClientCase']['submit'];
+		$formBtn = $data['submit'];
 		if($formBtn!='next') {
 
 			$this->Session->setFlash('<span class="setFlash success">Case updated successfully.</span>');
@@ -318,5 +444,39 @@ class CasesController extends AppController
 		}
 
 		return $data;
+	}
+
+	public function deletePayment($caseId, $casePaymentId)
+	{
+		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
+		$this->loadModel('CasePayment');
+
+		$result = array('status' => 'error', 'message' => 'Invalid Request');
+		if ($this->request->data) {
+
+			$casePayment = $this->CasePayment->find('first',
+					array('conditions' => array(
+						'id' => $casePaymentId,
+						'client_case_id' => $caseId
+					)
+				)
+			);
+
+			if(!empty($casePayment)) {
+
+				$this->CasePayment->delete($casePayment['CasePayment']['id']);
+
+				$this->ClientCase->contain('CasePayment');
+				$caseDetails = $this->ClientCase->read(null, $caseId);
+				$caseData = $this->getPaymentStatus($caseDetails);
+				$this->ClientCase->updateAll($caseData, array('ClientCase.id'=> $caseId));
+
+				$result = array('status' => 'success');
+			}
+		}
+
+		echo json_encode($result);
+		exit;
 	}
 }

@@ -93,6 +93,126 @@ $(document).ready(function(){
 
         return false;
     });
+
+    $("body").on('click', '.saveCasePayments', function() {
+
+        paymentUpdated();
+
+        var btnClicked = $(this).val();
+        $("#casePaymentsHiddenSubmit").val(btnClicked);
+
+        $.ajax({
+            url: $('#casePayments').attr('action'),
+            type: "POST",
+            data: $('#casePayments').serialize(),
+            dataType:'json',
+            success: function(data) {
+
+                var nextPage = 'remarks';
+                processAfterSaveResponse(data, btnClicked, nextPage);
+            }
+        });
+
+        return false;
+    });
+
+    $("body").on('click', '.deletePayment', function() {
+
+        if (confirm('Are you sure you want to delete this payment?')) {
+            var deleteAction = $(this).attr('id');
+            $.ajax({
+                url: deleteAction,
+                type: "POST",
+                data: { 'action' : 'delete'},
+                dataType:'json',
+                success: function(data) {
+
+                    if(data.status == 'success') {
+
+                        var nextPage = 'feesInformation';
+                        showEditPage(nextPage);
+                    }
+                }
+            });
+        }
+
+        return false;
+    });
+
+    $("body").on('click', '.editCasePayment', function() {
+
+        var pageTitle = $(this).attr('pageTitle');
+        var pageName = $(this).attr('pageName');
+        $.ajax({
+            type: "POST",
+            url: pageName,
+            data: false,
+            beforeSend: function( xhr ) {
+                showLoading();
+            },
+            success: function(data) {
+
+                hideLoading();
+                $('#projectModal .modal-title').html(pageTitle);
+                $('#projectModal .modal-body').html(data);
+                $('#projectModal').modal('show');
+            }
+        });
+    });
+
+    $("body").on('click', '.updateCasePayment', function() {
+
+        paymentUpdated();
+
+        $.ajax({
+            url: $('#editCasePayments').attr('action'),
+            type: "POST",
+            data: $('#editCasePayments').serialize(),
+            dataType:'json',
+            success: function(data) {
+
+                $('.editBasicDetailsError').hide();
+                if(data.status=='error') {
+
+                    $.each(data.message, function (i, v) {
+
+                        if($('#edit_error_'+i).length > 0) {
+
+                            $('#edit_error_'+i).html(v);
+                            $('#edit_error_'+i).show();
+                        }
+                    });
+                } else if(data.status == 'success') {
+
+                    $('#projectModal').modal('hide');
+                    var nextPage = 'feesInformation';
+                    showEditPage(nextPage);
+                }
+            }
+        });
+
+        return false;
+    });
+
+    $("body").on('click', '.saveRemarks', function() {
+
+        var btnClicked = $(this).val();
+        $("#remarksHiddenSubmit").val(btnClicked);
+
+        $.ajax({
+            url: $('#editRemarks').attr('action'),
+            type: "POST",
+            data: $('#editRemarks').serialize(),
+            dataType:'json',
+            success: function(data) {
+
+                var nextPage = $('#fifthStep').html();
+                processAfterSaveResponse(data, btnClicked, nextPage);
+            }
+        });
+
+        return false;
+    });
 });
 
 function processAfterSaveResponse(data, btnClicked, nextPage)
