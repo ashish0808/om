@@ -19,7 +19,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Case Title:</b> </label>
 										<div class="col-sm-8">
 											<?php
-											echo strtoupper($Dispatch['ClientCase']['case_title']);
+											echo !empty($Dispatch['ClientCase']['case_title']) ? strtoupper($Dispatch['ClientCase']['case_title']) : 'Not Available';
 											?>
 										</div>
 									</div>
@@ -31,7 +31,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Computer File No:</b> </label>
 										<div class="col-sm-8">
 											<?php
-											echo $Dispatch['ClientCase']['computer_file_no'];
+											echo !empty($Dispatch['ClientCase']['computer_file_no']) ? $Dispatch['ClientCase']['computer_file_no'] : 'Not Available';
 											?>
 										</div>
 									</div>

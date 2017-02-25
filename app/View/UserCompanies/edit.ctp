@@ -5,15 +5,15 @@
 				<?php echo $pageTitle; ?>
 			</h1>
 		</div>
-		<?php echo $this->Form->create('CaseCivilMisc', array('type'=>'file', 'url' => '/CaseCivilMiscs/add/', 'class' => 'form-horizontal', 'name' => 'add', 'id' => 'add')); ?>
+		<?php echo $this->Form->create('UserCompany', array('type'=>'file', 'url' => '/UserCompanies/edit/'.$id, 'class' => 'form-horizontal', 'name' => 'edit', 'id' => 'edit')); ?>
 		<div class="col-sm-12 col-xs-12">
 			<div class="widget-box">
 				<div class="widget-header">
-					<h4 class="widget-title">CM/CRM Details</h4>
+					<h4 class="widget-title">Update Todo Details</h4>
 				</div>
 				<div class="widget-body">
 					<div class="widget-main">
-						<?php echo $this->element('CaseCivilMiscs/add_edit');?>
+						<?php echo $this->element('UserCompanies/add_edit');?>
 					</div>
 				</div>
 			</div>

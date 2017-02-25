@@ -103,10 +103,10 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Case Title
 						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							CM/CRM No
 						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Type', array());?>
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
@@ -131,13 +131,13 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
 						<td class=""><?php echo $this->Time->format('F j, Y',$record['CaseCivilMisc']['application_date']); ?></td>
 						<td class=" ">
-						<?php 
+						<?php
 						if ($record['CaseCivilMisc']['status'] == 'pending') { ?>
-							<div class="label label-warning arrowed-in arrowed-in-right">
+							<div class="label label-lg label-yellow arrowed-in arrowed-in-right">
 							<?php
 						} else {
 						?>
-							<div class="label label-success arrowed-in arrowed-in-right">
+							<div class="label label-lg label-success arrowed-in arrowed-in-right">
 						<?php
 						}
 						echo strtoupper($record['CaseCivilMisc']['status']);
