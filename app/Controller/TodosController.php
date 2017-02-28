@@ -104,6 +104,7 @@ class TodosController extends AppController
                 if ($this->Todo->validates()) {
                     if ($this->Todo->save($this->request->data)) {
                         $this->Flash->success(__('The Todo has been saved.'));
+
                         return $this->redirect(array('action' => 'index'));
                     } else {
                         $this->Flash->error(__('The Todo could not be saved. Please, try again.'));
@@ -200,7 +201,7 @@ class TodosController extends AppController
     }
 
     /**
-     * view the details of the given application ID.
+     * view the details of the given Todo ID.
      *
      * @param string $id
      */
@@ -219,13 +220,46 @@ class TodosController extends AppController
         }
     }
 
+    /**
+     * Change status of given todo ID like Mark complete or Reopen.
+     *
+     * @param string $id
+     */
+    public function changeStatus($id = null)
+    {
+        $TodoData = $this->Todo->find('first', array('contain' => array('ClientCase'), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'Todo.id' => $id)));
+        if (!empty($TodoData)) {            
+            if ($TodoData['Todo']['status'] == 'pending') {
+                $this->request->data['Todo']['status'] = 'completed';
+            } else {
+                $this->request->data['Todo']['status'] = 'pending';
+            }
+            $this->request->data['Todo']['title'] = $TodoData['Todo']['title'];
+            $this->request->data['Todo']['priority'] = $TodoData['Todo']['priority'];
+            $this->request->data['Todo']['completion_date'] = $TodoData['Todo']['completion_date'];
+            
+            $this->Todo->id = $id;
+            if ($this->Todo->save($this->request->data)) {
+                $this->Flash->success(__('The Todo has been updated.'));
+                $this->redirect(Router::url($this->referer(), true));
+            } else {
+                $this->Flash->error(__('The Todo could not be updated. Please, try again.'));
+                $this->redirect(Router::url($this->referer(), true));
+            }
+        } else {
+            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
+            $this->redirect(Router::url($this->referer(), true));
+        }
+    }
+
     public function checkList()
     {
         # code...
         // If attachment has been given upload it to aws S3
         if (!empty($this->request->data['Todo']['attachment']['name'])) {
             $str = file_get_contents($this->request->data['Todo']['attachment']['tmp_name']);
-            pr($str);die;
+            pr($str);
+            die;
         }
     }
 }

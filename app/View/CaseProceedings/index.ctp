@@ -80,7 +80,7 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
                             array("class"=>"btn btn-sm","escape"=>false,
                                 "type"=>"reset", "div" => false));
                         echo $this->Form->end();
-						echo $this->Js->writeBuffer();
+                        echo $this->Js->writeBuffer();
 						?>
                     </div>
                 </div>
@@ -147,12 +147,12 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 				<tbody role="alert" aria-live="polite" aria-relevant="all">
 				<?php $i = 1;
 				if (!empty($CaseProceedings)) {
-					foreach ($CaseProceedings as $record) { 
+					foreach ($CaseProceedings as $record) {
 						$this->request->data = $record;
 						?>
 					<?php echo $this->Form->create('CaseProceeding', array('url' => '/CaseProceedings/', 'id'=>'CaseProceedingUpdateForm','name'=>'CaseProceedingUpdateForm', 'class' => 'form-horizontal', 'name' => 'edit', 'id' => 'edit')); 
 						echo $this->Form->hidden('CaseProceeding.id');
-						echo $this->Form->hidden('ClientCase.id');
+						echo $this->Form->hidden('CaseProceeding.client_case_id');
 						echo $this->Form->hidden('CaseProceeding.search_date', array('value' => $date));
 					?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
@@ -194,7 +194,7 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 						<?php
 						$caseStatus = array('pending' => 'Pending', 'decided' => 'Decided', 'admitted' => 'Admitted', 'reserved' => 'Reserved');
 						if ($record['CaseProceeding']['proceeding_status'] == 'pending') {
-							echo $this->Form->input('ClientCase.status', array('options' => $caseStatus, 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
+							echo $this->Form->input('ClientCase.case_status', array('options' => $caseStatus, 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
 						} else {
 							echo strtoupper($record['CaseProceeding']['case_status']);
 						}
@@ -249,6 +249,7 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 						</td>
 					</tr>
 					<?php echo $this->Form->end(); ?>
+					<?php echo $this->Js->writeBuffer(); ?>
 					<?php
 						$i++;
 					}
@@ -299,11 +300,14 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Completion Date
 						</th>
-						<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Priority
 						</th>
-						<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Status
+						</th>
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Action
 						</th>
 					</tr>
 				</thead>
@@ -339,7 +343,8 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 						</td>
 						<td class=" ">
 							<?php
-							if ($record['Todo']['status'] == 'pending') { ?>
+							if ($record['Todo']['status'] == 'pending') {
+							?>
 								<div class="label label-lg label-yellow arrowed-in arrowed-in-right">
 								<?php
 							} else {
@@ -348,6 +353,15 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 							<?php
 							}
 							echo strtoupper($record['Todo']['status']);
+							?>
+						</td>
+						<td class=" ">
+							<?php
+							if ($record['Todo']['status'] == 'pending') {
+								echo $this->Html->link('<i class="icon-ok bigger-110"></i> Mark Complete', array('controller'=>'Todos','action'=>'changeStatus',$record['Todo']['id']), array('escape' => false, 'class' => 'btn btn-primary'));
+							} else {
+								echo $this->Html->link('<i class="icon-ok bigger-110"></i> Reopen', array('controller'=>'Todos','action'=>'changeStatus',$record['Todo']['id']), array('escape' => false, 'class' => 'btn btn-primary'));
+							}
 							?>
 						</td>
 					</tr>
@@ -377,9 +391,6 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
         
 	</div>
 </div>
-<script type="text/javascript">
-	$('[data-rel=tooltip]').tooltip();
-</script>
 <script type="text/javascript">
 	$('[data-rel=tooltip]').tooltip();
 </script>
