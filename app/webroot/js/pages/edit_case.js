@@ -252,6 +252,37 @@ $(document).ready(function(){
 
         return false;
     });
+
+    $("body").on('click', '.saveCaseRegistration', function() {
+
+        $.ajax({
+            url: $('#caseRegistrationForm').attr('action'),
+            type: "POST",
+            data: $('#caseRegistrationForm').serialize(),
+            dataType:'json',
+            success: function(data) {
+
+                $('.editBasicDetailsError').hide();
+                if(data.status=='error') {
+
+                    $.each(data.message, function (i, v) {
+
+                        if($('#register_error_'+i).length > 0) {
+
+                            $('#register_error_'+i).html(v);
+                            $('#register_error_'+i).show();
+                        }
+                    });
+                } else if(data.status == 'success') {
+
+                    var nextPage = $('#fifthStep').html();
+                    showEditPage(nextPage);
+                }
+            }
+        });
+
+        return false;
+    });
 });
 
 function ajaxFileUpload() {

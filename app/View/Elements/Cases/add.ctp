@@ -120,8 +120,18 @@
 			<div class="col-sm-12 col-xs-12">
 				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequired required">*</span> Date Fixed: </label>
 				<div class="col-sm-8">
+					<?php if(empty($caseDetails['CaseProceeding'])) { ?>
 					<?php echo $this->Form->input('ClientCase.date_fixed', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
 					<div class="error-message editBasicDetailsError clear" id="error_date_fixed"></div>
+					<?php } else {
+					$lastHearing = 'NA';
+					if(isset($pendingProceeding['CaseProceeding']) && !empty($pendingProceeding['CaseProceeding'])) {
+
+						$lastHearing = $pendingProceeding['CaseProceeding']['date_of_hearing'];
+					}
+					?>
+						<input class="col-sm-12 col-xs-12" disabled="disabled" value="<?php echo $lastHearing; ?>" type="text">
+					<?php } ?>
 				</div>
 			</div>
 		</div>
@@ -131,7 +141,12 @@
 			<div class="col-sm-12 col-xs-12">
 				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequiredAppellant required">*</span> Limitation Expires On: </label>
 				<div class="col-sm-8">
-					<?php echo $this->Form->input('ClientCase.limitation_expires_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
+					<?php
+					if(empty($this->request->data['ClientCase']['limitation_expires_on'])) {
+
+						$this->request->data['ClientCase']['limitation_expires_on'] = date('Y-m-d', strtotime(' + 40 days'));
+					}
+					echo $this->Form->input('ClientCase.limitation_expires_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
 					<div class="error-message editBasicDetailsError clear" id="error_limitation_expires_on"></div>
 				</div>
 			</div>

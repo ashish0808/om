@@ -25,4 +25,20 @@ class CaseStatus extends AppModel {
 			),
 		),
 	);
+
+	public $hasMany = array(
+		'ClientCase' => array(
+			'className' => 'ClientCase',
+			'foreignKey' => 'case_status',
+			'dependent' => false,
+			'conditions' => '',
+			'fields' => '',
+			'order' => '',
+			'limit' => '',
+			'offset' => '',
+			'exclusive' => '',
+			'finderQuery' => '',
+			'counterQuery' => ''
+		)
+	);
 }

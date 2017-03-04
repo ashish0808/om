@@ -108,6 +108,9 @@ class CasesController extends AppController
 
 					$caseId = $this->ClientCase->getLastInsertId();
 
+					$data['id'] = $caseId;
+					$this->addCaseProceeding($data);
+
 					$this->Session->setFlash(CASE_INFORMATION_ADDED);
 					$this->redirect(array('controller' => 'cases', 'action' => 'edit', $caseId));
 				}
@@ -140,7 +143,7 @@ class CasesController extends AppController
 
 		$this->loadModel('ClientCase');
 
-		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling');
+		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling', 'CaseStatus', 'CaseProceeding');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 
 		$this->request->data['ClientCase'] = $caseDetails['ClientCase'];
@@ -178,6 +181,16 @@ class CasesController extends AppController
 			$defaultCollapseIn = $_REQUEST['defaultCollapseIn'];
 		}
 
+		$this->loadModel('CaseProceeding');
+		$this->set("pendingProceeding", $this->CaseProceeding->find('first', array(
+			'conditions' => array(
+				'client_case_id' => $caseId,
+				'proceeding_status' => 'pending'
+			),
+			'fields' => array('date_of_hearing'),
+			'order' => 'date_of_hearing DESC'
+		)));
+
 		$this->set("defaultCollapseIn", $defaultCollapseIn);
 	}
 
@@ -186,6 +199,7 @@ class CasesController extends AppController
 		$this->layout = 'ajax';
 		$this->loadModel('ClientCase');
 
+		$this->ClientCase->contain('CaseProceeding');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 
 		$this->loadModel('ClientCase');
@@ -207,6 +221,11 @@ class CasesController extends AppController
 				}
 
 				if ($this->ClientCase->save($data)) {
+
+					if(empty($caseDetails['CaseProceeding'])) {
+
+						$this->addCaseProceeding($data);
+					}
 
 					$this->setFlashCaseUpdated($this->request->data['ClientCase']);
 					$result = array('status' => 'success');
@@ -563,7 +582,6 @@ class CasesController extends AppController
 
 		if ($this->request->data) {
 
-			$result = array('status' => 'error');
 			$this->CaseFiling->set($this->request->data);
 			if ($this->CaseFiling->validates()) {
 
@@ -584,5 +602,71 @@ class CasesController extends AppController
 
 		$this->set("caseId", $caseId);
 		$this->set("caseFilingId", $caseFilingId);
+	}
+
+	public function caseRegistration($caseId)
+	{
+		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
+
+		$result = array('status' => 'error', 'message' => 'Unable to process data');
+
+		if ($this->request->data) {
+
+			$this->ClientCase->set($this->request->data);
+			$this->ClientCase->validate = $this->ClientCase->validateCaseRegistration;
+
+			if ($this->ClientCase->validate) {
+
+				$data = $this->request->data['ClientCase'];
+				$data['id'] = $caseId;
+
+
+				$this->ClientCases = $this->Components->load('ClientCases');
+
+				$case_status_val = 'pending_for_refiling';
+				if(!empty($data['is_registered'])) {
+
+					$case_status_val = 'pending';
+				}
+
+				$case_status_id = $this->ClientCases->updateCaseStatus($case_status_val);
+				$data['case_status'] = $case_status_id;
+
+				if ($this->ClientCase->save($data)) {
+
+					if(!empty($data['is_registered'])) {
+
+						$this->addCaseProceeding($data);
+					}
+
+					$result = array('status' => 'success');
+				} else {
+
+					$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
+				}
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
+			}
+		}
+
+		echo json_encode($result);
+		exit;
+	}
+
+	public function addCaseProceeding($data)
+	{
+		if(!empty($data['id']) && !empty($data['case_number']) && !empty($data['date_fixed'])) {
+
+			$this->loadModel('CaseProceeding');
+
+			$saveData = array(
+				'date_of_hearing' => $data['date_fixed'],
+				'client_case_id' => $data['id']
+			);
+
+			$this->CaseProceeding->save($saveData);
+		}
 	}
 }
