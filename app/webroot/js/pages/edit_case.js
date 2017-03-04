@@ -139,7 +139,7 @@ $(document).ready(function(){
         return false;
     });
 
-    $("body").on('click', '.editCasePayment', function() {
+    $("body").on('click', '.editCasePayment, .editCaseFiling', function() {
 
         var pageTitle = $(this).attr('pageTitle');
         var pageName = $(this).attr('pageName');
@@ -213,7 +213,88 @@ $(document).ready(function(){
 
         return false;
     });
+
+    $("body").on('click', '.saveCaseFiling', function() {
+
+        ajaxFileUpload();
+
+        return false;
+    });
+
+    $("body").on('click', '.updateCaseFiling', function() {
+
+        $.ajax({
+            url: $('#editCaseFilingForm').attr('action'),
+            type: "POST",
+            data: $('#editCaseFilingForm').serialize(),
+            dataType:'json',
+            success: function(data) {
+
+                $('.editBasicDetailsError').hide();
+                if(data.status=='error') {
+
+                    $.each(data.message, function (i, v) {
+
+                        if($('#edit_error_'+i).length > 0) {
+
+                            $('#edit_error_'+i).html(v);
+                            $('#edit_error_'+i).show();
+                        }
+                    });
+                } else if(data.status == 'success') {
+
+                    $('#projectModal').modal('hide');
+                    var nextPage = $('#fifthStep').html();
+                    showEditPage(nextPage);
+                }
+            }
+        });
+
+        return false;
+    });
 });
+
+function ajaxFileUpload() {
+
+    var file_data = $("#ClientCaseMainFile").prop("files")[0];
+    var form_data = new FormData();
+
+    form_data.append("data[CaseFiling][filing_date]", $("#CaseFilingFilingDate").val());
+    form_data.append("data[CaseFiling][filing_type]", $("#CaseFilingFilingType").val());
+    form_data.append("data[CaseFiling][filing_no]", $("#CaseFilingFilingNo").val());
+    form_data.append("file", file_data);
+
+    $.ajax({
+        url: $('#caseFilingForm').attr('action'),
+        dataType:'json',
+        cache:false,
+        contentType: false,
+        processData: false,
+        data: form_data,
+        type: "POST",
+        success: function(data) {
+
+            $('.editBasicDetailsError').hide();
+            if(data.status=='error') {
+
+                $.each(data.message, function (i, v) {
+
+                    if($('#error_'+i).length > 0) {
+
+                        $('#error_'+i).html(v);
+                        $('#error_'+i).show();
+                    }
+                });
+            } else if(data.status == 'success') {
+
+                var nextPage = $('#fifthStep').html();
+                showEditPage(nextPage);
+            }
+        }
+    });
+
+    return false;
+}
 
 function processAfterSaveResponse(data, btnClicked, nextPage)
 {

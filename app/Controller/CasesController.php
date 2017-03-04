@@ -140,7 +140,7 @@ class CasesController extends AppController
 
 		$this->loadModel('ClientCase');
 
-		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod');
+		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 
 		$this->request->data['ClientCase'] = $caseDetails['ClientCase'];
@@ -478,5 +478,89 @@ class CasesController extends AppController
 
 		echo json_encode($result);
 		exit;
+	}
+
+	public function addCaseFiling($caseId)
+	{
+		$this->layout = 'ajax';
+		$this->loadModel('CaseFiling');
+
+		if ($this->request->data) {
+
+			$this->CaseFiling->set($this->request->data);
+
+			if ($this->CaseFiling->validates()) {
+
+				$result = array('status' => 'success');
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->CaseFiling->validationErrors);
+			}
+
+			if (isset($_FILES['file']) && $_FILES['file']['error'] > 0) {
+
+				$result = array('status' => 'error', 'message' => array(
+					'main_file' => array($_FILES['file']['error'])
+				));
+			}
+
+			if($result['status'] == 'success') {
+
+				$data = $this->request->data['CaseFiling'];
+				$data['client_case_id'] = $caseId;
+				$this->CaseFiling->save($data);
+
+				$sourceFile = $_FILES['file']['tmp_name'];
+				$fileKey = time().'-'.$this->Session->read('UserInfo.uid').'-'.$_FILES['file']['name'];
+				// Upload file to S3
+				$this->Aws->upload($sourceFile, $fileKey);
+
+				$this->loadModel('ClientCase');
+				$caseDetails = $this->ClientCase->read(null, $caseId);
+
+				if(!empty($caseDetails['ClientCase']['main_file'])) {
+
+					// Delete previous attached file
+					$this->Aws->delete($caseDetails['ClientCase']['main_file']);
+				}
+
+				$newFileName = $_FILES['file']['name'];
+				$this->ClientCase->updateAll(array('case_status' => 1, 'main_file' => "'$fileKey'"), array('ClientCase.id'=> $caseId));
+			}
+		}
+
+		echo json_encode($result);
+		exit;
+	}
+
+	public function editCaseFiling($caseId, $caseFilingId)
+	{
+		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
+		$this->loadModel('CaseFiling');
+
+		if ($this->request->data) {
+
+			$result = array('status' => 'error');
+			$this->CaseFiling->set($this->request->data);
+			if ($this->CaseFiling->validates()) {
+
+				$data = $this->request->data['CaseFiling'];
+				$this->CaseFiling->save($data);
+				$result = array('status' => 'success');
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->CaseFiling->validationErrors);
+			}
+
+			echo json_encode($result);
+			exit;
+		}
+
+		$caseDetails = $this->CaseFiling->read(null, $caseFilingId);
+		$this->request->data['CaseFiling'] = $caseDetails['CaseFiling'];
+
+		$this->set("caseId", $caseId);
+		$this->set("caseFilingId", $caseFilingId);
 	}
 }

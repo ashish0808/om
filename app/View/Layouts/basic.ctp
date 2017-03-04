@@ -120,8 +120,8 @@
 				<div class="modal-body">
 
 				</div> <!-- / .modal-body -->
-				<div class="modal-footer">
-				</div>
+				<!--<div class="modal-footer">
+				</div>-->
 			</div> <!-- / .modal-content -->
 		</div> <!-- / .modal-dialog -->
 	</div>

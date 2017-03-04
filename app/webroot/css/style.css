@@ -53,3 +53,8 @@
     position:fixed;
     z-index:1183;
 }
+
+.edit-case-cnt {
+    border: solid 1px !important;
+    border-color: #c5d0dc !important;
+}

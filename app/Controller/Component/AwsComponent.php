@@ -20,8 +20,8 @@ class AwsComponent extends Component
     {
         $this->s3 = S3Client::factory(array(
             'credentials' => array(
-                'key' => '',
-                'secret'  => '',
+                'key' => 'AKIAJKLDUWR6YGWSVRXQ',
+                'secret'  => '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',
             ),
             'region' => 'ap-south-1',
             'version' => 'latest',
