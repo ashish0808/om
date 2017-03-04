@@ -1,14 +1,22 @@
 function changeClientType(client_type)
 {
-    if(client_type == 'petitioner') {
+    $('.customRequiredAppellant').each(function() {
+        $(this).addClass('hide');
+    });
+
+    $('.customRequired').each(function() {
+        $(this).addClass('hide');
+    });
+
+    if(client_type == 'respondent') {
 
         $('.customRequired').each(function() {
             $(this).removeClass('hide');
         });
-    } else {
+    } else if(client_type == 'petitioner') {
 
-        $('.customRequired').each(function() {
-            $(this).addClass('hide');
+        $('.customRequiredAppellant').each(function() {
+            $(this).removeClass('hide');
         });
     }
 }

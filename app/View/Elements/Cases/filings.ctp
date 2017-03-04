@@ -37,6 +37,10 @@
 	</div>
 </div>
 
+<?php
+
+if(empty($caseDetails['CaseStatus']['status']) ||
+(!empty($caseDetails['CaseStatus']['status']) && in_array($caseDetails['CaseStatus']['status'], array('pending_for_filing', 'pending_for_refiling')))) { ?>
 <?php echo $this->Form->create('CaseFiling', array('type'=>'file', 'url' => '/cases/addCaseFiling/'.$caseId, 'class' => 'form-horizontal', 'name' => 'caseFilingForm', 'id' => 'caseFilingForm', 'novalidate' => true)); ?>
 
 <div class="">
@@ -87,3 +91,10 @@
 	</div>
 </div>
 <?php echo $this->Form->end(); ?>
+<?php }elseif(!empty($caseDetails['CaseStatus']['status']) && $caseDetails['CaseStatus']['status']=='pending_for_registration'){ ?>
+<?php echo $this->Form->create('CaseFiling', array('type'=>'file', 'url' => '/cases/caseRegistration/'.$caseId, 'class' => 'form-horizontal', 'name' => 'caseFilingForm', 'id' => 'caseFilingForm', 'novalidate' => true)); ?>
+
+
+
+<?php echo $this->Form->end(); ?>
+<?php } ?>

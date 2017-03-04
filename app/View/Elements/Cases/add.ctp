@@ -56,7 +56,7 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequired required">*</span> Case Type: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Case Type: </label>
 				<div class="col-sm-8">
 					<?php
 					echo $this->Form->input('ClientCase.case_type_id', array('options' => $caseTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
@@ -118,7 +118,31 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequired required">*</span> Court: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequired required">*</span> Date Fixed: </label>
+				<div class="col-sm-8">
+					<?php echo $this->Form->input('ClientCase.date_fixed', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
+					<div class="error-message editBasicDetailsError clear" id="error_date_fixed"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-sm-6">
+		<div class="form-group">
+			<div class="col-sm-12 col-xs-12">
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequiredAppellant required">*</span> Limitation Expires On: </label>
+				<div class="col-sm-8">
+					<?php echo $this->Form->input('ClientCase.limitation_expires_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
+					<div class="error-message editBasicDetailsError clear" id="error_limitation_expires_on"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<div class="col-sm-12 col-xs-12">
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Court: </label>
 				<div class="col-sm-8">
 					<?php
 					echo $this->Form->input('ClientCase.court_id', array('options' => $courts, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
@@ -130,10 +154,22 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Presiding Officer: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Presiding Officer: </label>
 				<div class="col-sm-8">
 					<?php echo $this->Form->input('ClientCase.presiding_officer', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
 					<div class="error-message editBasicDetailsError clear" id="error_presiding_officer"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<div class="col-sm-12 col-xs-12">
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Engaged On: </label>
+				<div class="col-sm-8">
+					<?php echo $this->Form->input('ClientCase.engaged_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
 				</div>
 			</div>
 		</div>

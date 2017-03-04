@@ -186,6 +186,10 @@ class CasesController extends AppController
 		$this->layout = 'ajax';
 		$this->loadModel('ClientCase');
 
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+
+		$this->loadModel('ClientCase');
+
 		$result = array('status' => 'error', 'message' => 'Unable to process data');
 		if ($this->request->data) {
 
@@ -193,7 +197,14 @@ class CasesController extends AppController
 			if ($this->ClientCase->validates()) {
 
 				$this->ClientCases = $this->Components->load('ClientCases');
+
+				$this->request->data['ClientCase']['user_id'] = $this->getLawyerId();
 				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase']);
+
+				if($caseDetails['ClientCase']['completed_step'] > 1) {
+
+					$data['completed_step'] = $caseDetails['ClientCase']['completed_step'];
+				}
 
 				if ($this->ClientCase->save($data)) {
 
@@ -401,10 +412,19 @@ class CasesController extends AppController
 				$feeSettled = $caseData['fee_settled'];
 			}
 
+			$nonVerifiedPayment = 0;
 			foreach($caseDetails['CasePayment'] as $casePayment) {
 
 				$amount_paid = $amount_paid+$casePayment['amount'];
+
+				if($casePayment['is_verified']!=1) {
+
+					$nonVerifiedPayment = $nonVerifiedPayment+$casePayment['amount'];
+				}
 			}
+
+			$caseData['ClientCase.payment_received'] = $amount_paid;
+			$caseData['ClientCase.non_verified_payment'] = $nonVerifiedPayment;
 
 			if(!empty($amount_paid)) {
 
@@ -524,8 +544,10 @@ class CasesController extends AppController
 					$this->Aws->delete($caseDetails['ClientCase']['main_file']);
 				}
 
-				$newFileName = $_FILES['file']['name'];
-				$this->ClientCase->updateAll(array('case_status' => 1, 'main_file' => "'$fileKey'"), array('ClientCase.id'=> $caseId));
+				$this->ClientCases = $this->Components->load('ClientCases');
+				$case_status = $this->ClientCases->updateCaseStatus('pending_for_registration');
+
+				$this->ClientCase->updateAll(array('case_status' => $case_status, 'main_file' => "'$fileKey'"), array('ClientCase.id'=> $caseId));
 			}
 		}
 
