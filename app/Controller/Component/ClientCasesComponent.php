@@ -15,12 +15,41 @@ class ClientCasesComponent extends Component
 
 		$data['complete_case_number'] = $this->generateCaseNumber($data);
 
+
+		$caseStatus = "pending_for_filing";
+		if(!empty($data['date_fixed'])) {
+
+			$caseStatus = "pending";
+		}
+
+		$data['case_status'] = $this->updateCaseStatus($caseStatus);
+
 		if($data['submit']=='saveIncomplete') {
 
 			$data['saved_incomplete'] = 1;
 		}
 
 		return $data;
+	}
+
+	public function updateCaseStatus($caseStatus)
+	{
+		App::import('Model','CaseStatus');
+		$caseStatusObj = & new CaseStatus();
+
+		$caseStatusData = $caseStatusObj->find('first', array(
+			'conditions' => array(
+				'status' => $caseStatus
+			),
+			'fields' => array('id')
+		));
+
+		if(!empty($caseStatusData['CaseStatus']['id'])) {
+
+			return $caseStatusData['CaseStatus']['id'];
+		}
+
+		return 0;
 	}
 
 	public function generateCaseNumber($data)

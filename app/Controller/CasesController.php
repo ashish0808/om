@@ -140,7 +140,7 @@ class CasesController extends AppController
 
 		$this->loadModel('ClientCase');
 
-		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod');
+		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 
 		$this->request->data['ClientCase'] = $caseDetails['ClientCase'];
@@ -186,6 +186,10 @@ class CasesController extends AppController
 		$this->layout = 'ajax';
 		$this->loadModel('ClientCase');
 
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+
+		$this->loadModel('ClientCase');
+
 		$result = array('status' => 'error', 'message' => 'Unable to process data');
 		if ($this->request->data) {
 
@@ -193,7 +197,14 @@ class CasesController extends AppController
 			if ($this->ClientCase->validates()) {
 
 				$this->ClientCases = $this->Components->load('ClientCases');
+
+				$this->request->data['ClientCase']['user_id'] = $this->getLawyerId();
 				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase']);
+
+				if($caseDetails['ClientCase']['completed_step'] > 1) {
+
+					$data['completed_step'] = $caseDetails['ClientCase']['completed_step'];
+				}
 
 				if ($this->ClientCase->save($data)) {
 
@@ -401,10 +412,19 @@ class CasesController extends AppController
 				$feeSettled = $caseData['fee_settled'];
 			}
 
+			$nonVerifiedPayment = 0;
 			foreach($caseDetails['CasePayment'] as $casePayment) {
 
 				$amount_paid = $amount_paid+$casePayment['amount'];
+
+				if($casePayment['is_verified']!=1) {
+
+					$nonVerifiedPayment = $nonVerifiedPayment+$casePayment['amount'];
+				}
 			}
+
+			$caseData['ClientCase.payment_received'] = $amount_paid;
+			$caseData['ClientCase.non_verified_payment'] = $nonVerifiedPayment;
 
 			if(!empty($amount_paid)) {
 
@@ -478,5 +498,91 @@ class CasesController extends AppController
 
 		echo json_encode($result);
 		exit;
+	}
+
+	public function addCaseFiling($caseId)
+	{
+		$this->layout = 'ajax';
+		$this->loadModel('CaseFiling');
+
+		if ($this->request->data) {
+
+			$this->CaseFiling->set($this->request->data);
+
+			if ($this->CaseFiling->validates()) {
+
+				$result = array('status' => 'success');
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->CaseFiling->validationErrors);
+			}
+
+			if (isset($_FILES['file']) && $_FILES['file']['error'] > 0) {
+
+				$result = array('status' => 'error', 'message' => array(
+					'main_file' => array($_FILES['file']['error'])
+				));
+			}
+
+			if($result['status'] == 'success') {
+
+				$data = $this->request->data['CaseFiling'];
+				$data['client_case_id'] = $caseId;
+				$this->CaseFiling->save($data);
+
+				$sourceFile = $_FILES['file']['tmp_name'];
+				$fileKey = time().'-'.$this->Session->read('UserInfo.uid').'-'.$_FILES['file']['name'];
+				// Upload file to S3
+				$this->Aws->upload($sourceFile, $fileKey);
+
+				$this->loadModel('ClientCase');
+				$caseDetails = $this->ClientCase->read(null, $caseId);
+
+				if(!empty($caseDetails['ClientCase']['main_file'])) {
+
+					// Delete previous attached file
+					$this->Aws->delete($caseDetails['ClientCase']['main_file']);
+				}
+
+				$this->ClientCases = $this->Components->load('ClientCases');
+				$case_status = $this->ClientCases->updateCaseStatus('pending_for_registration');
+
+				$this->ClientCase->updateAll(array('case_status' => $case_status, 'main_file' => "'$fileKey'"), array('ClientCase.id'=> $caseId));
+			}
+		}
+
+		echo json_encode($result);
+		exit;
+	}
+
+	public function editCaseFiling($caseId, $caseFilingId)
+	{
+		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
+		$this->loadModel('CaseFiling');
+
+		if ($this->request->data) {
+
+			$result = array('status' => 'error');
+			$this->CaseFiling->set($this->request->data);
+			if ($this->CaseFiling->validates()) {
+
+				$data = $this->request->data['CaseFiling'];
+				$this->CaseFiling->save($data);
+				$result = array('status' => 'success');
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->CaseFiling->validationErrors);
+			}
+
+			echo json_encode($result);
+			exit;
+		}
+
+		$caseDetails = $this->CaseFiling->read(null, $caseFilingId);
+		$this->request->data['CaseFiling'] = $caseDetails['CaseFiling'];
+
+		$this->set("caseId", $caseId);
+		$this->set("caseFilingId", $caseFilingId);
 	}
 }

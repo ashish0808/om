@@ -7,10 +7,20 @@
 				<?php echo $pageTitle; ?>
 			</h1>
 		</div>
+		<div class="col-sm-12 widget-container-col ui-sortable">
+			<div class="widget-box transparent ui-sortable-handle">
+				<?php echo $this->element('Cases/top_menus');?>
 
-		<div class="col-sm-12 col-xs-12" id="editPage-cnt">
+				<div class="widget-body edit-case-cnt">
+					<div class="widget-main padding-12">
+						<div class="tab-content padding-4">
+							<div class="tab-pane active" id="editPage-cnt">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
-        <!-- /.col -->
     </div>
     <!-- /.row -->
 </div><!-- /.page-content -->

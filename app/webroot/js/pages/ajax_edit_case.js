@@ -1,4 +1,8 @@
 $(document).ready(function(){
+
+    var client_type = $("#ClientCaseClientType").val();
+    changeClientType(client_type)
+
     var partyType = $('#ClientCasePartyType').val();
     showPartTypeFields(partyType)
     $("body").on('change', '#ClientCasePartyType', function() {

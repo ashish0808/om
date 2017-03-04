@@ -12,7 +12,7 @@
 					<th>Is Verified</th>
 					<th>Remarks</th>
 					<th>Created</th>
-					<th></th>
+					<th>Actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -37,7 +37,11 @@
 								<?php echo $this->Html->link('<i class="icon-trash bigger-130"></i>', "javascript:void(0)", array('escape' => false, 'class' => 'blue deletePayment', 'id' => $deletePaymentLink.'/'.$case_payment['client_case_id'].'/'.$case_payment['id']))?>
 							</td>
 						</tr>
-				<?php } } ?>
+				<?php } } else { ?>
+					<tr>
+						<td colspan="6">No record found</td>
+					</tr>
+				<?php } ?>
 			</tbody>
 		</table>
 	</div>

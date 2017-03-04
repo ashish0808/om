@@ -55,7 +55,7 @@ class ClientCase extends AppModel {
 		),
 		'case_type_id' => array(
 			'ruleCaseType' => array(
-				'rule' => array('validateWithClientType', 'client_type'),
+				'rule' => 'notBlank',
 				'message' => 'Please select case type',
 			),
 		),
@@ -72,6 +72,7 @@ class ClientCase extends AppModel {
 			),
 			'rule2' => array(
 				'rule' => array('validateValidYear'),
+				'allowEmpty' => true,
 				'message' => 'Please enter valid year',
 			)
 		),
@@ -83,7 +84,7 @@ class ClientCase extends AppModel {
 		),
 		'court_id' => array(
 			'ruleName1' => array(
-				'rule' => array('validateWithClientType', 'client_type'),
+				'rule' => 'notBlank',
 				'message' => 'Please select court',
 			),
 		),
@@ -93,15 +94,17 @@ class ClientCase extends AppModel {
 				'message' => 'Please enter file number',
 			)
 		),
-		'presiding_officer' => array(
-			'notBlank' => array(
-				'rule' => array('notBlank'),
-				'message' => 'Please enter presiding officer name',
-				//'allowEmpty' => false,
-				//'required' => false,
-				//'last' => false, // Stop validation after this rule
-				//'on' => 'create', // Limit validation to 'create' or 'update' operations
-			),
+		'date_fixed' => array(
+			'rule1' => array(
+				'rule' => array('validateWithClientType', 'client_type'),
+				'message' => 'Please enter date fixed',
+			)
+		),
+		'limitation_expires_on' => array(
+			'rule1' => array(
+				'rule' => array('validateWithClientTypeAppellant', 'client_type'),
+				'message' => 'Please enter limitation expiry date',
+			)
 		),
 		'is_deleted' => array(
 			'boolean' => array(
@@ -304,6 +307,22 @@ class ClientCase extends AppModel {
 	);
 
 	public function validateWithClientType($field = array(), $compare_field = null)
+	{
+		foreach ($field as $key => $value) {
+
+			$v1 = trim($value);
+			$v2 = trim($this->data[$this->name][$compare_field]);
+
+			if($v2=='respondent' && empty($v1)) {
+
+				return false;
+			}
+
+			return true;
+		}
+	}
+
+	public function validateWithClientTypeAppellant($field = array(), $compare_field = null)
 	{
 		foreach ($field as $key => $value) {
 
