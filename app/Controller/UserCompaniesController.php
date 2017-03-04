@@ -31,8 +31,6 @@ class UserCompaniesController extends AppController
         $this->pageTitle = 'Manage Companies';
         $this->set('pageTitle', $this->pageTitle);
 
-        $fields = [];
-
         $records = $this->UserCompany->find('all', array('conditions' => array('user_id' => $this->Session->read('UserInfo.uid'))));
         // pr($records);die;
         $this->set('UserCompanies', $records);

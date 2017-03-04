@@ -71,6 +71,97 @@ $lawyersStatus = '';
 			</li>
         </ul>
     </li>
+    <?php
+    $caseCivilMiscMain = '';
+    $caseCivilMiscSub = '';
+    if($this->params['controller'] == 'CaseCivilMiscs')
+    {
+        $caseCivilMiscMain = 'open';
+        $caseCivilMiscSub = 'style="display:block;"';
+    }
+    ?>
+    <li class="<?php echo $caseCivilMiscMain; ?>">
+        <a href="#" class="dropdown-toggle">
+            <i class="icon-list"></i>
+            <span class="menu-text"> Case CM/CRM </span>
+            <b class="arrow icon-angle-down"></b>
+        </a>
+
+        <ul class="submenu" <?php echo $caseCivilMiscSub; ?>>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Manage ', array('controller'=>'CaseCivilMiscs','action'=>'index'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'CaseCivilMiscs','action'=>'add'), array('escape' => false))?>
+            </li>
+        </ul>
+    </li>
+    <?php
+    $caseDisptachMain = '';
+    $caseDisptachSub = '';
+    if($this->params['controller'] == 'Dispatches')
+    {
+        $caseDisptachMain = 'open';
+        $caseDisptachSub = 'style="display:block;"';
+    }
+    ?>
+    <li class="<?php echo $caseDisptachMain; ?>">
+        <a href="#" class="dropdown-toggle">
+            <i class="icon-list"></i>
+            <span class="menu-text"> Dispatches </span>
+            <b class="arrow icon-angle-down"></b>
+        </a>
+
+        <ul class="submenu" <?php echo $caseDisptachSub; ?>>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Manage ', array('controller'=>'Dispatches','action'=>'index'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'Dispatches','action'=>'add'), array('escape' => false))?>
+            </li>
+        </ul>
+    </li>
+    <?php
+    $todoMain = '';
+    $todoSub = '';
+    if($this->params['controller'] == 'Todos')
+    {
+        $todoMain = 'open';
+        $todoSub = 'style="display:block;"';
+    }
+    ?>
+    <li class="<?php echo $caseDisptachMain; ?>">
+        <a href="#" class="dropdown-toggle">
+            <i class="icon-list"></i>
+            <span class="menu-text"> Todos </span>
+            <b class="arrow icon-angle-down"></b>
+        </a>
+
+        <ul class="submenu" <?php echo $todoSub; ?>>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Manage ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'Todos','action'=>'add'), array('escape' => false))?>
+            </li>
+        </ul>
+    </li>
+    <?php
+    $caseProceedingMain = '';
+    if($this->params['controller'] == 'CaseProceedings')
+    {
+        $caseProceedingMain = 'active';
+    }
+    ?>
+    <li class="<?php echo $caseProceedingMain; ?>">
+        <?php echo $this->Html->link('<i class="icon-desktop"></i> Daily Dairy ', array('controller'=>'CaseProceedings','action'=>'index'), array('escape' => false))?>
+    </li>
+    <li class="<?php echo $caseDisptachMain; ?>">
+        <?php echo $this->Html->link('<i class="icon-desktop"></i> Change Password ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
+    </li>
+    <li class="<?php echo $caseDisptachMain; ?>">
+        <?php echo $this->Html->link('<i class="icon-desktop"></i> Logout ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
+    </li>
     <!--
     <li class="active">
         <a href="index.html">
