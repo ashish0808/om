@@ -192,7 +192,7 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 						</td>
 						<td class=" ">
 						<?php
-						$caseStatus = array('pending' => 'Pending', 'decided' => 'Decided', 'admitted' => 'Admitted', 'reserved' => 'Reserved');
+						$caseStatus = array('pending' => 'Pending', 'decided' => 'Decided', 'admitted' => 'Admitted', 'reserved' => 'Reserved', 'not_with_us' => 'Not with Us');
 						if ($record['CaseProceeding']['proceeding_status'] == 'pending') {
 							echo $this->Form->input('ClientCase.case_status', array('options' => $caseStatus, 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
 						} else {

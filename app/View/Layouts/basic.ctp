@@ -194,6 +194,7 @@
     echo $this->Html->script('jquery.bootstrap-duallistbox');
     echo $this->Html->script('jquery.raty');
     echo $this->Html->script('select2');
+    echo $this->Html->script('jquery.easypiechart.min');
     ?>
 </body>
 </html>
