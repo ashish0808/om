@@ -223,11 +223,23 @@ $(document).ready(function(){
 
     $("body").on('click', '.updateCaseFiling', function() {
 
+        var file_data = $("#EditClientCaseMainFile").prop("files")[0];
+        var form_data = new FormData();
+
+        form_data.append("data[CaseFiling][id]", $("#EditCaseFilingId").val());
+        form_data.append("data[CaseFiling][filing_date]", $("#EditCaseFilingFilingDate").val());
+        form_data.append("data[CaseFiling][filing_type]", $("#EditCaseFilingFilingType").val());
+        form_data.append("data[CaseFiling][filing_no]", $("#EditCaseFilingFilingNo").val());
+        form_data.append("file", file_data);
+
         $.ajax({
             url: $('#editCaseFilingForm').attr('action'),
-            type: "POST",
-            data: $('#editCaseFilingForm').serialize(),
             dataType:'json',
+            cache:false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: "POST",
             success: function(data) {
 
                 $('.editBasicDetailsError').hide();
@@ -278,6 +290,23 @@ $(document).ready(function(){
                     var nextPage = $('#fifthStep').html();
                     showEditPage(nextPage);
                 }
+            }
+        });
+
+        return false;
+    });
+
+    $("body").on('click', '.updateCaseEssentials', function() {
+
+        showLoading();
+        $.ajax({
+            url: $('#formEssentialWorks').attr('action'),
+            type: "POST",
+            data: $('#formEssentialWorks').serialize(),
+            dataType:'json',
+            success: function(data) {
+
+                hideLoading();
             }
         });
 

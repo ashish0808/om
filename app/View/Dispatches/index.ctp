@@ -115,7 +115,7 @@ echo $this->Form->create('Dispatch',array('url' => '/Dispatches/index','id'=>'Di
 							if (!empty($record['Dispatch']['attachment'])) {
 							?>
 							<a href="<?php echo $record['Dispatch']['attachment'];?>" target="_blank" 'class'='col-sm-12 col-xs-12'>Application Copy</a>
-							<?php 
+							<?php
 							} else {
 								echo "Not Available";
 							}

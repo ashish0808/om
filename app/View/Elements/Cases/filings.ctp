@@ -1,3 +1,12 @@
+<?php if (!empty($mainCaseFile)) { ?>
+<div class="row">
+	<div class="col-sm-12">
+		<div class="clearfix pull-right custom-form-actions">
+			<a href="<?php echo $mainCaseFile;?>" target="_blank" class='btn btn-info'>Main Case File</a>
+		</div>
+	</div>
+</div>
+<?php } ?>
 <?php $editFilingLink = $this->Html->url(array('controller' => 'Cases', 'action' => 'editCaseFiling')); ?>
 <div class="row" style="margin-left: -10px !important;">
 	<div class="case_filing_form_cnt col-xs-12" style="overflow-x: scroll;">
@@ -75,7 +84,7 @@ if(empty($caseDetails['CaseStatus']['status']) ||
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12" style="padding-left:40px;">
-				<label class="control-label no-padding-right" for="form-field-dob"> Upload File.: </label>
+				<label class="control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Upload Case File.: </label>
 				<?php echo $this->Form->input('ClientCase.main_file', array('label' => false, 'div' => false, 'type' => 'file', 'error' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
 				<div class="error-message editBasicDetailsError clear" id="error_main_file"></div>
 			</div>
