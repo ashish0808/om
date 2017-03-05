@@ -306,6 +306,33 @@ class ClientCase extends AppModel {
 		)
 	);
 
+	public $validateCaseRegistration = array(
+		'is_registered' => array(
+			'required' => array(
+				'rule' => 'notBlank',
+				'message' => 'Please select if registered or objection'
+			)
+		),
+		'case_number' => array(
+			'ruleCaseType' => array(
+				'rule' => array('validateWithRegistration', 'is_registered'),
+				'message' => 'Please enter case number',
+			),
+		),
+		'date_fixed' => array(
+			'ruleCaseType' => array(
+				'rule' => array('validateWithRegistration', 'is_registered'),
+				'message' => 'Please enter date fixed',
+			),
+		),
+		'limitation_expires_on' => array(
+			'ruleCaseNumber' => array(
+				'rule' => array('validateWithObjection', 'is_registered'),
+				'message' => 'Please enter limitation expiry date',
+			),
+		)
+	);
+
 	public function validateWithClientType($field = array(), $compare_field = null)
 	{
 		foreach ($field as $key => $value) {
@@ -406,6 +433,38 @@ class ClientCase extends AppModel {
 		}
 	}
 
+	public function validateWithRegistration($field = array(), $compare_field = null)
+	{
+		foreach ($field as $key => $value) {
+
+			$v1 = trim($value);
+			$v2 = trim($this->data[$this->name][$compare_field]);
+
+			if(!empty($v2) && empty($v1)) {
+
+				return false;
+			}
+
+			return true;
+		}
+	}
+
+	public function validateWithObjection($field = array(), $compare_field = null)
+	{
+		foreach ($field as $key => $value) {
+
+			$v1 = trim($value);
+			$v2 = trim($this->data[$this->name][$compare_field]);
+
+			if(empty($v2) && empty($v1)) {
+
+				return false;
+			}
+
+			return true;
+		}
+	}
+
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
 
 	/**
@@ -441,7 +500,14 @@ class ClientCase extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
+		),
+		'CaseStatus' => array(
+			'className' => 'CaseStatus',
+			'foreignKey' => 'case_status',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
 	);
 
 	/**

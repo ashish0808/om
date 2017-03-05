@@ -174,32 +174,37 @@ if(empty($defaultCollapseIn)) {
 	</div>
 	<div class="widget-body edit-case-cnt panel-collapse collapse" id="essentialWorks">
 		<div class="widget-main">
-			<?php echo $this->Form->create('ClientCase', array('url' => '/cases/essentialWorks/'.$caseId, 'class' => 'form-horizontal', 'name' => 'essentialWorks', 'id' => 'essentialWorks', 'novalidate' => true)); ?>
+			<?php echo $this->Form->create('ClientCase', array('url' => '/cases/updateEssentialWorks/'.$caseId, 'class' => 'form-horizontal', 'name' => 'formEssentialWorks', 'id' => 'formEssentialWorks', 'novalidate' => true)); ?>
 				<?php echo $this->Form->input('ClientCase.id', array('label' => false, 'div' => false, 'type' => 'hidden')); ?>
 
-				<div class="row">
-                	<div class="col-sm-12">
-						<div class="form-group">
-							<div class="col-sm-12">
-								<span class="help-inline col-xs-12 col-sm-7">
-									<label>
-										<input class="ace" id="id-disable-check" type="checkbox">
-										<span class="lbl"> Disable it!</span>
-									</label>
-								</span>
-							</div>
-						</div>
-                	</div>
-                </div>
+				<?php foreach($essentialWorksArr as $essentialWorkKey=>$essentialWork){ ?>
+				<div class="col-sm-12">
+					<div class="form-group">
+						<div class="col-sm-12">
+							<span class="help-inline col-xs-12 col-sm-7">
+								<label>
+									<?php
+									$workChecked = '';
+									if(!empty($caseDetails['ClientCase'][$essentialWorkKey])){
+										$workChecked = 'checked="checked"';
+									} ?>
 
-				<div class="row">
-					<div class="col-sm-12">
-						<div class="clearfix pull-right custom-form-actions">
-							<?php echo $this->Form->button("<i class='icon-arrow-right bigger-110'></i>Next", array("class" => "btn btn-success btn-next saveEssentialWorks", "escape" => false, "type" => "submit", "value" => "next"));?>
-							<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Save Incomplete Info", array("class" => "btn btn-info saveEssentialWorks", "escape" => false, "type" => "submit", "value" => "saveIncomplete"));?>
+									<input class="ace" <?php echo $workChecked; ?> value=1 name="data[ClientCase][<?php echo $essentialWorkKey; ?>]" type="checkbox">
+									<span class="lbl"> <?php echo $essentialWork; ?></span>
+								</label>
+							</span>
 						</div>
 					</div>
 				</div>
+				<?php } ?>
+
+				<div class="row">
+                	<div class="col-sm-12">
+                		<div class="clearfix pull-right custom-form-actions">
+                			<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Update", array("class" => "btn btn-info updateCaseEssentials", "escape" => false, "type" => "button"));?>
+                		</div>
+                	</div>
+                </div>
 			<?php echo $this->Form->end(); ?>
 		</div>
 	</div>

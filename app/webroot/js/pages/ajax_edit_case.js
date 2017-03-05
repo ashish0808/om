@@ -22,7 +22,13 @@ $(document).ready(function(){
         paymentUpdated();
     });
 
+    $("body").delegate(".isCaseRegistered", "change", function() {
+
+        caseRegistrationFields();
+    });
+
     paymentUpdated();
+    caseRegistrationFields();
 });
 
 function showPartTypeFields(partyType) {
@@ -49,6 +55,21 @@ function paymentUpdated()
     } else {
 
         $('.paymentRequired').addClass('hide');
+    }
+}
+
+function caseRegistrationFields()
+{
+    var isCaseRegistered = $("input[name='data[ClientCase][is_registered]']:checked").val();
+
+    if(isCaseRegistered==1) {
+
+        $('.registerCaseNumberField').removeClass('hide');
+        $('.objectionCaseNumberField').addClass('hide');
+    } else {
+
+        $('.objectionCaseNumberField').removeClass('hide');
+        $('.registerCaseNumberField').addClass('hide');
     }
 }
 

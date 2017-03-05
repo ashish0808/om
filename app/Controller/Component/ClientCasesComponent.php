@@ -114,4 +114,22 @@ class ClientCasesComponent extends Component
 
 		return '301/'.$currYear;
 	}
+
+	public function listEssentialWorks($clientType)
+	{
+		$essentialWorks = array(
+			'is_ememo_filed' => 'E-memo filed',
+			'is_paper_book' => 'Paper book',
+			'is_diary_entry' => 'Diary Entry',
+			'is_letter_communication' => 'Letter/Communication',
+			'is_lcr' => 'LCR'
+		);
+
+		if($clientType == 'petitioner') {
+
+			unset($essentialWorks['is_ememo_filed']);
+		}
+
+		return $essentialWorks;
+	}
 }
