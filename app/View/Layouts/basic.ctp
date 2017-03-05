@@ -18,7 +18,7 @@
 	?>
 
     <!--[if IE 7]>
-    <?php echo $this->Html->css('font-awesome-ie7.min'); ?>
+    <?php // echo $this->Html->css('font-awesome-ie7.min'); ?>
     <![endif]-->
 
     <?php
@@ -30,7 +30,7 @@
     echo $this->Html->css('select2/select2');
     ?>
     <!--[if lte IE 8]>
-    <?php echo $this->Html->css('ace-ie.min'); ?>
+    <?php // echo $this->Html->css('ace-ie.min'); ?>
     <![endif]-->
     <?php
     echo $this->Html->script('jquery-2.0.3.min');
@@ -161,7 +161,7 @@
 
 
     <!--[if IE]>
-    <?php echo $this->Html->script('jquery-1.10.2.min'); ?>
+    <?php // echo $this->Html->script('jquery-1.10.2.min'); ?>
     <![endif]-->
 
     <script type="text/javascript">
@@ -173,7 +173,7 @@
     <!-- page specific plugin scripts -->
 
     <!--[if lte IE 8]>
-    <!--<script src="assets/js/excanvas.min.js"></script>-->
+    <<script src="assets/js/excanvas.min.js"></script>>
     <![endif]-->
 
     <!-- ace scripts -->
