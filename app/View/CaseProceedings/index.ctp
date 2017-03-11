@@ -38,25 +38,6 @@ $this->Js->get('#CaseProceedingSearchForm')->event(
     )
 );
 
-/*$updateData = $this->Js->get('#CaseProceedingUpdateForm')->serializeForm(array('isForm' => true, 'inline' => true));
-$this->Js->get('#CaseProceedingUpdateForm')->event(
-    'submit',
-    $this->Js->request(
-        array(
-        	'action' => 'index',
-        ),
-        array(
-            'update' => '#content',
-            'before'   => '$("#overlay_img").fadeIn()',
-            'complete' => '$("#overlay_img").fadeOut()',
-            'data' => $updateData,
-            'async' => true,
-            'dataExpression'=>true,
-            'method' => 'POST'
-        )
-    )
-);*/
-
 echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','id'=>'CaseProceedingSearchForm','name'=>'CaseProceedingSearchForm'));?>
 <div class="row-fluid">
     <div class="span12">
@@ -108,8 +89,8 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Proceeding Date
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+							Case No.
 						</th>
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Cr. No.
@@ -117,120 +98,49 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Sr. No.
 						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
-							Case No.
-						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Party Name
 						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Court
-						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Case Brief
-						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Case Status
 						</th>
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Referred to Lok Adalat
 						</th>
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Remarks
-						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Next Date
 						</th>
-						<th class="col-xs-1" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
+						<th class="col-xs-2" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
 					</tr>
 				</thead>
 				<tbody role="alert" aria-live="polite" aria-relevant="all">
 				<?php $i = 1;
 				if (!empty($CaseProceedings)) {
 					foreach ($CaseProceedings as $record) {
-						$this->request->data = $record;
-						?>
-					<?php echo $this->Form->create('CaseProceeding', array('url' => '/CaseProceedings/', 'id'=>'CaseProceedingUpdateForm','name'=>'CaseProceedingUpdateForm', 'class' => 'form-horizontal', 'name' => 'edit', 'id' => 'edit')); 
-						echo $this->Form->hidden('CaseProceeding.id');
-						echo $this->Form->hidden('CaseProceeding.client_case_id');
-						echo $this->Form->hidden('CaseProceeding.search_date', array('value' => $date));
 					?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" ">
-						<?php 
-						echo $this->Form->input('CaseProceeding.date_of_hearing', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-sm-12 col-xs-12 date-picker', 'placeholder' => 'Proceeding Date', 'data-date-format' => 'yyyy-mm-dd', 'autocomplete' => 'off'));
-						?>
-						</td>
-						<td class=" ">
-						<?php
-						echo $this->Form->input('CaseProceeding.court_room_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
-						// echo $record['CaseProceeding']['court_room_no'];
-						?>
-						</td>
-						<td class=" ">
-						<?php
-						echo $this->Form->input('CaseProceeding.court_serial_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
-						// echo $record['CaseProceeding']['court_serial_no'];
-						?>
-						</td>
 						<td class=" "><?php echo $record['ClientCase']['case_number']; ?></td>
+						<td class=" "><?php echo $record['CaseProceeding']['court_room_no']; ?></td>
+						<td class=" "><?php echo $record['CaseProceeding']['court_serial_no']; ?></td>
 						<td class=" "><?php echo $record['ClientCase']['party_name'];?></td>
 						<td class=" "><?php echo $record['ClientCase']['Court']['name']; ?></td>
 						<td class=" ">
 						<?php
-						$briefStatus = array('in_office' => 'In Office', 'out_of_office' => 'Out of Office');
-						if ($record['CaseProceeding']['proceeding_status'] == 'pending') {
-							echo $this->Form->input('ClientCase.brief_status', array('options' => $briefStatus, 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
+						if ($record['CaseProceeding']['referred_to_lok_adalat']) {
+							echo 'Yes';
 						} else {
-							if ($record['CaseProceeding']['brief_status'] == 'in_office') {
-								echo 'In Office';
-							} else {
-								echo 'Out of Office';
-							}
+							echo 'No';
 						}
-						?>
-						</td>
-						<td class=" ">
-						<?php
-						$caseStatus = array('pending' => 'Pending', 'decided' => 'Decided', 'admitted' => 'Admitted', 'reserved' => 'Reserved', 'not_with_us' => 'Not with Us');
-						if ($record['CaseProceeding']['proceeding_status'] == 'pending') {
-							echo $this->Form->input('ClientCase.case_status', array('options' => $caseStatus, 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
-						} else {
-							echo strtoupper($record['CaseProceeding']['case_status']);
-						}
-						?>
-						</td>
-						<td class=" " style="text-align: center;">
-						<?php
-						if ($record['CaseProceeding']['proceeding_status'] == 'pending') {
-							echo $this->Form->checkbox('ClientCase.referred_to_lok_adalat');
-						} else {
-							if ($record['CaseProceeding']['referred_to_lok_adalat']) {
-								echo 'Yes';
-							} else {
-								echo 'No';
-							}
-						}
-						?>
-						</td>
-						<td class=" ">
-						<?php
-						echo $this->Form->textarea('CaseProceeding.remarks', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
 						?>
 						</td>
 						<td>
 						<?php
-						if ($record['CaseProceeding']['proceeding_status'] == 'pending') {
-							echo $this->Form->input('CaseProceeding.next_date_of_hearing', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-sm-12 col-xs-12 date-picker', 'placeholder' => 'Next Date', 'data-date-format' => 'yyyy-mm-dd', 'autocomplete' => 'off'));
-						} else {
 							echo $record['CaseProceeding']['next_date_of_hearing'];
-						}
 						?>
 						</td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">
-								<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Update", array("class" => "btn btn-primary", "escape" => false, "type" => "submit", "name" => "data[CaseProceeding][submit]", "value" => "submit"));
-								?>
+								<?php echo $this->Html->link('View/Edit', "javascript:void(0)", array('escape' => false, 'class' => 'btn btn-primary editCaseProceeding', 'pageTitle' => 'Edit Case Proceeding', 'pageName' => $this->Html->url(array('controller' => 'CaseProceedings', 'action' => 'editCaseProceeding')).'/'.$record['CaseProceeding']['id'].'/'.$date)); ?>
 							</div>
 							<div class="hidden-desktop visible-phone">
 								<div class="inline position-relative">
@@ -240,15 +150,13 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 
 									<ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
 										<li>
-											<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Update", array("class" => "btn btn-primary", "escape" => false, "type" => "submit", "name" => "data[CaseProceeding][submit]", "value" => "submit"));
-											?>
+											<?php echo $this->Html->link('View/Edit', "javascript:void(0)", array('escape' => false, 'class' => 'btn btn-primary editCaseProceeding', 'pageTitle' => 'Edit Case Proceeding', 'pageName' => $this->Html->url(array('controller' => 'CaseProceedings', 'action' => 'editCaseProceeding')).'/'.$record['CaseProceeding']['id'].'/'.$date)); ?>
 										</li>
 									</ul>
 								</div>
 							</div>
 						</td>
 					</tr>
-					<?php echo $this->Form->end(); ?>
 					<?php echo $this->Js->writeBuffer(); ?>
 					<?php
 						$i++;
@@ -394,4 +302,3 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 <script type="text/javascript">
 	$('[data-rel=tooltip]').tooltip();
 </script>
-<?php echo $this->Form->end(); ?>

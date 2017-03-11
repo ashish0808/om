@@ -195,6 +195,7 @@
     echo $this->Html->script('jquery.raty');
     echo $this->Html->script('select2');
     echo $this->Html->script('jquery.easypiechart.min');
+    echo $this->Html->script('pages/daily_diary');
     ?>
 </body>
 </html>
