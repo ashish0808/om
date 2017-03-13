@@ -123,7 +123,7 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 							}
 							?>
 						</td>
-						<td class=""><?php echo $this->Time->format('F j, Y',$record['ClientCase']['created']); ?></td>
+						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['ClientCase']['created']); ?></td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">
 								<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'cases','action'=>'edit',$record['ClientCase']['id']), array('escape' => false, 'class' => 'blue tooltip-info', 'data-rel' => 'tooltip', 'data-original-title'=>'Edit Case'))?>

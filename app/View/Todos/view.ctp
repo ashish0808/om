@@ -57,7 +57,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Completion Date:</b> </label>
 										<div class="col-sm-8">
 											<?php
-											echo $this->Time->format('F j, Y',$Todo['Todo']['completion_date']);
+											echo $this->Time->format('D, M jS, Y', $Todo['Todo']['completion_date']);
 											?>
 										</div>
 									</div>

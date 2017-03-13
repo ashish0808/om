@@ -69,7 +69,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
 
         <ul class="submenu" <?php echo $caseSub; ?>>
             <li>
-                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Manage ', array('controller'=>'cases','action'=>'manage'), array('escape' => false))?>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'cases','action'=>'manage'), array('escape' => false))?>
             </li>
             <li>
 				<?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'cases','action'=>'add'), array('escape' => false))?>
@@ -94,7 +94,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
 
         <ul class="submenu" <?php echo $caseCivilMiscSub; ?>>
             <li>
-                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Manage ', array('controller'=>'CaseCivilMiscs','action'=>'index'), array('escape' => false))?>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'CaseCivilMiscs','action'=>'index'), array('escape' => false))?>
             </li>
             <li>
                 <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'CaseCivilMiscs','action'=>'add'), array('escape' => false))?>
@@ -119,7 +119,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
 
         <ul class="submenu" <?php echo $caseDisptachSub; ?>>
             <li>
-                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Manage ', array('controller'=>'Dispatches','action'=>'index'), array('escape' => false))?>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'Dispatches','action'=>'index'), array('escape' => false))?>
             </li>
             <li>
                 <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'Dispatches','action'=>'add'), array('escape' => false))?>
@@ -144,7 +144,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
 
         <ul class="submenu" <?php echo $todoSub; ?>>
             <li>
-                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Manage ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
             </li>
             <li>
                 <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'Todos','action'=>'add'), array('escape' => false))?>

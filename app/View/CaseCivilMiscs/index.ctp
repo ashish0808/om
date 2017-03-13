@@ -101,22 +101,19 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 				<thead>
 					<tr role="row">
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Case Title
+							Case No
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							CM/CRM No
 						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Type', array());?>
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.application_date', 'Date', array());?>
 						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.status', 'Status', array());?>
-						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Attachment
 						</th>
 						<th class="col-xs-2" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
 					</tr>
@@ -126,10 +123,10 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 				if (isset($caseCivilMiscs) && !empty($caseCivilMiscs)) {
 					foreach ($caseCivilMiscs as $record){ ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" "><?php echo $record['ClientCase']['case_title']; ?></td>
+						<td class=" "><?php echo $record['ClientCase']['case_number']; ?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_no'];?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
-						<td class=""><?php echo $this->Time->format('F j, Y',$record['CaseCivilMisc']['application_date']); ?></td>
+						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['CaseCivilMisc']['application_date']); ?></td>
 						<td class=" ">
 						<?php
 						if ($record['CaseCivilMisc']['status'] == 'pending') { ?>
@@ -142,17 +139,6 @@ echo $this->Form->create('CaseCivilMiscs',array('url' => '/CaseCivilMiscs/index/
 						}
 						echo strtoupper($record['CaseCivilMisc']['status']);
 						?>
-						</td>
-						<td class=" ">
-							<?php 
-							if (!empty($record['CaseCivilMisc']['attachment'])) {
-							?>
-							<a href="<?php echo $record['CaseCivilMisc']['attachment'];?>" target="_blank" 'class'='col-sm-12 col-xs-12'>Application Copy</a>
-							<?php 
-							} else {
-								echo "Not Available";
-							}
-							?>
 						</td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">

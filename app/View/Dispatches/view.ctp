@@ -57,7 +57,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Date of Dispatch:</b> </label>
 										<div class="col-sm-8">
 											<?php
-											echo $this->Time->format('F j, Y',$Dispatch['Dispatch']['date_of_dispatch']);
+											echo $this->Time->format('D, M jS, Y', $Dispatch['Dispatch']['date_of_dispatch']);
 											?>
 										</div>
 									</div>

@@ -3,10 +3,6 @@
 		<thead class="thin-border-bottom">
 			<tr>
 				<th>
-					<i class="icon-caret-right blue"></i>Case Title
-				</th>
-
-				<th>
 					<i class="icon-caret-right blue"></i>Case No
 				</th>
 
@@ -25,7 +21,6 @@
 				foreach ($cases_with_pending_actions as $record) {
 			?>
 			<tr>
-				<td><?php echo $record['ClientCase']['case_title']; ?></td>
 				<td><?php echo $record['ClientCase']['case_number']; ?></td>
 				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
 				<td class="">

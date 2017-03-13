@@ -75,10 +75,6 @@
 								<thead class="thin-border-bottom">
 									<tr>
 										<th>
-											<i class="icon-caret-right blue"></i>Case Title
-										</th>
-
-										<th>
 											<i class="icon-caret-right blue"></i>Case No
 										</th>
 
@@ -122,10 +118,6 @@
 							<table class="table table-bordered table-striped">
 								<thead class="thin-border-bottom">
 									<tr>
-										<th>
-											<i class="icon-caret-right blue"></i>Case Title
-										</th>
-
 										<th>
 											<i class="icon-caret-right blue"></i>Case No
 										</th>
@@ -176,10 +168,6 @@
 								<thead class="thin-border-bottom">
 									<tr>
 										<th>
-											<i class="icon-caret-right blue"></i>Case Title
-										</th>
-
-										<th>
 											<i class="icon-caret-right blue"></i>Case No
 										</th>
 
@@ -223,10 +211,6 @@
 							<table class="table table-bordered table-striped">
 								<thead class="thin-border-bottom">
 									<tr>
-										<th>
-											<i class="icon-caret-right blue"></i>Case Title
-										</th>
-
 										<th>
 											<i class="icon-caret-right blue"></i>Case No
 										</th>

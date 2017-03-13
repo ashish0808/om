@@ -91,7 +91,7 @@ echo $this->Form->create('Todo',array('url' => '/Todos/index','id'=>'TodoSearchF
 				<thead>
 					<tr role="row">
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Case Title
+							Case No
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Title
@@ -113,9 +113,9 @@ echo $this->Form->create('Todo',array('url' => '/Todos/index','id'=>'TodoSearchF
 				if (isset($Todos) && !empty($Todos)) {
 					foreach ($Todos as $record){ ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>"; ?></td>
+						<td class=" "><?php echo $record['ClientCase']['case_number'] ? $record['ClientCase']['case_number']: "<span class='red'>Miscellaneous</span>"; ?></td>
 						<td class=" "><?php echo $record['Todo']['title'];?></td>
-						<td class=""><?php echo $this->Time->format('F j, Y',$record['Todo']['completion_date']); ?>
+						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['Todo']['completion_date']); ?>
 						</td>
 						<td class=" ">
 							<?php
