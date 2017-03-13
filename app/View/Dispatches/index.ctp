@@ -86,17 +86,14 @@ echo $this->Form->create('Dispatch',array('url' => '/Dispatches/index','id'=>'Di
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Case Title
-						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Title
-						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							<?php echo $this->Paginator->sort('Dispatch.date_of_dispatch', 'Date of Dispatch', array());?>
+						<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Case No
 						</th>
 						<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Attachment
+							Title
+						</th>
+						<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							<?php echo $this->Paginator->sort('Dispatch.date_of_dispatch', 'Date of Dispatch', array());?>
 						</th>
 						<th class="col-xs-3" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
 					</tr>
@@ -106,20 +103,9 @@ echo $this->Form->create('Dispatch',array('url' => '/Dispatches/index','id'=>'Di
 				if (isset($Dispatches) && !empty($Dispatches)) {
 					foreach ($Dispatches as $record){ ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>"; ?></td>
+						<td class=" "><?php echo $record['ClientCase']['case_number'] ? $record['ClientCase']['case_number']: "<span class='red'>Miscellaneous</span>"; ?></td>
 						<td class=" "><?php echo $record['Dispatch']['title'];?></td>
-						<td class=""><?php echo $this->Time->format('F j, Y',$record['Dispatch']['date_of_dispatch']); ?>
-						</td>
-						<td class=" ">
-							<?php 
-							if (!empty($record['Dispatch']['attachment'])) {
-							?>
-							<a href="<?php echo $record['Dispatch']['attachment'];?>" target="_blank" 'class'='col-sm-12 col-xs-12'>Application Copy</a>
-							<?php
-							} else {
-								echo "Not Available";
-							}
-							?>
+						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['Dispatch']['date_of_dispatch']); ?>
 						</td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">

@@ -71,7 +71,7 @@
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Application Date:</b> </label>
 										<div class="col-sm-8">
 											<?php 
-											echo $this->Time->format('F j, Y',$CaseCivilMisc['CaseCivilMisc']['application_date']);
+											echo $this->Time->format('D, M jS, Y', $CaseCivilMisc['CaseCivilMisc']['application_date']);
 											?>
 										</div>
 									</div>

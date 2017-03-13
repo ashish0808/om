@@ -152,16 +152,19 @@ class CaseProceedingsController extends AppController
                     }
                 }
                 
-                if (!empty($this->request->data['CaseProceeding']['next_date_of_hearing'])) {
+                if (!empty($this->request->data['CaseProceeding']['next_date_of_hearing']) || !empty($cpData['CaseProceeding']['next_date_of_hearing'])) {
                     $this->request->data['CaseProceeding']['proceeding_status'] = 'completed';
+                } else {
+                    $this->request->data['CaseProceeding']['proceeding_status'] = 'pending';
                 }
+
                 $this->request->data['ClientCase']['id'] = $cpData['CaseProceeding']['client_case_id'];
                 $this->CaseProceeding->id = $this->request->data['CaseProceeding']['id'];
                 $this->CaseProceeding->saveAssociated($this->request->data);
 
                 $this->loadModel('ClientCase');
                 // Connected case data
-                $ccData = $this->ClientCase->find('all', array('contain' => array('CaseProceeding' => array('conditions' => array('proceeding_status' => 'pending', 'date_of_hearing' => $this->request->data['CaseProceeding']['date_of_hearing']))), 'conditions' => array('parent_case_id' => $this->request->data['CaseProceeding']['id'])));
+                $ccData = $this->ClientCase->find('all', array('contain' => array('CaseProceeding' => array('conditions' => array('date_of_hearing' => $this->request->data['CaseProceeding']['date_of_hearing']))), 'conditions' => array('parent_case_id' => $this->request->data['CaseProceeding']['client_case_id'])));
                 if (!empty($ccData)) {
                     // Update all the connected case proceeding as well
                     foreach ($ccData as $key => $proceedings) {
@@ -176,7 +179,7 @@ class CaseProceedingsController extends AppController
                 }
 
                 // If next hearing date has been entered add new row in proceeding for that date
-                if (!empty($this->request->data['CaseProceeding']['next_date_of_hearing'])) {
+                if (!empty($this->request->data['CaseProceeding']['next_date_of_hearing']) && empty($cpData['CaseProceeding']['next_date_of_hearing'])) {
                     foreach ($this->request->data['CaseProceeding'] as $key => $value) {
                         if (!in_array($key, array('date_of_hearing', 'referred_to_lok_adalat', 'case_status', 'brief_status', 'next_date_of_hearing'))) {
                             unset($this->request->data['CaseProceeding'][$key]);

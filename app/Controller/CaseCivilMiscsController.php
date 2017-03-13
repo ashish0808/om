@@ -76,13 +76,13 @@ class CaseCivilMiscsController extends AppController
         }
         $this->set('paginateLimit', LIMIT);
         $records = $this->Paginator->paginate('CaseCivilMisc', $criteria);
-        foreach ($records as $key => $value) {
+        /*foreach ($records as $key => $value) {
             if (!empty($value['CaseCivilMisc']['attachment'])) {
                 $records[$key]['CaseCivilMisc']['attachment'] = $this->Aws->getObjectUrl($value['CaseCivilMisc']['attachment']);
             } else {
                 $records[$key]['CaseCivilMisc']['attachment'] = '';
             }
-        }
+        }*/
         $this->set('caseCivilMiscs', $records);
         $this->set('status', $status);
     }

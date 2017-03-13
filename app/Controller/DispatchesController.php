@@ -72,13 +72,13 @@ class DispatchesController extends AppController
         }
         $this->set('paginateLimit', LIMIT);
         $records = $this->Paginator->paginate('Dispatch', $criteria);
-        foreach ($records as $key => $value) {
+        /*foreach ($records as $key => $value) {
             if (!empty($value['Dispatch']['attachment'])) {
                 $records[$key]['Dispatch']['attachment'] = $this->Aws->getObjectUrl($value['Dispatch']['attachment']);
             } else {
                 $records[$key]['Dispatch']['attachment'] = '';
             }
-        }
+        }*/
         $this->set('Dispatches', $records);
     }
 

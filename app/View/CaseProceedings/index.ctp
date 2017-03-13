@@ -135,7 +135,7 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 						</td>
 						<td>
 						<?php
-							echo $record['CaseProceeding']['next_date_of_hearing'];
+							echo $this->Time->format('D, M jS, Y', $record['CaseProceeding']['next_date_of_hearing']);
 						?>
 						</td>
 						<td class=" ">
@@ -226,7 +226,7 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
 						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>";?></td>
 						<td class=" "><?php echo $record['Todo']['title'];?></td>
-						<td class=""><?php echo $this->Time->format('F j, Y',$record['Todo']['completion_date']); ?>
+						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['Todo']['completion_date']); ?>
 						</td>
 						<td class=" ">
 							<?php

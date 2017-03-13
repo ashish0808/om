@@ -221,7 +221,7 @@ echo $this->Form->hidden('CaseProceeding.search_date', array('value' => $date));
 						?>
 						<label class="control-label no-padding-right">
 						<?php
-							echo $caseProceeding['CaseProceeding']['next_date_of_hearing'];
+							echo $this->Time->format('D, M jS, Y', $caseProceeding['CaseProceeding']['next_date_of_hearing']);
 						?>
 						</label>
 						<?php

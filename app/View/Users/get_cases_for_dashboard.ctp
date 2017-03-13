@@ -3,10 +3,6 @@
 		<thead class="thin-border-bottom">
 			<tr>
 				<th>
-					<i class="icon-caret-right blue"></i>Case Title
-				</th>
-
-				<th>
 					<i class="icon-caret-right blue"></i>Case No
 				</th>
 
@@ -25,10 +21,9 @@
 				foreach ($pending_for_filing_data as $record) {
 			?>
 			<tr>
-				<td><?php echo $record['ClientCase']['case_title']; ?></td>
 				<td><?php echo $record['ClientCase']['case_number']; ?></td>
 				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
-				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('F j, Y',$record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
+				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('D, M jS, Y', $record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
 			</tr>
 			<?php
 				}
@@ -50,10 +45,6 @@
 		<thead class="thin-border-bottom">
 			<tr>
 				<th>
-					<i class="icon-caret-right blue"></i>Case Title
-				</th>
-
-				<th>
 					<i class="icon-caret-right blue"></i>Case No
 				</th>
 
@@ -72,10 +63,9 @@
 				foreach ($pending_for_refiling_data as $record) {
 			?>
 			<tr>
-				<td><?php echo $record['ClientCase']['case_title']; ?></td>
 				<td><?php echo $record['ClientCase']['case_number']; ?></td>
 				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
-				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('F j, Y',$record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
+				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('D, M jS, Y', $record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
 			</tr>
 			<?php
 				}
@@ -98,10 +88,6 @@
 		<thead class="thin-border-bottom">
 			<tr>
 				<th>
-					<i class="icon-caret-right blue"></i>Case Title
-				</th>
-
-				<th>
 					<i class="icon-caret-right blue"></i>Case No
 				</th>
 
@@ -120,10 +106,9 @@
 				foreach ($pending_for_registration_data as $record) {
 			?>
 			<tr>
-				<td><?php echo $record['ClientCase']['case_title']; ?></td>
 				<td><?php echo $record['ClientCase']['case_number']; ?></td>
 				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
-				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('F j, Y',$record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
+				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('D, M jS, Y', $record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
 			</tr>
 			<?php
 				}

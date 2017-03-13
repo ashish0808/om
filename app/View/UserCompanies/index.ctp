@@ -35,7 +35,7 @@
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
 						<td class=" "><?php echo $record['UserCompany']['name']?></td>
 						<td class=" "><?php echo $record['UserCompany']['description'];?></td>
-						<td class=""><?php echo $this->Time->format('F j, Y',$record['UserCompany']['created']); ?>
+						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['UserCompany']['created']); ?>
 						</td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">
