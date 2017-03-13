@@ -92,7 +92,11 @@ class ClientCase extends AppModel {
 			'rule1' => array(
 				'rule' => array('validateFileNumber', 'is_existing'),
 				'message' => 'Please enter file number',
-			)
+			),
+			/*'uniqueRule' => array(
+				'rule' => array('validateUniqueFileNumber', 'user_id'),
+				'message' => 'File number already registered'
+			)*/
 		),
 		'date_fixed' => array(
 			'rule1' => array(
@@ -567,7 +571,23 @@ class ClientCase extends AppModel {
 
 		return $this->query("SELECT cc1.id, cc1.case_number, cc1.case_year, cc1.client_phone, cc1.party_name
 					FROM client_cases as cc1 LEFT OUTER JOIN client_cases as cc2 ON cc1.id=cc2.parent_case_id
-					WHERE cc2.id IS NULL AND (cc1.parent_case_id IS NULL OR cc1.parent_case_id=0) AND cc1.is_main_case = 1 AND cc1.id != $caseId AND cc1.user_id = $userId".$customSearchStr);
+					WHERE cc2.id IS NULL AND cc1.case_number != '' AND (cc1.parent_case_id IS NULL OR cc1.parent_case_id=0) AND cc1.is_main_case = 1 AND cc1.id != $caseId AND cc1.user_id = $userId".$customSearchStr);
+	}
+
+	public function validateUniqueFileNumber($field = array(), $compare_field = null)
+	{
+		foreach ($field as $key => $value) {
+
+			$fileNumber = trim($value);
+			$userId = trim($this->data[$this->name][$compare_field]);
+
+			if(empty($v2) && empty($v1)) {
+
+				return false;
+			}
+
+			return true;
+		}
 	}
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -613,6 +633,11 @@ class ClientCase extends AppModel {
 			'fields' => '',
 			'order' => ''
 		),
+		'ParentClientCase' => array(
+			'className' => 'ClientCase',
+			'foreignKey' => 'parent_case_id',
+			'counterCache' => true
+		)
 	);
 
 	/**
@@ -719,4 +744,6 @@ class ClientCase extends AppModel {
 	//ALTER TABLE `client_cases` CHANGE `fee_settlled` `fee_settled` FLOAT(9,2) NOT NULL DEFAULT '0.00';
 	//ALTER TABLE `client_cases` ADD `decided_procedure_completed` TINYINT NOT NULL DEFAULT '0' AFTER `alongwith_lcr`;
 	//ALTER TABLE `client_cases` CHANGE `certified_copy_required` `certified_copy_required` TINYINT(1) NOT NULL DEFAULT '1';
+	//ALTER TABLE `client_cases` ADD `final_completion_date` DATE NULL AFTER `saved_incomplete`;
+	//ALTER TABLE `client_cases` ADD `reminder_date` DATE NULL AFTER `saved_incomplete`;
 }
