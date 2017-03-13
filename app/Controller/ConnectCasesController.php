@@ -86,10 +86,9 @@ class ConnectCasesController extends AppController
 
 			if(!empty($caseDetails)) {
 
-				$this->loadModel('ClientCase');
 				if($caseDetails['ClientCase']['parent_case_id'] == $caseId) {
 
-					$this->ClientCase->updateAll(array('is_main_case' => 1, 'parent_case_id' => 0), array('ClientCase.id'=> $childCaseId));
+					$this->_deleteConnection($childCaseId);
 				}
 			}
 		}
@@ -101,14 +100,12 @@ class ConnectCasesController extends AppController
 
 		if(!empty($caseDetails)) {
 
-			$this->loadModel('ClientCase');
-			$this->ClientCase->updateAll(array('is_main_case' => 1, 'parent_case_id' => 0), array('ClientCase.id'=> $childCaseId));
-
+			$this->_deleteConnection($childCaseId);
 			if($skipSetFlash != true) {
 
 				$this->Flash->success(__('Case detached successfully.'));
 
-				return $this->redirect(array('action' => 'manage', $childCaseId));
+				return $this->redirect(array('action' => 'manage', $caseDetails['ClientCase']['parent_case_id']));
 			}
 		}
 
@@ -139,8 +136,8 @@ class ConnectCasesController extends AppController
 			if (isset($this->request->data['ClientCase']) && !empty($this->request->data['ClientCase'])) {
 				foreach ($this->request->data['ClientCase'] as $key => $value) {
 					if (!empty($value)) {
-						//$customSearch[] = "cc1.".$key." = '.$value.'";
-						$customSearch[] = "cc1.$key = '".$value."'";
+
+						$customSearch[] = "cc1.$key LIKE '%".$value."%'";
 					}
 				}
 
@@ -200,14 +197,19 @@ class ConnectCasesController extends AppController
 				if(!empty($this->request->data['parentId'])) {
 
 					$postedParentId = $this->request->data['parentId'];
-
-					$this->ClientCase->updateAll(array('is_main_case' => 0, 'parent_case_id' => $postedParentId), array('ClientCase.id'=> $caseId));
+					$this->_saveConnection($caseId, $postedParentId);
 
 					$this->Flash->success(__('Case detached successfully.'));
 				}
 			} else {
 
-				if(!empty($this->request->data['box'])) {
+				if(!empty($this->request->data['parentId'])) {
+
+					$postedParentId = $this->request->data['parentId'];
+					$this->_saveConnection($caseId, $postedParentId);
+
+					$this->Flash->success(__('Case detached successfully.'));
+				}elseif(!empty($this->request->data['box'])) {
 
 					$postedChildIds = $this->request->data['box'];
 
@@ -215,7 +217,7 @@ class ConnectCasesController extends AppController
 
 						foreach($postedChildIds as $postedChildId) {
 
-							$this->ClientCase->updateAll(array('is_main_case' => 0, 'parent_case_id' => $caseId), array('ClientCase.id'=> $postedChildId));
+							$this->_saveConnection($postedChildId, $caseId);
 						}
 					}
 
@@ -230,5 +232,29 @@ class ConnectCasesController extends AppController
 
 			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 		}
+	}
+
+	private function _saveConnection($updateCaseId, $parentCaseId)
+	{
+		$this->loadModel('ClientCase');
+		$postedChildArr = $this->ClientCase->read(null, $updateCaseId);
+
+		$postedChildData = $postedChildArr['ClientCase'];
+		$postedChildData['is_main_case'] = 0;
+		$postedChildData['parent_case_id'] = $parentCaseId;
+
+		$this->ClientCase->save($postedChildData, false);
+	}
+
+	private function _deleteConnection($updateCaseId)
+	{
+		$this->loadModel('ClientCase');
+		$postedChildArr = $this->ClientCase->read(null, $updateCaseId);
+
+		$postedChildData = $postedChildArr['ClientCase'];
+		$postedChildData['is_main_case'] = 1;
+		$postedChildData['parent_case_id'] = 0;
+
+		$this->ClientCase->save($postedChildData, false);
 	}
 }

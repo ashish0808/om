@@ -13,11 +13,13 @@ function changeClientType(client_type)
         $('.customRequired').each(function() {
             $(this).removeClass('hide');
         });
+        $('.fieldForAppellant').addClass('hide');
     } else if(client_type == 'petitioner') {
 
         $('.customRequiredAppellant').each(function() {
             $(this).removeClass('hide');
         });
+        $('.fieldForAppellant').removeClass('hide');
     }
 }
 

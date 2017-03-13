@@ -10,7 +10,7 @@ App::uses('AppController', 'Controller');
  */
 class CasesController extends AppController
 {
-	public $helpers = array("Form", "Js" => array('Jquery'), 'Validation');
+	public $helpers = array("Form", "Js" => array('Jquery'), 'Validation', 'Session');
 	//JS and Validation helpers are not in Use right now
 
 	public $components = array('Paginator', 'Flash', 'Session', 'RequestHandler', 'Email');
@@ -169,6 +169,7 @@ class CasesController extends AppController
 
 				$this->ClientCases = $this->Components->load('ClientCases');
 				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase']);
+				$data['reminder_date'] = date('Y-m-d');
 
 				if ($this->ClientCase->save($data)) {
 
@@ -178,7 +179,14 @@ class CasesController extends AppController
 					$this->addCaseProceeding($data);
 
 					$this->Session->setFlash(CASE_INFORMATION_ADDED);
-					$this->redirect(array('controller' => 'cases', 'action' => 'edit', $caseId));
+
+					if(isset($this->request->data['ClientCase']['submit']) && $this->request->data['ClientCase']['submit']=='next') {
+
+						$this->redirect(array('controller' => 'cases', 'action' => 'edit', $caseId));
+					} else {
+
+						$this->redirect(array('controller' => 'cases', 'action' => 'manage'));
+					}
 				}
 			}
 		}
@@ -816,6 +824,8 @@ class CasesController extends AppController
 
 			if ($this->ClientCase->save($data, false)) {
 
+				$this->Flash->success(__('CM/CRM has been saved successfully.'));
+
 				$result = array('status' => 'success');
 			}
 		}
@@ -843,13 +853,16 @@ class CasesController extends AppController
 				if($data['certified_copy_required']==1) {
 
 					$data['decided_procedure_completed'] = 0;
+					$data['final_completion_date'] = '';
 					if(!empty($data['order_supplied_date'])) {
 
 						$data['decided_procedure_completed'] = 1;
+						$data['final_completion_date'] = date('Y-m-d');
 					}
 				} else {
 
 					$data['decided_procedure_completed'] = 1;
+					$data['final_completion_date'] = date('Y-m-d');
 					$data['certified_copy_applied_date'] = '';
 					$data['certified_copy_received_date'] = '';
 					$data['order_supplied_date'] = '';

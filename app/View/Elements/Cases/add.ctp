@@ -43,13 +43,20 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Client Type: </label>
-				<div class="col-sm-8">
-					<?php
-					$clientTypes = array('petitioner' => 'Appellant/Petitioner', 'respondent' => 'Respondent');
-					echo $this->Form->input('ClientCase.client_type', array('options' => $clientTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
-					<div class="error-message editBasicDetailsError clear" id="error_client_type"></div>
-				</div>
+				<?php
+				$clientTypes = array('petitioner' => 'Appellant/Petitioner', 'respondent' => 'Respondent');
+				if(isset($caseDetails['ClientCase']['completed_step']) && $caseDetails['ClientCase']['completed_step']>=2 &&
+				isset($clientTypes[$caseDetails['ClientCase']['client_type']])) { ?>
+					<label class="col-sm-4 control-label no-padding-right"> Client Type: </label>
+					<label class="col-sm-8" style="padding-top: 7px !important;"><?php echo $clientTypes[$caseDetails['ClientCase']['client_type']]; ?></label>
+				<?php }else{ ?>
+					<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Client Type: </label>
+					<div class="col-sm-8">
+						<?php
+						echo $this->Form->input('ClientCase.client_type', array('options' => $clientTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
+						<div class="error-message editBasicDetailsError clear" id="error_client_type"></div>
+					</div>
+				<?php } ?>
 			</div>
 		</div>
 	</div>
@@ -139,15 +146,9 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequiredAppellant required">*</span> Limitation Expires On: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Engaged On: </label>
 				<div class="col-sm-8">
-					<?php
-					if(empty($this->request->data['ClientCase']['limitation_expires_on'])) {
-
-						$this->request->data['ClientCase']['limitation_expires_on'] = date('Y-m-d', strtotime(' + 40 days'));
-					}
-					echo $this->Form->input('ClientCase.limitation_expires_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
-					<div class="error-message editBasicDetailsError clear" id="error_limitation_expires_on"></div>
+					<?php echo $this->Form->input('ClientCase.engaged_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
 				</div>
 			</div>
 		</div>
@@ -178,13 +179,19 @@
 		</div>
 	</div>
 </div>
-<div class="row">
+<div class="row fieldForAppellant">
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Engaged On: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequiredAppellant required">*</span> Limitation Expires On: </label>
 				<div class="col-sm-8">
-					<?php echo $this->Form->input('ClientCase.engaged_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
+					<?php
+					if(empty($this->request->data['ClientCase']['limitation_expires_on'])) {
+
+						$this->request->data['ClientCase']['limitation_expires_on'] = date('Y-m-d', strtotime(' + 40 days'));
+					}
+					echo $this->Form->input('ClientCase.limitation_expires_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
+					<div class="error-message editBasicDetailsError clear" id="error_limitation_expires_on"></div>
 				</div>
 			</div>
 		</div>
