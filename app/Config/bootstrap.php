@@ -138,10 +138,11 @@ define('PAYMENT_DELETED', '<span class="setFlash success">Payment deleted succes
 define('DOCUMENT_DELETED', '<span class="setFlash success">Document deleted successfully.</span>');
 
 // Statuses
-define('PENDING_FOR_FILING', 'pending_for_filing');
-define('PENDING_FOR_REFILING', 'pending_for_refiling');
-define('PENDING_FOR_REGISTRATION', 'pending_for_registration');
-define('PENDING', 'pending');
-define('ADMITTED', 'admitted');
-define('DECIDED', 'decided');
-define('RESERVED', 'reserved');
+define('PENDING_FOR_FILING', '1');
+define('PENDING_FOR_REFILING', '2');
+define('PENDING_FOR_REGISTRATION', '3');
+define('PENDING', '4');
+define('ADMITTED', '5');
+define('DECIDED', '6');
+define('RESERVED', '7');
+define('NOT_WITH_US', '8');

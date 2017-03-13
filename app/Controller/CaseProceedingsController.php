@@ -122,7 +122,8 @@ class CaseProceedingsController extends AppController
             }
         }
 
-        $CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => $criteria));
+        $this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+        $CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => $criteria));
 
         // Find todos for the given date
         $this->loadModel('Todo');
@@ -143,11 +144,14 @@ class CaseProceedingsController extends AppController
                 // Find the beind updated case proceeding data
                 $cpData = $this->CaseProceeding->find('first', array('conditions' => array('id' => $this->request->data['CaseProceeding']['id'])));
 
-                foreach ($this->request->data['ClientCase'] as $key => $value) {
-                    if (!empty($value)) {
-                        $this->request->data['CaseProceeding'][$key] = $value;
+                if (!empty($this->request->data['ClientCase'])) {
+                    foreach ($this->request->data['ClientCase'] as $key => $value) {
+                        if (!empty($value)) {
+                            $this->request->data['CaseProceeding'][$key] = $value;
+                        }
                     }
                 }
+                
                 if (!empty($this->request->data['CaseProceeding']['next_date_of_hearing'])) {
                     $this->request->data['CaseProceeding']['proceeding_status'] = 'completed';
                 }
