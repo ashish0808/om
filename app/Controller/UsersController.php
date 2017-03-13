@@ -83,11 +83,6 @@ class UsersController extends AppController
         $this->layout = 'basic';
         $this->pageTitle = 'Dashboard';
         $this->set('pageTitle', $this->pageTitle);
-
-        $this->loadModel('ClientCase');
-        $caseData = $this->ClientCase->find('all', array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'ClientCase.case_status' => PENDING_FOR_FILING)));
-        // pr($caseData);die;
-        $this->set($caseData, 'caseCivilMiscs');
     }
 
 

@@ -57,7 +57,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
-							<i class="icon-book blue"></i>
+							<i class="icon-book red"></i>
 							Cases Pending for Filing
 						</h4>
 
@@ -206,7 +206,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
-							<i class="icon-star blue"></i>
+							<i class="icon-star red"></i>
 							Cases with Pending Actions
 						</h4>
 

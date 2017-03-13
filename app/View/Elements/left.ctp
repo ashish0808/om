@@ -40,17 +40,22 @@
 <?php
 $dashBoardStatus = '';
 $lawyersStatus = '';
+$singleMenuClass = '';
 
+if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashboard') {
+    $singleMenuClass = 'active';
+} else {
+    $singleMenuClass = '';
+}
 ?>
-    <li class="active">
+    <li class="<?php echo $singleMenuClass; ?>">
         <?php echo $this->Html->link('<i class="icon-desktop"></i><span class="menu-text"> Dashboard </span>', array('controller'=>'users','action'=>'dashboard'), array('escape' => false))?>
     </li>
     
     <?php
     $caseMain = '';
     $caseSub = '';
-    if($this->params['controller'] == 'cases')
-    {
+    if ($this->params['controller'] == 'cases') {
   		$caseMain = 'open';
   		$caseSub = 'style="display:block;"';
     }
@@ -130,7 +135,7 @@ $lawyersStatus = '';
         $todoSub = 'style="display:block;"';
     }
     ?>
-    <li class="<?php echo $caseDisptachMain; ?>">
+    <li class="<?php echo $todoMain; ?>">
         <a href="#" class="dropdown-toggle">
             <i class="icon-list"></i>
             <span class="menu-text"> Todos </span>
@@ -156,9 +161,9 @@ $lawyersStatus = '';
     <li class="<?php echo $caseProceedingMain; ?>">
         <?php echo $this->Html->link('<i class="icon-desktop"></i> Daily Dairy ', array('controller'=>'CaseProceedings','action'=>'index'), array('escape' => false))?>
     </li>
-    <li class="<?php echo $caseDisptachMain; ?>">
+    <!--li class="<?php echo $caseDisptachMain; ?>">
         <?php echo $this->Html->link('<i class="icon-desktop"></i> Change Password ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
-    </li>
+    </li-->
     <li class="<?php echo $caseDisptachMain; ?>">
         <?php echo $this->Html->link('<i class="icon-desktop"></i> Logout ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
     </li>
