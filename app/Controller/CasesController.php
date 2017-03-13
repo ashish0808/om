@@ -853,13 +853,16 @@ class CasesController extends AppController
 				if($data['certified_copy_required']==1) {
 
 					$data['decided_procedure_completed'] = 0;
+					$data['final_completion_date'] = '';
 					if(!empty($data['order_supplied_date'])) {
 
 						$data['decided_procedure_completed'] = 1;
+						$data['final_completion_date'] = date('Y-m-d');
 					}
 				} else {
 
 					$data['decided_procedure_completed'] = 1;
+					$data['final_completion_date'] = date('Y-m-d');
 					$data['certified_copy_applied_date'] = '';
 					$data['certified_copy_received_date'] = '';
 					$data['order_supplied_date'] = '';
