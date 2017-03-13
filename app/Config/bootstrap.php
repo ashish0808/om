@@ -136,3 +136,12 @@ define('HEARING_ADDED', '<span class="setFlash success">Case Hearing added succe
 define('HEARING_DELETED', '<span class="setFlash success">Case Hearing deleted successfully.</span>');
 define('PAYMENT_DELETED', '<span class="setFlash success">Payment deleted successfully.</span>');
 define('DOCUMENT_DELETED', '<span class="setFlash success">Document deleted successfully.</span>');
+
+// Statuses
+define('PENDING_FOR_FILING', 'pending_for_filing');
+define('PENDING_FOR_REFILING', 'pending_for_refiling');
+define('PENDING_FOR_REGISTRATION', 'pending_for_registration');
+define('PENDING', 'pending');
+define('ADMITTED', 'admitted');
+define('DECIDED', 'decided');
+define('RESERVED', 'reserved');
