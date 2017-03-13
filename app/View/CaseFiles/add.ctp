@@ -15,9 +15,9 @@
 							<div class="tab-pane active">
 								<?php echo $this->Form->create('CaseFile', array('type' => 'file', 'url' => '/CaseFiles/add/'.$caseId, 'class' => 'form-horizontal', 'name' => 'add', 'id' => 'add', 'novalidate' => true)); ?>
 
-									<div class="row">
+									<div class="">
 										<div class="col-sm-12">
-											<div class="clearfix custom-form-actions">
+											<div class="clearfix buttons-with-spaces">
 												<?php //echo $this->Form->input('files.', array('type' => 'file', 'multiple')); ?>
 
 												<div class='file_upload' id='f1'><input name='data[CaseFile][files][]' type='file'/><br /></div>

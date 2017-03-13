@@ -88,7 +88,7 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequired required">*</span> Case Year: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Case Year: </label>
 				<div class="col-sm-8">
 					<?php echo $this->Form->input('ClientCase.case_year', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
 					<div class="error-message editBasicDetailsError clear" id="error_case_year"></div>

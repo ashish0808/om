@@ -67,12 +67,11 @@ class ClientCase extends AppModel {
 		),
 		'case_year' => array(
 			'rule1' => array(
-				'rule' => array('validateWithClientType', 'client_type'),
+				'rule' => 'notBlank',
 				'message' => 'Please enter case year',
 			),
 			'rule2' => array(
 				'rule' => array('validateValidYear'),
-				'allowEmpty' => true,
 				'message' => 'Please enter valid year',
 			)
 		),

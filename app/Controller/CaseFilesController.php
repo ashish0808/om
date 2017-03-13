@@ -167,9 +167,9 @@ class CaseFilesController extends AppController
      *
      * @param string $id
      */
-    public function delete($id, $caseFileId)
+    public function delete($id, $caseId)
     {
-        $fileData = $this->CaseFile->find('first', array('conditions' => array('CaseFile.client_case_id' => $caseFileId, 'CaseFile.id' => $id)));
+        $fileData = $this->CaseFile->find('first', array('conditions' => array('CaseFile.client_case_id' => $caseId, 'CaseFile.id' => $id)));
         if (!empty($fileData)) {
             if ($this->request->is(array('get', 'delete'))) {
                 $this->CaseFile->id = $id;
@@ -188,6 +188,6 @@ class CaseFilesController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
         }
 
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(array('action' => 'manage', $caseId));
     }
 }
