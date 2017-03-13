@@ -43,6 +43,9 @@ $(document).ready(function(){
     paymentUpdated();
     caseRegistrationFields();
     certifiedCopyRequiredFields();
+
+    var isExistingCase = $("input[name='data[ClientCase][is_existing]']:checked").val();
+    getFileNumberField(isExistingCase);
 });
 
 function showPartTypeFields(partyType) {

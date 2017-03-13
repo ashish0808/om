@@ -15,14 +15,16 @@ class ClientCasesComponent extends Component
 
 		$data['complete_case_number'] = $this->generateCaseNumber($data);
 
+		if(isset($data['date_fixed'])) {
 
-		$caseStatus = "pending_for_filing";
-		if(!empty($data['date_fixed'])) {
+			$caseStatus = "pending_for_filing";
+			if(!empty($data['date_fixed'])) {
 
-			$caseStatus = "pending";
+				$caseStatus = "pending";
+			}
+
+			$data['case_status'] = $this->updateCaseStatus($caseStatus);
 		}
-
-		$data['case_status'] = $this->updateCaseStatus($caseStatus);
 
 		if($data['submit']=='saveIncomplete') {
 

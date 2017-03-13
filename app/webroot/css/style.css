@@ -23,13 +23,17 @@
 
 #showFlasshMsgsDiv{ display: none; }
 
-.custom-form-actions {
+/*.custom-form-actions {
     background-color: #f5f5f5;
     border-top: 1px solid #e5e5e5;
     display: block;
     margin-bottom: 20px;
     margin-top: 20px;
     padding: 0 15px;
+}*/
+.custom-form-actions {
+
+    margin-bottom: 5px;
 }
 
 .required{ color: red; font-size: 11px; }

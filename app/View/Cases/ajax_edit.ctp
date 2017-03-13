@@ -169,7 +169,6 @@ if(empty($defaultCollapseIn)) {
 		</div>
 		<div class="widget-body edit-case-cnt panel-collapse collapse" id="essentialWorks">
 			<div class="widget-main">
-				<?php echo $this->Session->flash();?>
 				<?php echo $this->Form->create('ClientCase', array('url' => '/cases/updateEssentialWorks/'.$caseId, 'class' => 'form-horizontal', 'name' => 'formEssentialWorks', 'id' => 'formEssentialWorks', 'novalidate' => true)); ?>
 					<?php echo $this->Form->input('ClientCase.id', array('label' => false, 'div' => false, 'type' => 'hidden')); ?>
 
