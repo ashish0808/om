@@ -132,4 +132,19 @@ class ClientCasesComponent extends Component
 
 		return $essentialWorks;
 	}
+
+	public function findByCaseId($caseId, $userId)
+	{
+		App::import('Model','ClientCase');
+		$clientCase = & new ClientCase();
+
+		$clientCase->contain('CaseType');
+
+		return $clientCase->find('first', array(
+			'conditions' => array(
+				'ClientCase.id' => $caseId,
+				'ClientCase.user_id' => $userId
+			)
+		));
+	}
 }

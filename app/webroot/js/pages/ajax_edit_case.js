@@ -27,8 +27,22 @@ $(document).ready(function(){
         caseRegistrationFields();
     });
 
+    $("body").delegate(".certifiedCopyRequired", "change", function() {
+
+        certifiedCopyRequiredFields();
+    });
+
+    if($('#ClientCaseCaseNumber').val()=='') {
+
+        $('.caseNumberRelatedFields').addClass('hide');
+    } else {
+
+        $('.caseNumberRelatedFields').removeClass('hide');
+    }
+
     paymentUpdated();
     caseRegistrationFields();
+    certifiedCopyRequiredFields();
 });
 
 function showPartTypeFields(partyType) {
@@ -70,6 +84,19 @@ function caseRegistrationFields()
 
         $('.objectionCaseNumberField').removeClass('hide');
         $('.registerCaseNumberField').addClass('hide');
+    }
+}
+
+function certifiedCopyRequiredFields()
+{
+    var isCertifiedCopyRequired = $(".certifiedCopyRequired").val();
+
+    if(isCertifiedCopyRequired==1) {
+
+        $('.requiredCertifiedCopy').removeClass('hide');
+    } else {
+
+        $('.requiredCertifiedCopy').addClass('hide');
     }
 }
 
