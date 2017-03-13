@@ -333,6 +333,74 @@ class ClientCase extends AppModel {
 		)
 	);
 
+	public $validateCaseDecision = array(
+		'certified_copy_required' => array(
+			'required' => array(
+				'rule' => 'notBlank',
+				'message' => 'Please select if certified copy required'
+			)
+		),
+		'certified_copy_applied_date' => array(
+			'ruleNotEmpty' => array(
+				'rule' => array('validateWithMultipleObjections', array('certified_copy_received_date', 'order_supplied_date', 'supplied_via', 'alongwith_lcr')),
+				'message' => 'Please enter date applied on',
+			),
+		),
+		'certified_copy_received_date' => array(
+			'ruleNotEmpty' => array(
+				'rule' => array('validateWithMultipleObjections', array('order_supplied_date', 'supplied_via', 'alongwith_lcr')),
+				'message' => 'Please enter date received on',
+			),
+			'ruleCompareDate' => array(
+				'rule' => array('validateWithCompareDates', array('certified_copy_applied_date')),
+				'message' => 'Date received on must be greater than applied on',
+			),
+		),
+		'order_supplied_date' => array(
+			'ruleNotEmpty' => array(
+				'rule' => array('validateWithMultipleObjections', array('supplied_via', 'alongwith_lcr')),
+				'message' => 'Please enter date supplied on',
+			),
+			'ruleCompareDate' => array(
+				'rule' => array('validateWithCompareDates', array('certified_copy_applied_date', 'certified_copy_received_date')),
+				'message' => 'Date supplied on must be greater than applied on and received on',
+			),
+		),
+		'supplied_via' => array(
+			'ruleNotEmpty' => array(
+				'rule' => array('validateWithMultipleObjections', array('order_supplied_date', 'alongwith_lcr')),
+				'message' => 'Please enter supplied via',
+			),
+		)
+	);
+
+	public function validateWithCompareDates($field = array(), $compare_fields = array())
+	{
+		foreach ($field as $key => $value) {
+
+			if(!empty($value)) {
+
+				$v1 = strtotime(trim($value));
+				foreach($compare_fields as $compare_field) {
+
+					$v2 = trim($this->data[$this->name][$compare_field]);
+
+					if(!empty($v2)) {
+
+						$v2 = strtotime($v2);
+
+						if($v2 > $v1) {
+
+							return false;
+						}
+					}
+				}
+			}
+
+			return true;
+		}
+	}
+
 	public function validateWithClientType($field = array(), $compare_field = null)
 	{
 		foreach ($field as $key => $value) {
@@ -463,6 +531,43 @@ class ClientCase extends AppModel {
 
 			return true;
 		}
+	}
+
+	public function validateWithMultipleObjections($field = array(), $compare_fields = array())
+	{
+		foreach ($field as $key => $value) {
+
+			$v1 = trim($value);
+			foreach($compare_fields as $compare_field) {
+
+				$v2 = trim($this->data[$this->name][$compare_field]);
+
+				if(!empty($v2) && empty($v1)) {
+
+					return false;
+				}
+			}
+
+			return true;
+		}
+	}
+
+	public function getUnattachedCases($caseId, $userId, $customSearch)
+	{
+		$customSearchStr = '';
+		if(!empty($customSearch)) {
+
+			$customSearchStr .= implode(' AND ', $customSearch);
+		}
+
+		if(!empty($customSearchStr)) {
+
+			$customSearchStr = ' AND '.$customSearchStr;
+		}
+
+		return $this->query("SELECT cc1.id, cc1.case_number, cc1.case_year, cc1.client_phone, cc1.party_name
+					FROM client_cases as cc1 LEFT OUTER JOIN client_cases as cc2 ON cc1.id=cc2.parent_case_id
+					WHERE cc2.id IS NULL AND (cc1.parent_case_id IS NULL OR cc1.parent_case_id=0) AND cc1.is_main_case = 1 AND cc1.id != $caseId AND cc1.user_id = $userId".$customSearchStr);
 	}
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -612,4 +717,6 @@ class ClientCase extends AppModel {
 	//ALTER TABLE `client_cases` CHANGE `case_number` `case_number` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `complete_case_number` `complete_case_number` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `case_year` `case_year` INT(5) NULL, CHANGE `case_title` `case_title` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `party_type` `party_type` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL COMMENT 'Private Client or Company';
 
 	//ALTER TABLE `client_cases` CHANGE `fee_settlled` `fee_settled` FLOAT(9,2) NOT NULL DEFAULT '0.00';
+	//ALTER TABLE `client_cases` ADD `decided_procedure_completed` TINYINT NOT NULL DEFAULT '0' AFTER `alongwith_lcr`;
+	//ALTER TABLE `client_cases` CHANGE `certified_copy_required` `certified_copy_required` TINYINT(1) NOT NULL DEFAULT '1';
 }

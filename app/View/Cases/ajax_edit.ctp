@@ -29,14 +29,9 @@ if(empty($defaultCollapseIn)) {
         	}
 		}
 
-		if($caseDetails['ClientCase']['completed_step']==5) {
+		if(!empty($caseDetails['CaseStatus']['status']) && $caseDetails['CaseStatus']['status']=='decided') {
 
-			$defaultCollapseIn = 'essentialWorks';
-		}
-
-		if($caseDetails['ClientCase']['completed_step']==6) {
-
-			$defaultCollapseIn = 'caseAttachments';
+			$defaultCollapseIn = 'caseDecision';
 		}
     }
 }
@@ -163,51 +158,65 @@ if(empty($defaultCollapseIn)) {
 	</div>
 	<?php } ?>
 
-	<?php if($caseDetails['ClientCase']['completed_step']>=4) { ?>
-	<div class="widget-header">
-		<a data-toggle="collapse" href="#essentialWorks">
-			<h4 class="col-sm-12 widget-title">
-				<i class="more-less pull-right icon-plus"></i>
-				Essential Works
-			</h4>
-		</a>
-	</div>
-	<div class="widget-body edit-case-cnt panel-collapse collapse" id="essentialWorks">
-		<div class="widget-main">
-			<?php echo $this->Form->create('ClientCase', array('url' => '/cases/updateEssentialWorks/'.$caseId, 'class' => 'form-horizontal', 'name' => 'formEssentialWorks', 'id' => 'formEssentialWorks', 'novalidate' => true)); ?>
-				<?php echo $this->Form->input('ClientCase.id', array('label' => false, 'div' => false, 'type' => 'hidden')); ?>
+	<?php if($caseDetails['ClientCase']['completed_step']>=4 && !empty($caseDetails['ClientCase']['case_number'])) { ?>
+		<div class="widget-header">
+			<a data-toggle="collapse" href="#essentialWorks">
+				<h4 class="col-sm-12 widget-title">
+					<i class="more-less pull-right icon-plus"></i>
+					Essential Works
+				</h4>
+			</a>
+		</div>
+		<div class="widget-body edit-case-cnt panel-collapse collapse" id="essentialWorks">
+			<div class="widget-main">
+				<?php echo $this->Form->create('ClientCase', array('url' => '/cases/updateEssentialWorks/'.$caseId, 'class' => 'form-horizontal', 'name' => 'formEssentialWorks', 'id' => 'formEssentialWorks', 'novalidate' => true)); ?>
+					<?php echo $this->Form->input('ClientCase.id', array('label' => false, 'div' => false, 'type' => 'hidden')); ?>
 
-				<?php foreach($essentialWorksArr as $essentialWorkKey=>$essentialWork){ ?>
-				<div class="col-sm-12">
-					<div class="form-group">
-						<div class="col-sm-12">
-							<span class="help-inline col-xs-12 col-sm-7">
-								<label>
-									<?php
-									$workChecked = '';
-									if(!empty($caseDetails['ClientCase'][$essentialWorkKey])){
-										$workChecked = 'checked="checked"';
-									} ?>
+					<?php foreach($essentialWorksArr as $essentialWorkKey=>$essentialWork){ ?>
+					<div class="col-sm-12">
+						<div class="form-group">
+							<div class="col-sm-12">
+								<span class="help-inline col-xs-12 col-sm-7">
+									<label>
+										<?php
+										$workChecked = '';
+										if(!empty($caseDetails['ClientCase'][$essentialWorkKey])){
+											$workChecked = 'checked="checked"';
+										} ?>
 
-									<input class="ace" <?php echo $workChecked; ?> value=1 name="data[ClientCase][<?php echo $essentialWorkKey; ?>]" type="checkbox">
-									<span class="lbl"> <?php echo $essentialWork; ?></span>
-								</label>
-							</span>
+										<input class="ace" <?php echo $workChecked; ?> value=1 name="data[ClientCase][<?php echo $essentialWorkKey; ?>]" type="checkbox">
+										<span class="lbl"> <?php echo $essentialWork; ?></span>
+									</label>
+								</span>
+							</div>
 						</div>
 					</div>
-				</div>
-				<?php } ?>
+					<?php } ?>
 
-				<div class="row">
-                	<div class="col-sm-12">
-                		<div class="clearfix pull-right custom-form-actions">
-                			<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Update", array("class" => "btn btn-info updateCaseEssentials", "escape" => false, "type" => "button"));?>
-                		</div>
-                	</div>
-                </div>
-			<?php echo $this->Form->end(); ?>
+					<div class="row">
+						<div class="col-sm-12">
+							<div class="clearfix pull-right custom-form-actions">
+								<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Update", array("class" => "btn btn-info updateCaseEssentials", "escape" => false, "type" => "button"));?>
+							</div>
+						</div>
+					</div>
+				<?php echo $this->Form->end(); ?>
+			</div>
 		</div>
-	</div>
+
+		<?php if(!empty($caseDetails['CaseStatus']['status']) && $caseDetails['CaseStatus']['status']=='decided') { ?>
+			<div class="widget-header">
+				<a data-toggle="collapse" href="#caseDecision">
+					<h4 class="col-sm-12 widget-title">
+						<i class="more-less pull-right icon-plus"></i>
+						Case Decision
+					</h4>
+				</a>
+			</div>
+			<div class="widget-body edit-case-cnt panel-collapse collapse" id="caseDecision">
+				<?php echo $this->element('Cases/decision');?>
+			</div>
+		<?php } ?>
 	<?php } ?>
 
 	<?php if($caseDetails['ClientCase']['client_type']=='petitioner'){ ?>

@@ -1,13 +1,79 @@
 <?php
-
+App::uses('AppController', 'Controller');
+/**
+ * Cases Controller.
+ *
+ * @property CaseCivilMisc $CaseCivilMisc
+ * @property PaginatorComponent $Paginator
+ * @property FlashComponent $Flash
+ * @property SessionComponent $Session
+ */
 class CasesController extends AppController
 {
 	public $helpers = array("Form", "Js" => array('Jquery'), 'Validation');
 	//JS and Validation helpers are not in Use right now
 
-	public $components = array('RequestHandler', 'Email');
+	public $components = array('Paginator', 'Flash', 'Session', 'RequestHandler', 'Email');
 
 	public function manage()
+	{
+		if ($this->request->isAjax()) {
+			$this->layout = 'ajax';
+		} else {
+			$this->layout = 'basic';
+		}
+		$this->pageTitle = 'Manage Cases';
+		$this->set('pageTitle', $this->pageTitle);
+
+		$this->loadModel('ClientCase');
+
+		$fields = [];
+
+		$criteria = array(
+			'ClientCase.user_id' => $this->getLawyerId()
+		);
+		if (!empty($this->request->data)) {
+			foreach ($this->request->data['ClientCase'] as $key => $value) {
+				if (!empty($value)) {
+					$criteria[$key] = $value;
+					$this->request->params['named'][$key] = $value;
+				}
+			}
+		}
+
+		if (!empty($this->request->params['named'])) {
+			foreach ($this->request->params['named'] as $key => $value) {
+				if (!in_array($key, ['page', 'sort', 'direction'])) {
+					if (!empty($value)) {
+						$criteria[$key] = $value;
+						$this->request->data['ClientCase'][$key] = $value;
+					}
+				}
+			}
+		}
+
+		$this->Paginator->settings = array(
+			'page' => 1,
+			'limit' => LIMIT,
+			'fields' => $fields,
+			'order' => array('ClientCase.id' => 'desc')
+		);
+
+		$this->set('paginateLimit', LIMIT);
+
+		$records = $this->Paginator->paginate('ClientCase', $criteria);
+
+		foreach ($records as $key => $value) {
+			if (!empty($value['ClientCase']['case_file'])) {
+				$records[$key]['ClientCase']['case_file'] = $this->Aws->getObjectUrl($value['ClientCase']['case_file']);
+			} else {
+				$records[$key]['ClientCase']['case_file'] = '';
+			}
+		}
+		$this->set('records', $records);
+	}
+
+	public function index()
 	{
 		if ($this->RequestHandler->isAjax()) {
 			$this->layout = 'ajax';
@@ -135,6 +201,10 @@ class CasesController extends AppController
 		$this->pageTitle = 'Edit Case';
 		$this->set("pageTitle", $this->pageTitle);
 		$this->set('caseId',$caseId);
+
+		$this->loadModel('ClientCase');
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+		$this->set('caseDetails', $caseDetails);
 	}
 
 	public function ajaxEdit($caseId)
@@ -747,6 +817,56 @@ class CasesController extends AppController
 			if ($this->ClientCase->save($data, false)) {
 
 				$result = array('status' => 'success');
+			}
+		}
+
+		echo json_encode($result);
+		exit;
+	}
+
+	public function addDecision($caseId)
+	{
+		$this->layout = 'ajax';
+		$this->loadModel('ClientCase');
+
+		$result = array('status' => 'error', 'message' => 'Unable to process data');
+
+		if ($this->request->data) {
+
+			$this->ClientCase->set($this->request->data);
+			$this->ClientCase->validate = $this->ClientCase->validateCaseDecision;
+
+			if ($this->ClientCase->validate) {
+
+				$data = $this->request->data['ClientCase'];
+
+				if($data['certified_copy_required']==1) {
+
+					$data['decided_procedure_completed'] = 0;
+					if(!empty($data['order_supplied_date'])) {
+
+						$data['decided_procedure_completed'] = 1;
+					}
+				} else {
+
+					$data['decided_procedure_completed'] = 1;
+					$data['certified_copy_applied_date'] = '';
+					$data['certified_copy_received_date'] = '';
+					$data['order_supplied_date'] = '';
+					$data['supplied_via'] = '';
+					$data['alongwith_lcr'] = '';
+				}
+
+				if ($this->ClientCase->save($data)) {
+
+					$result = array('status' => 'success');
+				} else {
+
+					$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
+				}
+			} else {
+
+				$result = array('status' => 'error', 'message' => $this->ClientCase->validationErrors);
 			}
 		}
 

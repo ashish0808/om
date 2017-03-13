@@ -312,6 +312,40 @@ $(document).ready(function(){
 
         return false;
     });
+
+    $("body").on('click', '.addDecision', function() {
+
+        showLoading();
+        $.ajax({
+            url: $('#addDecision').attr('action'),
+            type: "POST",
+            data: $('#addDecision').serialize(),
+            dataType:'json',
+            success: function(data) {
+
+                $('.editBasicDetailsError').hide();
+                if(data.status=='error') {
+
+                    $.each(data.message, function (i, v) {
+
+                        if($('#error_'+i).length > 0) {
+
+                            $('#error_'+i).html(v);
+                            $('#error_'+i).show();
+                        }
+                    });
+                } else if(data.status == 'success') {
+
+                    var nextPage = 'caseDecision';
+                    showEditPage(nextPage);
+                }
+
+                hideLoading();
+            }
+        });
+
+        return false;
+    });
 });
 
 function ajaxFileUpload() {
