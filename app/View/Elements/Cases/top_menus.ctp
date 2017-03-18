@@ -3,8 +3,8 @@
 		<ul class="nav nav-tabs" id="myTab2">
 
 			<?php
-			$viewCaseTab = $editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = '';
-			$viewCaseAE = $editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = 'false';
+			$viewCaseTab = $editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = $manageCaseCivilMiscTab = '';
+			$viewCaseAE = $editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = $manageCaseCivilMiscAE = 'false';
 
 			if (lcfirst($this->params['controller']) == 'cases' && $this->params['action'] == 'view') {
 				$viewCaseTab = 'active';
