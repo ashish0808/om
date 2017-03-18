@@ -15,27 +15,40 @@ class CasesController extends AppController
 
 	public $components = array('Paginator', 'Flash', 'Session', 'RequestHandler', 'Email');
 
-	public function manage()
+	public function manage($listType = '')
 	{
 		if ($this->request->isAjax()) {
 			$this->layout = 'ajax';
 		} else {
 			$this->layout = 'basic';
 		}
-		$this->pageTitle = 'Manage Cases';
+
+		$pageName = 'Manage Cases';
+		if($listType == 'decided') {
+
+			$pageName = 'List Decided Cases';
+		}elseif($listType == 'notwithus') {
+
+			$pageName = 'List Cases Not With Us';
+		}
+
+		$this->pageTitle = $pageName;
 		$this->set('pageTitle', $this->pageTitle);
 
 		$this->loadModel('ClientCase');
+		$this->loadModel('CaseStatus');
 
 		$fields = [];
 
-		$criteria = array(
-			'ClientCase.user_id' => $this->getLawyerId()
-		);
+		$criteria = array();
+
+		$this->ClientCases = $this->Components->load('ClientCases');
+		$criteria = $this->ClientCases->listFilterWithStatus($criteria, $listType);
+
 		if (!empty($this->request->data)) {
 			foreach ($this->request->data['ClientCase'] as $key => $value) {
 				if (!empty($value)) {
-					$criteria[$key] = $value;
+					$criteria['ClientCase.'.$key] = " LIKE '%".$value."%'";
 					$this->request->params['named'][$key] = $value;
 				}
 			}
@@ -45,7 +58,7 @@ class CasesController extends AppController
 			foreach ($this->request->params['named'] as $key => $value) {
 				if (!in_array($key, ['page', 'sort', 'direction'])) {
 					if (!empty($value)) {
-						$criteria[$key] = $value;
+						$criteria['ClientCase.'.$key] = " LIKE '%".$value."%'";
 						$this->request->data['ClientCase'][$key] = $value;
 					}
 				}
@@ -61,7 +74,20 @@ class CasesController extends AppController
 
 		$this->set('paginateLimit', LIMIT);
 
-		$records = $this->Paginator->paginate('ClientCase', $criteria);
+		$criteriaStr = 'ClientCase.user_id='.$this->getLawyerId().' AND ClientCase.is_main_case=1';
+
+		if(!empty($criteria)) {
+
+			foreach($criteria as $criteriaKey => $criteriaVal) {
+
+				$criteriaStr .= ' AND '.$criteriaKey.$criteriaVal;
+			}
+
+		}
+		//echo $criteriaStr; die;
+		//pr($criteria); die;
+
+		$records = $this->Paginator->paginate('ClientCase', $criteriaStr);
 
 		foreach ($records as $key => $value) {
 			if (!empty($value['ClientCase']['case_file'])) {
@@ -70,6 +96,31 @@ class CasesController extends AppController
 				$records[$key]['ClientCase']['case_file'] = '';
 			}
 		}
+
+		$caseStatuses = $this->CaseStatus->find('all', array(
+			'conditions' => array(
+				"NOT" => array( "CaseStatus.status" => array('decided', 'not_with_us') )
+			),
+			'fields' => array('id', 'status')
+		));
+		$caseStatusesArr = array();
+		if(!empty($caseStatuses)) {
+
+			foreach($caseStatuses as $caseStatus){
+
+				$caseStatusesArr[$caseStatus['CaseStatus']['id']] = ucfirst(str_replace('_', ' ', $caseStatus['CaseStatus']['status']));
+			}
+		}
+		$this->set('caseStatuses', $caseStatusesArr);
+
+		$this->loadModel('CaseType');
+		$caseTypes = $this->CaseType->find('list', array(
+			'fields' => array('CaseType.id', 'CaseType.name'),
+			'order' => 'name ASC'
+		));
+		$this->set("caseTypes", $caseTypes);
+
+		$this->set('listType', $listType);
 		$this->set('records', $records);
 	}
 
@@ -534,13 +585,13 @@ class CasesController extends AppController
 
 			if(!empty($amount_paid)) {
 
-				$caseData['ClientCase.payment_status'] = "'Part'";
+				$caseData['ClientCase.payment_status'] = "'part'";
 				if($amount_paid >= $feeSettled) {
 
 					$caseData['ClientCase.payment_status'] = "'full'";
 				} elseif($amount_paid == ($feeSettled / 2)) {
 
-				$caseData['ClientCase.payment_status'] = "'Half'";
+				$caseData['ClientCase.payment_status'] = "'half'";
 				}
 			}
 		}

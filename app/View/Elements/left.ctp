@@ -69,11 +69,17 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
 
         <ul class="submenu" <?php echo $caseSub; ?>>
             <li>
+				<?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'cases','action'=>'add'), array('escape' => false))?>
+			</li>
+            <li>
                 <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'cases','action'=>'manage'), array('escape' => false))?>
             </li>
             <li>
-				<?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'cases','action'=>'add'), array('escape' => false))?>
-			</li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Decided ', array('controller'=>'cases','action'=>'manage', 'decided'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Not With Us ', array('controller'=>'cases','action'=>'manage', 'notwithus'), array('escape' => false))?>
+            </li>
         </ul>
     </li>
     <?php
