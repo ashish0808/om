@@ -128,7 +128,7 @@ Configure::write('PAYMENT_TYPES', array('Cheque' => 'Cheque', 'Gateway' => 'Gate
 Configure::write('USER_TYPES', array(2 => 'Lawyer'));
 define('NO_RECORD', 'No records found');
 define('SITE_NAME', 'Office Management');
-define('LIMIT', 1);
+define('LIMIT', 10);
 define('REQUIRED', '<span class="red">*</span>');
 define('CASE_INFORMATION_ADDED', '<span class="setFlash success">Case information added successfully.</span>');
 define('CASE_DELETED', '<span class="setFlash success">Case deleted successfully.</span>');
