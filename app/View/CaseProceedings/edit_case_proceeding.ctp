@@ -1,4 +1,4 @@
-<?php echo $this->Form->create('CaseProceeding', array('url' => '/CaseProceedings/editCaseProceeding/'.$caseProceedingId.'/'.$date, 'class' => 'form-horizontal', 'name' => 'editCaseProceedingForm', 'id' => 'editCaseProceedingForm', 'novalidate' => true));
+<?php echo $this->Form->create('CaseProceeding', array('url' => '/CaseProceedings/editCaseProceeding/'.$caseProceedingId.'/'.$date.'/'.$pageType, 'class' => 'form-horizontal', 'name' => 'editCaseProceedingForm', 'id' => 'editCaseProceedingForm', 'novalidate' => true));
 echo $this->Form->hidden('CaseProceeding.id');
 echo $this->Form->hidden('CaseProceeding.client_case_id');
 echo $this->Form->hidden('CaseProceeding.search_date', array('value' => $date));
