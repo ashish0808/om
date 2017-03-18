@@ -17,9 +17,11 @@ $data = $this->Js->get('#CaseSearchForm')->serializeForm(array('isForm' => true,
 $this->Js->get('#CaseSearchForm')->event(
     'submit',
     $this->Js->request(
-        array('action' => 'manage'),
+        array('action' => 'manage', $listType),
         array(
             'update' => '#content',
+            'before'   => '$("#overlay_img").fadeIn()',
+            'complete' => '$("#overlay_img").fadeOut()',
             'data' => $data,
             'async' => true,
             'dataExpression'=>true,
@@ -30,16 +32,18 @@ $this->Js->get('#CaseSearchForm')->event(
 $this->Js->get('#CaseSearchForm')->event(
     'reset',
     $this->Js->request(
-        array('action' => 'manage'),
+        array('action' => 'manage', $listType),
         array(
             'update' => '#content',
+            'before'   => '$("#overlay_img").fadeIn()',
+            'complete' => '$("#overlay_img").fadeOut()',
             'async' => true,
             'dataExpression'=>true,
             'method' => 'POST'
         )
     )
 );
-echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'CaseSearchForm','name'=>'CaseSearchForm'));?>
+echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'CaseSearchForm','name'=>'CaseSearchForm', 'novalidate' => true));?>
 <div class="row-fluid">
     <div class="span12">
         <div class="row-fluid">
@@ -49,35 +53,121 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
                 </div>
                 <div class="widget-body">
                     <div class="widget-main">
-                        <?php
-                        echo $this->Form->input('ClientCase.case_number', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Case Number', 'data-date-format' => 'yyyy-mm-dd', 'autocomplete' => 'off'));
-                        ?>
-                        <?php
-                        echo $this->Form->input('ClientCase.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Computer File No', 'autocomplete' => 'off'));
-                        ?>
-                        <?php
-                        echo $this->Form->button("<i class='icon-search icon-on-right bigger-110'></i>Search",
-                            array("class"=>"btn btn-purple btn-sm","escape"=>false,
-                                "type"=>"submit", "div" => false));
-                                ?>
-                        <?php
-                        echo $this->Form->button("<i class='icon-on-right bigger-110'></i>Reset",
-                            array("class"=>"btn btn-sm","escape"=>false,
-                                "type"=>"reset", "div" => false));
-                        echo $this->Form->end();
-						echo $this->Js->writeBuffer();
-						?>
+						<div class="row">
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Case Number: </label>
+										<?php echo $this->Form->input('ClientCase.case_number', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Computer File No: </label>
+										<?php echo $this->Form->input('ClientCase.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Case Title: </label>
+										<?php echo $this->Form->input('ClientCase.case_title', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Case Year: </label>
+										<?php echo $this->Form->input('ClientCase.case_year', array('label' => false, 'required' => false, 'div' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row m-t-10">
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Client type: </label>
+										<?php
+										$clientTypes = array('petitioner' => 'Appellant/Petitioner', 'respondent' => 'Respondent');
+										echo $this->Form->input('ClientCase.client_type', array('options' => $clientTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Party Name: </label>
+										<?php echo $this->Form->input('ClientCase.party_name', array('label' => false, 'required' => false, 'div' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Case Type: </label>
+										<?php echo $this->Form->input('ClientCase.case_type_id', array('options' => $caseTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Payment Paid: </label>
+										<?php
+										$paymentPaidTypes = array('nil' => 'Nil', 'part' => 'Part', 'half' => 'Half', 'full' => 'Full');
+										echo $this->Form->input('ClientCase.payment_status', array('options' => $paymentPaidTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row m-t-10">
+							<?php if(empty($listType)){ ?>
+								<div class="col-sm-3 col-xs-12">
+									<div class="form-group">
+										<div class="col-sm-12 col-xs-12">
+											<label class="col-xs-12 control-label no-padding-right">Case Status: </label>
+											<?php echo $this->Form->input('ClientCase.case_status', array('options' => $caseStatuses, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
+										</div>
+									</div>
+								</div>
+                        	<?php } ?>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">&nbsp;</label>
+										<label class="col-xs-12 control-label no-padding-right">
+
+										<?php echo $this->Form->input('ClientCase.saved_incomplete', array('label' => false, 'value' => 1, 'required' => false, 'div' => false, 'class' => 'search-query', 'type' => 'checkbox', 'autocomplete' => 'off')); ?> Saved Incomplete </label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row"><div class="col-md-12">&nbsp;</div></div>
+						<div class="row">
+							<div class="col-md-12">
+								<div class="form-group pull-right">
+									<div class="col-sm-12 col-xs-12">
+									<?php echo $this->Form->button("<i class='icon-search icon-on-right bigger-110'></i>Search",
+										array("class"=>"btn btn-purple btn-sm","escape"=>false, "type"=>"submit", "div" => false)); ?>
+									<?php echo $this->Form->button("<i class='icon-on-right bigger-110'></i>Reset",
+										array("class"=>"btn btn-sm","escape"=>false, "type"=>"reset", "div" => false)); ?>
+									</div>
+								</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-<div class="row-fluid">
-	<div class="span12">
-	</div>
-</div>
+<?php echo $this->Form->end();
+echo $this->Js->writeBuffer(); ?>
 <div class="row-fluid">
 	<div class="span12">
         <div class="row-fluid">
@@ -86,22 +176,43 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							<?php echo $this->Paginator->sort('ClientCase.case_number', 'Case Number', array());?>
-						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							<?php echo $this->Paginator->sort('ClientCase.computer_file_no', 'Computer File No', array());?>
-						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							<?php echo $this->Paginator->sort('ClientCase.case_title', 'Case Title', array());?>
-						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Attachment
-						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							<?php echo $this->Paginator->sort('ClientCase.created', 'Created', array());?>
-						</th>
-						<th class="col-xs-2" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
+						<?php if(count($records) > 1) {?>
+							<th>
+								<?php echo $this->Paginator->sort('ClientCase.case_number', 'Case Number', array());?>
+							</th>
+							<th class="col-xs-2">
+								<?php echo $this->Paginator->sort('ClientCase.computer_file_no', 'Computer File No', array());?>
+							</th>
+							<th class="col-xs-2">
+								<?php echo $this->Paginator->sort('ClientCase.case_title', 'Case Title', array());?>
+							</th>
+							<th>
+								<?php echo $this->Paginator->sort('ClientCase.case_year', 'Case Year', array());?>
+							</th>
+							<th class="col-xs-2">
+								<?php echo $this->Paginator->sort('ClientCase.party_name', 'Party Name', array());?>
+							</th>
+							<th>
+								<?php echo $this->Paginator->sort('ClientCase.client_case_count', 'Child Cases', array());?>
+							</th>
+							<th>
+								Attachment
+							</th>
+							<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+								<?php echo $this->Paginator->sort('ClientCase.created', 'Created', array());?>
+							</th>
+							<th>Action</th>
+						<?php }else{ ?>
+							<th>Case Number</th>
+							<th class="col-xs-2">Computer File No</th>
+							<th class="col-xs-2">Case Title</th>
+							<th>Case Year</th>
+							<th>Party Name</th>
+							<th>Child Cases</th>
+							<th>Attachment</th>
+							<th class="col-xs-2">Created</th>
+							<th>Action</th>
+						<?php } ?>
 					</tr>
 				</thead>
 				<tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -112,6 +223,9 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 						<td class=" "><?php echo $record['ClientCase']['case_number'];?></td>
 						<td class=" "><?php echo $record['ClientCase']['computer_file_no'];?></td>
 						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>"; ?></td>
+						<td><?php echo $record['ClientCase']['case_year'];?></td>
+						<td><?php echo $record['ClientCase']['party_name'];?></td>
+						<td><?php echo $record['ClientCase']['client_case_count'] ? $record['ClientCase']['client_case_count']: 0; ?></td>
 						<td class=" ">
 							<?php 
 							if (!empty($record['ClientCase']['case_file'])) {

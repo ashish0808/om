@@ -38,6 +38,21 @@ class AppController extends Controller {
 
     public function beforeFilter()
     {
+	    $currentUrl = $this->params['controller'].'/'.$this->params['action'];
+
+	    $currentUrl = strtolower($currentUrl);
+	    if($currentUrl == 'users/login' && $this->isUserLoggedIn()) {
+
+		    return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+	    }
+
+	    if (!$this->checkUserAccess($currentUrl)) {
+
+		    $this->Session->setFlash('<span class="setFlash error">Unauthorized access.</span>');
+
+		    $this->redirect(array('controller' => 'users', 'action' => 'login'));
+	    }
+
         parent::beforeFilter();
     }
 
@@ -94,6 +109,16 @@ class AppController extends Controller {
 
     public function checkUserAccess($currentUrl)
     {
+	    if($currentUrl == 'users/login') {
+
+		    return true;
+	    }
+
+	    if(!$this->isUserLoggedIn()) {
+
+		    return false;
+	    }
+
         return true;
     }
 

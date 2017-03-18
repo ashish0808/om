@@ -741,8 +741,8 @@ class ClientCase extends AppModel {
 	//ALTER TABLE `client_cases` CHANGE `case_number` `case_number` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `complete_case_number` `complete_case_number` VARCHAR(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `case_year` `case_year` INT(5) NULL, CHANGE `case_title` `case_title` VARCHAR(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL, CHANGE `party_type` `party_type` VARCHAR(20) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL COMMENT 'Private Client or Company';
 
 	//ALTER TABLE `client_cases` CHANGE `fee_settlled` `fee_settled` FLOAT(9,2) NOT NULL DEFAULT '0.00';
-	//ALTER TABLE `client_cases` ADD `decided_procedure_completed` TINYINT NOT NULL DEFAULT '0' AFTER `alongwith_lcr`;
 	//ALTER TABLE `client_cases` CHANGE `certified_copy_required` `certified_copy_required` TINYINT(1) NOT NULL DEFAULT '1';
+	//ALTER TABLE `client_cases` ADD `decided_procedure_completed` TINYINT NOT NULL DEFAULT '0' AFTER `alongwith_lcr`;
 	//ALTER TABLE `client_cases` ADD `final_completion_date` DATE NULL AFTER `saved_incomplete`;
 	//ALTER TABLE `client_cases` ADD `reminder_date` DATE NULL AFTER `saved_incomplete`;
 }

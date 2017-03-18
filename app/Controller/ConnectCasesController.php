@@ -24,7 +24,7 @@ class ConnectCasesController extends AppController
     public function manage($caseId)
     {
 	    $this->layout = 'basic';
-	    $this->pageTitle = 'Connected Cases';
+	    $this->pageTitle = 'Connected Child Cases';
 
 	    $this->loadModel('ClientCase');
 	    $caseDetails = $this->getCaseDetails($caseId);
@@ -50,7 +50,7 @@ class ConnectCasesController extends AppController
 		    $parentId = $caseDetails['ClientCase']['parent_case_id'];
 		    if(!empty($parentId)) {
 
-			    $this->pageTitle = 'Connected To';
+			    $this->pageTitle = 'Connected To Parent Case';
 
 			    $parentCase = $this->getCaseDetails($parentId);
 			    $this->set('parentCase', $parentCase);

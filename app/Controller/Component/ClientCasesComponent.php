@@ -154,4 +154,65 @@ class ClientCasesComponent extends Component
 			)
 		));
 	}
+
+	public function listFilterWithStatus($criteria, $listType)
+	{
+		if(!empty($listType)) {
+
+			if($listType == 'decided') {
+
+				$criteria = $this->_addListFilterWithStatusId($criteria, $listType);
+			}elseif($listType == 'notwithus') {
+
+				$criteria = $this->_addListFilterWithStatusId($criteria, 'not_with_us');
+			}
+		} else {
+
+			App::import('Model','CaseStatus');
+			$caseStatusObj = & new CaseStatus();
+
+			$caseStatuses = $caseStatusObj->find('all', array(
+				'conditions' => array(
+					'status' => array('decided', 'notwithus')
+				),
+				'fields' => array('id')
+			));
+
+			if(!empty($caseStatuses)) {
+
+				$caseStatusIds = array();
+				foreach($caseStatuses as $caseStatus) {
+
+					$caseStatusIds[] = $caseStatus['CaseStatus']['id'];
+				}
+
+				$criteria['ClientCase.case_status'] = ' NOT IN ('.implode(', ', $caseStatusIds).')';
+			}
+
+			return $criteria;
+		}
+
+
+		return $criteria;
+	}
+
+	private function _addListFilterWithStatusId($criteria, $listType)
+	{
+		App::import('Model','CaseStatus');
+		$caseStatusObj = & new CaseStatus();
+
+		$caseStatusData = $caseStatusObj->find('first', array(
+			'conditions' => array(
+				'status' => $listType
+			),
+			'fields' => array('id')
+		));
+
+		if(!empty($caseStatusData['CaseStatus']['id'])) {
+
+			$criteria['ClientCase.case_status'] = ' = '.$caseStatusData['CaseStatus']['id'];
+		}
+
+		return $criteria;
+	}
 }
