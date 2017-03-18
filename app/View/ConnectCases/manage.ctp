@@ -137,7 +137,7 @@
 											if(isset($childCases) && !empty($childCases)){
 												foreach ($childCases as $i=>$record){
 												$i = $i+1; ?>
-												<tr class="<?php echo ($i%2==1)?'odd':'even';?>"">
+												<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
 													<td class="center">
 														<label>
 															<input type="checkbox" class="ace">

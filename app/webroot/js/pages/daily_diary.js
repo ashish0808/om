@@ -20,19 +20,25 @@ $(document).ready(function() {
                 } else {
                     $('#projectModal').modal('hide');
                     var formData = new FormData();
-                    formData.append('data[CaseProceeding][date_of_hearing]', data);
-                    $.ajax({
-                        type: "POST",
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        url: '/om/CaseProceedings/',
-                        data: formData,
-                        success: function(html) {
-                            hideLoading();
-                            $('#content').html(html);
-                        }
-                    });
+                    data = JSON.parse(data);
+                    var url = $('#projectModal').attr('redirectUrl');
+                    if (data.pageType == 'daily_diary') {
+                        formData.append('data[CaseProceeding][date_of_hearing]', data.date);
+                        $.ajax({
+                            type: "POST",
+                            cache: false,
+                            processData: false,
+                            contentType: false,
+                            url: url,
+                            data: formData,
+                            success: function(html) {
+                                hideLoading();
+                                $('#content').html(html);
+                            }
+                        });
+                    } else {
+                        $(location).attr('href', url);
+                    }
                 }
             }
         });
@@ -43,6 +49,7 @@ $(document).ready(function() {
 
         var pageTitle = $(this).attr('pageTitle');
         var pageName = $(this).attr('pageName');
+        var redirectUrl = $(this).attr('redirectUrl');
         $.ajax({
             type: "GET",
             url: pageName,
@@ -53,6 +60,7 @@ $(document).ready(function() {
                 hideLoading();
                 $('#projectModal .modal-title').html(pageTitle);
                 $('#projectModal .modal-body').html(data);
+                $('#projectModal').attr('redirectUrl', redirectUrl);
                 $('#projectModal').modal('show');
             }
         });
