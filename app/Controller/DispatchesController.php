@@ -195,13 +195,14 @@ class DispatchesController extends AppController
                         $this->Dispatch->id = $id;
                         if ($this->Dispatch->save($this->request->data)) {
                             $this->Flash->success(__('The dispatch has been saved.'));
-
-                            return $this->redirect(array('action' => 'index'));
+                            if ($this->data['Dispatch']['referer'] == 'caseDispatches') {
+                                return $this->redirect(array('action' => 'caseDispatches', $this->data['Dispatch']['case_id']));
+                            } else {
+                                return $this->redirect(array('action' => 'index'));
+                            }
                         } else {
                             $this->Flash->error(__('The dispatch could not be saved. Please, try again.'));
                         }
-                    } else {
-                        pr($this->Dispatch->validationErrors);die;
                     }
                 }
             } else {
@@ -210,8 +211,15 @@ class DispatchesController extends AppController
             $this->set(compact('id', 'computer_file_no'));
         } else {
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
-
-            return $this->redirect(array('action' => 'index'));
+            return $this->redirect(Router::url($this->referer(), true));
+        }
+        // To see if the page has been accessed from case detail page or dispatches main page
+        $referer_url_params = Router::parse($this->referer('/', true));
+        $this->set('action', $referer_url_params['action']);
+        if (!empty($referer_url_params['pass'])) {
+            $this->set('caseId', $referer_url_params['pass'][0]);
+        } else {
+            $this->set('caseId', 0);
         }
     }
 
@@ -241,7 +249,7 @@ class DispatchesController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
         }
 
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(Router::url($this->referer(), true));
     }
 
     /**
@@ -261,10 +269,44 @@ class DispatchesController extends AppController
                 $dispatchData['Dispatch']['attachment'] = $this->Aws->getObjectUrl($dispatchData['Dispatch']['attachment']);
             }
             $this->set('Dispatch', $dispatchData);
+
+            // To see if the page has been accessed from case detail page or dispatches main page
+            $referer_url_params = Router::parse($this->referer('/', true));
+            $this->set('action', $referer_url_params['action']);
+            if (!empty($referer_url_params['pass'])) {
+                $this->set('caseId', $referer_url_params['pass'][0]);
+            }
         } else {
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
 
-            return $this->redirect(array('action' => 'index'));
+            return $this->redirect(Router::url($this->referer(), true));
         }
+    }
+
+
+    /**
+     * Get all the dispatches of a case
+     * @param  integer $caseId Case ID for which dispatches has to be fetched
+     * @return [html]  View of case dispatches page
+     */
+    public function caseDispatches($caseId)
+    {
+        $this->layout = 'basic';
+        $this->pageTitle = 'Case Dispatches';
+        $this->set('pageTitle', $this->pageTitle);
+
+        $caseDetails = $this->_getCaseDetails($caseId);
+
+        $this->Dispatch->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+        $Dispatches = $this->Dispatch->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId))), 'conditions' => array('client_case_id' => $caseId, 'Dispatch.user_id' => $this->Session->read('UserInfo.uid'))));
+
+        $this->set(compact('caseDetails', 'caseId', 'Dispatches'));
+    }
+
+    private function _getCaseDetails($caseId)
+    {
+        $this->ClientCases = $this->Components->load('ClientCases');
+
+        return $this->ClientCases->findByCaseId($caseId, $this->Session->read('UserInfo.lawyer_id'));
     }
 }

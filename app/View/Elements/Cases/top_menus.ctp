@@ -1,10 +1,10 @@
-<div class="widget-header">
+<div class="">
 	<div class="widget-toolbars no-border">
 		<ul class="nav nav-tabs" id="myTab2">
 
 			<?php
-			$editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = '';
-			$editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = 'false';
+			$editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = '';
+			$editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = 'false';
 			if (lcfirst($this->params['controller']) == 'cases') {
 				$editCaseTab = 'active';
 				$editCaseAE = 'true';
@@ -24,6 +24,12 @@
 				$manageCaseHistoryTab = 'active';
 				$manageCaseHistoryAE = 'true';
 			}
+
+			if ($this->params['controller'] == 'Dispatches') {
+				$manageCaseDispatchTab = 'active';
+				$manageCaseDispatchAE = 'true';
+			}
+
 			?>
 
 			<li class="<?php echo $editCaseTab; ?>">
@@ -48,6 +54,11 @@
 			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageCaseHistoryTab; ?>">
 				<?php echo $this->Html->link('Case History ', array('controller'=>'CaseProceedings','action'=>'caseHistory', $caseId), array('escape' => false, 'aria-expanded' => $manageCaseHistoryAE))?>
 			</li>
+
+			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageCaseDispatchTab; ?>">
+				<?php echo $this->Html->link('Case Dispatches ', array('controller'=>'Dispatches','action'=>'caseDispatches', $caseId), array('escape' => false, 'aria-expanded' => $manageCaseDispatchAE))?>
+			</li>
+
 		</ul>
 	</div>
 </div>

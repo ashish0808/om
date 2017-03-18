@@ -55,7 +55,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     <?php
     $caseMain = '';
     $caseSub = '';
-    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory')) {
+    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches')) {
   		$caseMain = 'open';
   		$caseSub = 'style="display:block;"';
     }
@@ -104,7 +104,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     <?php
     $caseDisptachMain = '';
     $caseDisptachSub = '';
-    if($this->params['controller'] == 'Dispatches')
+    if($this->params['controller'] == 'Dispatches' && $this->params['action'] != 'caseDispatches')
     {
         $caseDisptachMain = 'open';
         $caseDisptachSub = 'style="display:block;"';
