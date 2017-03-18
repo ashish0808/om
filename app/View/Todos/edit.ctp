@@ -6,6 +6,10 @@
 			</h1>
 		</div>
 		<?php echo $this->Form->create('Todo', array('type'=>'file', 'url' => '/Todos/edit/'.$id, 'class' => 'form-horizontal', 'name' => 'edit', 'id' => 'edit')); ?>
+		<?php
+		echo $this->Form->hidden('Todo.case_id', array('value' => $caseId));
+		echo $this->Form->hidden('Todo.referer', array('value' => $action));
+		?>
 		<div class="col-sm-12 col-xs-12">
 			<div class="widget-box">
 				<div class="widget-header">

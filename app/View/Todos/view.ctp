@@ -129,7 +129,13 @@
 							<div class="col-sm-12">
 								<div class="clearfix pull-right">
 									<?php echo $this->Html->link("Edit", array('controller' => 'Todos', 'action' => 'edit/'.$Todo['Todo']['id']), array('class' => 'btn btn-primary'));?>
-									<?php echo $this->Html->link("Back", array('controller' => 'Todos', 'action' => 'index'), array('class' => 'btn btn-info'));?>
+									<?php
+									if ($action == 'caseTodos') {
+										echo $this->Html->link("Back", array('controller' => 'Todos', 'action' => 'caseTodos', $caseId), array('class' => 'btn btn-info'));
+									} else {
+										echo $this->Html->link("Back", array('controller' => 'Todos', 'action' => 'index'), array('class' => 'btn btn-info'));
+									}
+									?>
 								</div>
 							</div>
 						</div>

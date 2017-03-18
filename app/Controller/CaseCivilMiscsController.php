@@ -226,7 +226,7 @@ class CaseCivilMiscsController extends AppController
             }
         } else {
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(Router::url($this->referer(), true));
         }
     }
 
@@ -303,7 +303,7 @@ class CaseCivilMiscsController extends AppController
         $caseDetails = $this->_getCaseDetails($caseId);
 
         $this->CaseCivilMisc->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-        $caseCivilMiscs = $this->CaseCivilMisc->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'CaseCivilMisc.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'application_date DESC'));
+        $caseCivilMiscs = $this->CaseCivilMisc->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'application_date DESC'));
 
         $this->set(compact('caseDetails', 'caseId', 'caseCivilMiscs'));
     }

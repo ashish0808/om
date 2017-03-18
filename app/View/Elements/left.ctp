@@ -55,7 +55,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     <?php
     $caseMain = '';
     $caseSub = '';
-    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches') || ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] == 'caseCivilMisc')) {
+    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches') || ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] == 'caseCivilMisc') || ($this->params['controller'] == 'Todos' && $this->params['action'] == 'caseTodos')) {
   		$caseMain = 'open';
   		$caseSub = 'style="display:block;"';
     }
@@ -138,7 +138,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     <?php
     $todoMain = '';
     $todoSub = '';
-    if($this->params['controller'] == 'Todos')
+    if($this->params['controller'] == 'Todos' && $this->params['action'] != 'caseTodos')
     {
         $todoMain = 'open';
         $todoSub = 'style="display:block;"';
@@ -174,7 +174,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
         <?php echo $this->Html->link('<i class="icon-desktop"></i> Change Password ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
     </li-->
     <li class="<?php echo $caseDisptachMain; ?>">
-        <?php echo $this->Html->link('<i class="icon-off"></i> Logout ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
+        <?php echo $this->Html->link('<i class="icon-off"></i> Logout ', array('controller'=>'users','action'=>'logout'), array('escape' => false))?>
     </li>
     <!--
     <li class="active">
