@@ -73,7 +73,7 @@ echo $this->Form->create('Dispatch',array('url' => '/Dispatches/index','id'=>'Di
         </div>
     </div>
 </div>
-8968338630 492.83
+
 <div class="row-fluid">
 	<div class="span12">
 	</div>

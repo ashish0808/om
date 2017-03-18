@@ -3,8 +3,8 @@
 		<ul class="nav nav-tabs" id="myTab2">
 
 			<?php
-			$editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = '';
-			$editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = 'false';
+			$editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = $manageCaseCivilMiscTab = '';
+			$editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = $manageCaseCivilMiscAE = 'false';
 			if (lcfirst($this->params['controller']) == 'cases') {
 				$editCaseTab = 'active';
 				$editCaseAE = 'true';
@@ -30,6 +30,11 @@
 				$manageCaseDispatchAE = 'true';
 			}
 
+			if ($this->params['controller'] == 'CaseCivilMiscs') {
+				$manageCaseCivilMiscTab = 'active';
+				$manageCaseCivilMiscAE = 'true';
+			}
+
 			?>
 
 			<li class="<?php echo $editCaseTab; ?>">
@@ -53,6 +58,10 @@
 
 			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageCaseHistoryTab; ?>">
 				<?php echo $this->Html->link('Case History ', array('controller'=>'CaseProceedings','action'=>'caseHistory', $caseId), array('escape' => false, 'aria-expanded' => $manageCaseHistoryAE))?>
+			</li>
+
+			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageCaseCivilMiscTab; ?>">
+				<?php echo $this->Html->link('CM/CRM ', array('controller'=>'CaseCivilMiscs','action'=>'caseCivilMisc', $caseId), array('escape' => false, 'aria-expanded' => $manageCaseCivilMiscAE))?>
 			</li>
 
 			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageCaseDispatchTab; ?>">

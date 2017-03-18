@@ -55,7 +55,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     <?php
     $caseMain = '';
     $caseSub = '';
-    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches')) {
+    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches') || ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] == 'caseCivilMisc')) {
   		$caseMain = 'open';
   		$caseSub = 'style="display:block;"';
     }
@@ -85,7 +85,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     <?php
     $caseCivilMiscMain = '';
     $caseCivilMiscSub = '';
-    if($this->params['controller'] == 'CaseCivilMiscs')
+    if($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] != 'caseCivilMisc')
     {
         $caseCivilMiscMain = 'open';
         $caseCivilMiscSub = 'style="display:block;"';
@@ -100,10 +100,13 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
 
         <ul class="submenu" <?php echo $caseCivilMiscSub; ?>>
             <li>
-                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'CaseCivilMiscs','action'=>'index'), array('escape' => false))?>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'CaseCivilMiscs','action'=>'add'), array('escape' => false))?>
             </li>
             <li>
-                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'CaseCivilMiscs','action'=>'add'), array('escape' => false))?>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i>Pending List ', array('controller'=>'CaseCivilMiscs','action'=>'index'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i>Decided List ', array('controller'=>'CaseCivilMiscs','action'=>'index', 'decided'), array('escape' => false))?>
             </li>
         </ul>
     </li>

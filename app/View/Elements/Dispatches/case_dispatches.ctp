@@ -17,9 +17,9 @@
 			</tr>
 		</thead>
 		<tbody role="alert" aria-live="polite" aria-relevant="all">
-		<?php $i = 1;
+		<?php $i = ($this->params['paging']['Dispatch']['page']-1) * LIMIT + 1;
 		if (isset($Dispatches) && !empty($Dispatches)) {
-			foreach ($Dispatches as $record) { ?>
+			foreach ($Dispatches as $record){ ?>
 			<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
 				<td class=" "><?php echo $record['ClientCase']['case_number'] ? $record['ClientCase']['case_number']: "<span class='red'>Miscellaneous</span>"; ?></td>
 				<td class=" "><?php echo $record['Dispatch']['title'];?></td>
@@ -66,6 +66,17 @@
 				$i++;
 			}
 			?>
+			<tFoot>
+				<tr role="row">
+					<th role="columnheader" colspan="8" style="border-left: none !important;">
+						<?php 
+						if ($this->params['paging']['Dispatch']['count'] > 1) {
+							echo $this->Element('pagination');
+						}
+						?>
+					</th>
+				</tr>
+			</tFoot>
 		<?php } else {
 			?>
 				<tr>
