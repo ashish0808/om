@@ -3,9 +3,13 @@
 		<ul class="nav nav-tabs" id="myTab2">
 
 			<?php
-			$editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = '';
-			$editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = 'false';
-			if (lcfirst($this->params['controller']) == 'cases') {
+			$viewCaseTab = $editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = '';
+			$viewCaseAE = $editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = 'false';
+
+			if (lcfirst($this->params['controller']) == 'cases' && $this->params['action'] == 'view') {
+				$viewCaseTab = 'active';
+				$viewCaseAE = 'true';
+			}elseif (lcfirst($this->params['controller']) == 'cases') {
 				$editCaseTab = 'active';
 				$editCaseAE = 'true';
 			}
@@ -31,9 +35,12 @@
 			}
 
 			?>
+			<li class="<?php echo $viewCaseTab; ?>">
+				<?php echo $this->Html->link('View Case ', array('controller'=>'cases','action'=>'view', $caseId), array('escape' => false, 'aria-expanded' => $viewCaseAE))?>
+			</li>
 
 			<li class="<?php echo $editCaseTab; ?>">
-				<?php echo $this->Html->link('Edit Case ', array('controller'=>'cases','action'=>'edit', $caseId), array('escape' => false, 'aria-expanded' => $editCaseTab))?>
+				<?php echo $this->Html->link('Edit Case ', array('controller'=>'cases','action'=>'edit', $caseId), array('escape' => false, 'aria-expanded' => $editCaseAE))?>
 			</li>
 
 			<?php
