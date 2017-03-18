@@ -937,4 +937,33 @@ class CasesController extends AppController
 		echo json_encode($result);
 		exit;
 	}
+
+	public function view($caseId)
+	{
+		$this->layout = 'basic';
+		$this->pageTitle = 'View Case';
+		$this->set("pageTitle", $this->pageTitle);
+		$this->set('caseId',$caseId);
+
+		$this->loadModel('ClientCase', 'Court');
+		$this->ClientCase->contain('CaseStatus', 'CaseType');
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+		$this->set('caseDetails',$caseDetails);
+
+		$this->loadModel('CaseProceeding');
+		$this->set("pendingProceeding", $this->CaseProceeding->find('first', array(
+			'conditions' => array(
+				'client_case_id' => $caseId,
+				'proceeding_status' => 'pending'
+			),
+			'fields' => array('date_of_hearing'),
+			'order' => 'date_of_hearing DESC'
+		)));
+
+		$mainCaseFile = '';
+		if (!empty($caseDetails['ClientCase']['main_file'])) {
+			$mainCaseFile = $this->Aws->getObjectUrl($caseDetails['ClientCase']['main_file']);
+		}
+		$this->set("mainCaseFile", $mainCaseFile);
+	}
 }
