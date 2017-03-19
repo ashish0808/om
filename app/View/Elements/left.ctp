@@ -49,20 +49,20 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
 }
 ?>
     <li class="<?php echo $singleMenuClass; ?>">
-        <?php echo $this->Html->link('<i class="icon-desktop"></i><span class="menu-text"> Dashboard </span>', array('controller'=>'users','action'=>'dashboard'), array('escape' => false))?>
+        <?php echo $this->Html->link('<i class="icon-dashboard"></i><span class="menu-text"> Dashboard </span>', array('controller'=>'users','action'=>'dashboard'), array('escape' => false))?>
     </li>
     
     <?php
     $caseMain = '';
     $caseSub = '';
-    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches')) {
+    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches') || ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] == 'caseCivilMisc') || ($this->params['controller'] == 'Todos' && $this->params['action'] == 'caseTodos')) {
   		$caseMain = 'open';
   		$caseSub = 'style="display:block;"';
     }
     ?>
     <li class="<?php echo $caseMain; ?>">
         <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
+            <i class="icon-book"></i>
             <span class="menu-text"> Cases </span>
             <b class="arrow icon-angle-down"></b>
         </a>
@@ -85,7 +85,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     <?php
     $caseCivilMiscMain = '';
     $caseCivilMiscSub = '';
-    if($this->params['controller'] == 'CaseCivilMiscs')
+    if($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] != 'caseCivilMisc')
     {
         $caseCivilMiscMain = 'open';
         $caseCivilMiscSub = 'style="display:block;"';
@@ -93,17 +93,20 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     ?>
     <li class="<?php echo $caseCivilMiscMain; ?>">
         <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
+            <i class="icon-legal"></i>
             <span class="menu-text"> Case CM/CRM </span>
             <b class="arrow icon-angle-down"></b>
         </a>
 
         <ul class="submenu" <?php echo $caseCivilMiscSub; ?>>
             <li>
-                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'CaseCivilMiscs','action'=>'index'), array('escape' => false))?>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'CaseCivilMiscs','action'=>'add'), array('escape' => false))?>
             </li>
             <li>
-                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'CaseCivilMiscs','action'=>'add'), array('escape' => false))?>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i>Pending List ', array('controller'=>'CaseCivilMiscs','action'=>'index'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i>Decided List ', array('controller'=>'CaseCivilMiscs','action'=>'index', 'decided'), array('escape' => false))?>
             </li>
         </ul>
     </li>
@@ -118,7 +121,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     ?>
     <li class="<?php echo $caseDisptachMain; ?>">
         <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
+            <i class="icon-envelope"></i>
             <span class="menu-text"> Dispatches </span>
             <b class="arrow icon-angle-down"></b>
         </a>
@@ -135,7 +138,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     <?php
     $todoMain = '';
     $todoSub = '';
-    if($this->params['controller'] == 'Todos')
+    if($this->params['controller'] == 'Todos' && $this->params['action'] != 'caseTodos')
     {
         $todoMain = 'open';
         $todoSub = 'style="display:block;"';
@@ -143,7 +146,7 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     ?>
     <li class="<?php echo $todoMain; ?>">
         <a href="#" class="dropdown-toggle">
-            <i class="icon-list"></i>
+            <i class="icon-bell"></i>
             <span class="menu-text"> Todos </span>
             <b class="arrow icon-angle-down"></b>
         </a>
@@ -165,13 +168,13 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
     }
     ?>
     <li class="<?php echo $caseProceedingMain; ?>">
-        <?php echo $this->Html->link('<i class="icon-desktop"></i> Daily Dairy ', array('controller'=>'CaseProceedings','action'=>'index'), array('escape' => false))?>
+        <?php echo $this->Html->link('<i class="icon-calendar"></i> Daily Dairy ', array('controller'=>'CaseProceedings','action'=>'index'), array('escape' => false))?>
     </li>
     <!--li class="<?php echo $caseDisptachMain; ?>">
         <?php echo $this->Html->link('<i class="icon-desktop"></i> Change Password ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
     </li-->
     <li class="<?php echo $caseDisptachMain; ?>">
-        <?php echo $this->Html->link('<i class="icon-desktop"></i> Logout ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
+        <?php echo $this->Html->link('<i class="icon-off"></i> Logout ', array('controller'=>'users','action'=>'logout'), array('escape' => false))?>
     </li>
     <!--
     <li class="active">

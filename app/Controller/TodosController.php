@@ -156,8 +156,11 @@ class TodosController extends AppController
                         $this->Todo->id = $id;
                         if ($this->Todo->save($this->request->data)) {
                             $this->Flash->success(__('The Todo has been saved.'));
-
-                            return $this->redirect(array('action' => 'index'));
+                            if ($this->data['Todo']['referer'] == 'caseTodos') {
+                                return $this->redirect(array('action' => 'caseTodos', $this->data['Todo']['case_id']));
+                            } else {
+                                return $this->redirect(array('action' => 'index'));
+                            }
                         } else {
                             $this->Flash->error(__('The Todo could not be saved. Please, try again.'));
                         }
@@ -167,10 +170,19 @@ class TodosController extends AppController
                 $this->request->data = $TodoData;
             }
             $this->set(compact('id', 'computer_file_no'));
+
+            // To see if the page has been accessed from case detail page or dispatches main page
+            $referer_url_params = Router::parse($this->referer('/', true));
+            $this->set('action', $referer_url_params['action']);
+            if (!empty($referer_url_params['pass'])) {
+                $this->set('caseId', $referer_url_params['pass'][0]);
+            } else {
+                $this->set('caseId', 0);
+            }
         } else {
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
 
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(Router::url($this->referer(), true));
         }
     }
 
@@ -197,7 +209,7 @@ class TodosController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
         }
 
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(Router::url($this->referer(), true));
     }
 
     /**
@@ -213,10 +225,17 @@ class TodosController extends AppController
         $TodoData = $this->Todo->find('first', array('contain' => array('ClientCase'), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'Todo.id' => $id)));
         if (!empty($TodoData)) {
             $this->set('Todo', $TodoData);
+
+            // To see if the page has been accessed from case detail page or dispatches main page
+            $referer_url_params = Router::parse($this->referer('/', true));
+            $this->set('action', $referer_url_params['action']);
+            if (!empty($referer_url_params['pass'])) {
+                $this->set('caseId', $referer_url_params['pass'][0]);
+            }
         } else {
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
 
-            return $this->redirect(array('action' => 'index'));
+            return $this->redirect(Router::url($this->referer(), true));
         }
     }
 
@@ -250,6 +269,32 @@ class TodosController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
             $this->redirect(Router::url($this->referer(), true));
         }
+    }
+
+    /**
+     * Get all the CM/CRM of a case
+     * @param  integer $caseId Case ID for which CM/CRM has to be fetched
+     * @return [html]  View of case CM/CRM page
+     */
+    public function caseTodos($caseId)
+    {
+        $this->layout = 'basic';
+        $this->pageTitle = 'Case Todos';
+        $this->set('pageTitle', $this->pageTitle);
+
+        $caseDetails = $this->_getCaseDetails($caseId);
+
+        $this->Todo->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+        $Todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'completion_date DESC'));
+
+        $this->set(compact('caseDetails', 'caseId', 'Todos'));
+    }
+
+    private function _getCaseDetails($caseId)
+    {
+        $this->ClientCases = $this->Components->load('ClientCases');
+
+        return $this->ClientCases->findByCaseId($caseId, $this->Session->read('UserInfo.lawyer_id'));
     }
 
     public function checkList()

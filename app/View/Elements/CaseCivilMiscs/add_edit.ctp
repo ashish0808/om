@@ -133,7 +133,13 @@
 			?>
 			<?php echo $this->Form->button("<i class='icon-ok bigger-110'></i>Update", array("class" => "btn btn-primary", "escape" => false, "type" => "submit", "name" => "data[CaseCivilMiscs][submit]", "value" => "submit"));
 			?>
-			<?php echo $this->Html->link("Back", array('controller' => 'CaseCivilMiscs', 'action' => 'index/'.$this->request->data['CaseCivilMisc']['status']), array('class' => 'btn btn-info'));?>
+			<?php
+			if ($action == 'caseCivilMisc') {
+				echo $this->Html->link("Back", array('controller' => 'CaseCivilMiscs', 'action' => 'caseCivilMisc', $caseId), array('class' => 'btn btn-info'));
+			} else {
+				echo $this->Html->link("Back", array('controller' => 'CaseCivilMiscs', 'action' => 'index'), array('class' => 'btn btn-info'));
+			}
+			?>
 			<?php
 			}
 			?>

@@ -33,7 +33,7 @@ class CaseCivilMiscsController extends AppController
 
         $fields = [];
 
-        $criteria = ['status' => $status];
+        $criteria = ['status' => $status, 'CaseCivilMisc.user_id' => $this->Session->read('UserInfo.uid')];
         $containCriteria = [];
         if (!empty($this->request->data)) {
             foreach ($this->request->data['CaseCivilMisc'] as $key => $value) {
@@ -200,7 +200,11 @@ class CaseCivilMiscsController extends AppController
 
                         if ($this->CaseCivilMisc->save($this->request->data)) {
                             $this->Flash->success(__('CM/CRM has been saved successfully.'));
-                            return $this->redirect(array('action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
+                            if ($this->data['CaseCivilMisc']['referer'] == 'caseCivilMisc') {
+                                return $this->redirect(array('action' => 'caseCivilMisc', $this->data['CaseCivilMisc']['case_id']));
+                            } else {
+                                return $this->redirect(array('action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
+                            }
                         } else {
                             $this->Flash->error(__('The CM/CRM could not be saved. Please, try again.'));
                         }
@@ -211,9 +215,18 @@ class CaseCivilMiscsController extends AppController
                 $this->request->data = $cmData;
             }
             $this->set(compact('id', 'computer_file_no'));
+
+            // To see if the page has been accessed from case detail page or dispatches main page
+            $referer_url_params = Router::parse($this->referer('/', true));
+            $this->set('action', $referer_url_params['action']);
+            if (!empty($referer_url_params['pass'])) {
+                $this->set('caseId', $referer_url_params['pass'][0]);
+            } else {
+                $this->set('caseId', 0);
+            }
         } else {
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
-            return $this->redirect(array('action' => 'index'));
+            $this->redirect(Router::url($this->referer(), true));
         }
     }
 
@@ -234,9 +247,16 @@ class CaseCivilMiscsController extends AppController
                 $cmData['CaseCivilMisc']['attachment'] = $this->Aws->getObjectUrl($cmData['CaseCivilMisc']['attachment']);
             }
             $this->set('CaseCivilMisc',$cmData);
+
+            // To see if the page has been accessed from case detail page or dispatches main page
+            $referer_url_params = Router::parse($this->referer('/', true));
+            $this->set('action', $referer_url_params['action']);
+            if (!empty($referer_url_params['pass'])) {
+                $this->set('caseId', $referer_url_params['pass'][0]);
+            }
         } else {
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
-            return $this->redirect(array('action' => 'index'));
+            return $this->redirect(Router::url($this->referer(), true));
         }
     }
 
@@ -266,6 +286,32 @@ class CaseCivilMiscsController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
         }
 
-        return $this->redirect(array('action' => 'index/'.$cmData['CaseCivilMisc']['status']));
+        return $this->redirect(Router::url($this->referer(), true));
+    }
+
+    /**
+     * Get all the CM/CRM of a case
+     * @param  integer $caseId Case ID for which CM/CRM has to be fetched
+     * @return [html]  View of case CM/CRM page
+     */
+    public function caseCivilMisc($caseId)
+    {
+        $this->layout = 'basic';
+        $this->pageTitle = 'CM/CRM';
+        $this->set('pageTitle', $this->pageTitle);
+
+        $caseDetails = $this->_getCaseDetails($caseId);
+
+        $this->CaseCivilMisc->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+        $caseCivilMiscs = $this->CaseCivilMisc->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'application_date DESC'));
+
+        $this->set(compact('caseDetails', 'caseId', 'caseCivilMiscs'));
+    }
+
+    private function _getCaseDetails($caseId)
+    {
+        $this->ClientCases = $this->Components->load('ClientCases');
+
+        return $this->ClientCases->findByCaseId($caseId, $this->Session->read('UserInfo.lawyer_id'));
     }
 }
