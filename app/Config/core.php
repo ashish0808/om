@@ -110,7 +110,7 @@
  * thus not recommended for production applications.
  */
 	//Configure::write('App.baseUrl', env('SCRIPT_NAME'));
-
+Configure::write('App.fullBaseUrl', 'http://35.154.204.113/om');
 /**
  * To configure CakePHP to use a particular domain URL
  * for any URL generation inside the application, set the following
@@ -387,3 +387,5 @@ Cache::config('_cake_model_', array(
 	'serialize' => ($engine === 'File'),
 	'duration' => $duration
 ));
+
+Configure::write('App.fullBaseUrl', 'http://35.154.204.113/om/');
