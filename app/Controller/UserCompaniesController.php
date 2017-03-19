@@ -53,7 +53,7 @@ class UserCompaniesController extends AppController
             if ($this->UserCompany->validates()) {
                 if ($this->UserCompany->save($this->request->data)) {
                     $this->Flash->success(__('The Company has been saved.'));
-                    return $this->redirect(array('action' => 'index'));
+                    return $this->redirect(array('controller' => 'UserCompanies', 'action' => 'index'));
                 } else {
                     $this->Flash->error(__('The Company could not be saved. Please, try again.'));
                 }
@@ -83,7 +83,7 @@ class UserCompaniesController extends AppController
                     if ($this->UserCompany->save($this->request->data)) {
                         $this->Flash->success(__('The UserCompany has been saved.'));
 
-                        return $this->redirect(array('action' => 'index'));
+                        return $this->redirect(array('controller' => 'UserCompanies', 'action' => 'index'));
                     } else {
                         $this->Flash->error(__('The UserCompany could not be saved. Please, try again.'));
                     }
@@ -94,7 +94,7 @@ class UserCompaniesController extends AppController
             $this->set(compact('id'));
         } else {
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
-            return $this->redirect(array('action' => 'index'));
+            return $this->redirect(array('controller' => 'UserCompanies', 'action' => 'index'));
         }
     }
 
@@ -121,6 +121,6 @@ class UserCompaniesController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
         }
 
-        return $this->redirect(array('action' => 'index'));
+        return $this->redirect(array('controller' => 'UserCompanies', 'action' => 'index'));
     }
 }

@@ -125,7 +125,7 @@ class CaseCivilMiscsController extends AppController
 
                         if ($this->CaseCivilMisc->save($this->request->data)) {
                             $this->Flash->success(__('CM/CRM has been saved successfully.'));
-                            return $this->redirect(array('action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
+                            return $this->redirect(array('controller' => 'CaseCivilMiscs', 'action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
                         } else {
                             $this->Flash->error(__('The CM/CRM could not be saved. Please, try again.'));
                         }
@@ -201,9 +201,9 @@ class CaseCivilMiscsController extends AppController
                         if ($this->CaseCivilMisc->save($this->request->data)) {
                             $this->Flash->success(__('CM/CRM has been saved successfully.'));
                             if ($this->data['CaseCivilMisc']['referer'] == 'caseCivilMisc') {
-                                return $this->redirect(array('action' => 'caseCivilMisc', $this->data['CaseCivilMisc']['case_id']));
+                                return $this->redirect(array('controller' => 'CaseCivilMiscs', 'action' => 'caseCivilMisc', $this->data['CaseCivilMisc']['case_id']));
                             } else {
-                                return $this->redirect(array('action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
+                                return $this->redirect(array('controller' => 'CaseCivilMiscs', 'action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
                             }
                         } else {
                             $this->Flash->error(__('The CM/CRM could not be saved. Please, try again.'));
