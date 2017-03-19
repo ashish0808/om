@@ -188,6 +188,6 @@ class CaseFilesController extends AppController
             $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
         }
 
-        return $this->redirect(array('action' => 'manage', $caseId));
+        return $this->redirect(array('controller' => 'CaseFiles', 'action' => 'manage', $caseId));
     }
 }

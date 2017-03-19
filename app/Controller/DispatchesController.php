@@ -124,7 +124,7 @@ class DispatchesController extends AppController
                     if ($this->Dispatch->save($this->request->data)) {
                         $this->Flash->success(__('The dispatch misc has been saved.'));
 
-                        return $this->redirect(array('action' => 'index'));
+                        return $this->redirect(array('controller' => 'Dispatches', 'action' => 'index'));
                     } else {
                         $this->Flash->error(__('The dispatch could not be saved. Please, try again.'));
                     }
@@ -196,9 +196,9 @@ class DispatchesController extends AppController
                         if ($this->Dispatch->save($this->request->data)) {
                             $this->Flash->success(__('The dispatch has been saved.'));
                             if ($this->data['Dispatch']['referer'] == 'caseDispatches') {
-                                return $this->redirect(array('action' => 'caseDispatches', $this->data['Dispatch']['case_id']));
+                                return $this->redirect(array('controller' => 'Dispatches', 'action' => 'caseDispatches', $this->data['Dispatch']['case_id']));
                             } else {
-                                return $this->redirect(array('action' => 'index'));
+                                return $this->redirect(array('controller' => 'Dispatches', 'action' => 'index'));
                             }
                         } else {
                             $this->Flash->error(__('The dispatch could not be saved. Please, try again.'));

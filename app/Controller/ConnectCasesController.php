@@ -44,7 +44,7 @@ class ConnectCasesController extends AppController
 				    $this->Flash->error(__('Please select cases to detach'));
 			    }
 
-			    return $this->redirect(array('action' => 'manage', $caseId));
+			    return $this->redirect(array('controller' => 'ConnectCases', 'action' => 'manage', $caseId));
 		    }
 
 		    $parentId = $caseDetails['ClientCase']['parent_case_id'];
@@ -105,13 +105,13 @@ class ConnectCasesController extends AppController
 
 				$this->Flash->success(__('Case detached successfully.'));
 
-				return $this->redirect(array('action' => 'manage', $caseDetails['ClientCase']['parent_case_id']));
+				return $this->redirect(array('controller' => 'ConnectCases', 'action' => 'manage', $caseDetails['ClientCase']['parent_case_id']));
 			}
 		}
 
 		$this->Flash->error(__('Access denied'));
 
-		return $this->redirect(array('action' => 'manage', $childCaseId));
+		return $this->redirect(array('controller' => 'ConnectCases', 'action' => 'manage', $childCaseId));
 	}
 
 	private function getCaseDetails($caseId)
@@ -225,7 +225,7 @@ class ConnectCasesController extends AppController
 				}
 			}
 
-			return $this->redirect(array('action' => 'manage', $caseId));
+			return $this->redirect(array('controller' => 'ConnectCases', 'action' => 'manage', $caseId));
 		} else {
 
 			$this->Flash->error(__('Access denied'));
