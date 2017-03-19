@@ -31,7 +31,7 @@ class ClientCasesComponent extends Component
 			$data['saved_incomplete'] = 1;
 		}
 
-		if($data['client_type']=='respondent') {
+		if(isset($data['client_type']) && $data['client_type']=='respondent') {
 
 			$data['limitation_expires_on'] = '';
 		}

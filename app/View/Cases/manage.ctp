@@ -195,9 +195,6 @@ echo $this->Js->writeBuffer(); ?>
 							<th>
 								<?php echo $this->Paginator->sort('ClientCase.client_case_count', 'Child Cases', array());?>
 							</th>
-							<th>
-								Attachment
-							</th>
 							<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 								<?php echo $this->Paginator->sort('ClientCase.created', 'Created', array());?>
 							</th>
@@ -209,7 +206,6 @@ echo $this->Js->writeBuffer(); ?>
 							<th>Case Year</th>
 							<th>Party Name</th>
 							<th>Child Cases</th>
-							<th>Attachment</th>
 							<th class="col-xs-2">Created</th>
 							<th>Action</th>
 						<?php } ?>
@@ -226,21 +222,11 @@ echo $this->Js->writeBuffer(); ?>
 						<td><?php echo $record['ClientCase']['case_year'];?></td>
 						<td><?php echo $record['ClientCase']['party_name'];?></td>
 						<td><?php echo $record['ClientCase']['client_case_count'] ? $record['ClientCase']['client_case_count']: 0; ?></td>
-						<td class=" ">
-							<?php 
-							if (!empty($record['ClientCase']['case_file'])) {
-							?>
-							<a href="<?php echo $record['ClientCase']['case_file'];?>" target="_blank" 'class'='col-sm-12 col-xs-12'>Application Copy</a>
-							<?php
-							} else {
-								echo "Not Available";
-							}
-							?>
-						</td>
 						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['ClientCase']['created']); ?></td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">
-								<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'cases','action'=>'edit',$record['ClientCase']['id']), array('escape' => false, 'class' => 'blue tooltip-info', 'data-rel' => 'tooltip', 'data-original-title'=>'Edit Case'))?>
+								<?php echo $this->Html->link('<i class="icon-tasks bigger-130"></i>', array('controller'=>'cases','action'=>'view',$record['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
+								<?php echo $this->Html->link('<i class="icon-pencil bigger-130"></i>', array('controller'=>'cases','action'=>'edit',$record['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'Edit Case'))?>
 
 							</div>
 							<div class="hidden-desktop visible-phone">

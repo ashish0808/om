@@ -66,7 +66,9 @@
 .m-t-10 {
     margin-top: 10px;
 }
-
+.viewPageValues {
+    text-decoration: underline;
+}
 /*
 .widget-body {
     -moz-border-bottom-colors: none;
@@ -77,3 +79,7 @@
     border-color: -moz-use-text-color #ccc #ccc !important;;
     border-style: none solid solid !important;;
 }*/
+.common-flash {
+
+    margin: 10px 10px 0px 10px;
+}

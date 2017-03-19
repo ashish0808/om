@@ -83,15 +83,24 @@
             </div>
 
             <div class="main-content">
-                <div id="showFlasshMsgsDiv">
-                    <div class="alert in alert-block fade">
-                        <a data-dismiss="alert" class="close" href="#">×</a>
-                        <?php echo $this->Session->flash();?>
-                    </div>
-                </div>
-                <div class="breadcrumbs" id="breadcrumbs">
-                    <?php echo $this->element('breadcrumbs');?>
-                </div>
+            	<div class="breadcrumbs" id="breadcrumbs">
+					<?php echo $this->element('breadcrumbs');?>
+				</div>
+            	<?php
+            	if($this->Session->check('Message.flash')){
+
+            		$flashDetails = $this->Session->read('Message.flash');
+            		$flashType = 'alert-success';
+            		if(isset($flashDetails['element']) && $flashDetails['element']=='Flash/error') {
+
+            			$flashType = 'alert-danger';
+            		}
+            		?>
+				<div class="common-flash alert in alert-block <?php echo $flashType; ?>">
+					<a data-dismiss="alert" class="close" href="#">×</a>
+					<?php echo $this->Session->flash();?>
+				</div>
+				<?php } ?>
 
                 <div class="page-content" id="content">
                     <?php echo $content_for_layout; ?>

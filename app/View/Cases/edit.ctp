@@ -1,5 +1,5 @@
 <div class="hide" id="ajaxEdit"><?php echo $this->Html->url(array('controller' => 'Cases', 'action' => 'ajaxEdit', $caseId));?></div>
-<div class="hide" id="redirectIncompleteForm"><?php echo $this->Html->url(array('controller' => 'users', 'action' => 'dashboard'));?></div>
+<div class="hide" id="redirectIncompleteForm"><?php echo $this->Html->url(array('controller' => 'cases', 'action' => 'manage'));?></div>
 <div class="page-content">
 	<div class="row">
 		<div class="page-header">

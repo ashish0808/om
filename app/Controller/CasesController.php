@@ -89,14 +89,6 @@ class CasesController extends AppController
 
 		$records = $this->Paginator->paginate('ClientCase', $criteriaStr);
 
-		foreach ($records as $key => $value) {
-			if (!empty($value['ClientCase']['case_file'])) {
-				$records[$key]['ClientCase']['case_file'] = $this->Aws->getObjectUrl($value['ClientCase']['case_file']);
-			} else {
-				$records[$key]['ClientCase']['case_file'] = '';
-			}
-		}
-
 		$caseStatuses = $this->CaseStatus->find('all', array(
 			'conditions' => array(
 				"NOT" => array( "CaseStatus.status" => array('decided', 'not_with_us') )
@@ -229,7 +221,7 @@ class CasesController extends AppController
 					$data['id'] = $caseId;
 					$this->addCaseProceeding($data);
 
-					$this->Session->setFlash(CASE_INFORMATION_ADDED);
+					$this->Flash->success(__(CASE_INFORMATION_ADDED));
 
 					if(isset($this->request->data['ClientCase']['submit']) && $this->request->data['ClientCase']['submit']=='next') {
 
@@ -609,7 +601,7 @@ class CasesController extends AppController
 		$formBtn = $data['submit'];
 		if($formBtn!='next') {
 
-			$this->Session->setFlash('<span class="setFlash success">Case updated successfully.</span>');
+			$this->Flash->success(__('Case updated successfully.'));
 		}
 	}
 
@@ -875,7 +867,7 @@ class CasesController extends AppController
 
 			if ($this->ClientCase->save($data, false)) {
 
-				$this->Flash->success(__('CM/CRM has been saved successfully.'));
+				//$this->Flash->success(__('Case updated successfully.'));
 
 				$result = array('status' => 'success');
 			}
@@ -959,11 +951,5 @@ class CasesController extends AppController
 			'fields' => array('date_of_hearing'),
 			'order' => 'date_of_hearing DESC'
 		)));
-
-		$mainCaseFile = '';
-		if (!empty($caseDetails['ClientCase']['main_file'])) {
-			$mainCaseFile = $this->Aws->getObjectUrl($caseDetails['ClientCase']['main_file']);
-		}
-		$this->set("mainCaseFile", $mainCaseFile);
 	}
 }
