@@ -45,7 +45,7 @@
 																	</td>
 																	<td></td>
 																	<td class="details-field">
-																		<span class="view-label">Case Number: </span> <?php echo $caseDetails['ClientCase']['complete_case_number']; ?>
+																		<span class="view-label">Complete Case Number: </span> <?php echo $caseDetails['ClientCase']['complete_case_number']; ?>
 																	</td>
 																</tr>
 																<tr>
@@ -84,7 +84,7 @@
 																	</td>
 																	<td></td>
 																	<td class="details-field">
-																		<span class="view-label">Case Year: </span> <?php echo $caseDetails['ClientCase']['presiding_officer']; ?>
+																		<span class="view-label">Presiding Officer: </span> <?php echo $caseDetails['ClientCase']['presiding_officer']; ?>
 																	</td>
 																</tr>
 																<tr>
@@ -94,7 +94,7 @@
 																	</td>
 																	<td></td>
 																	<td class="details-field">
-																		<span class="view-label">Case Year: </span>
+																		<span class="view-label">Client Type: </span>
 																		<?php if($caseDetails['ClientCase']['client_type']=='petitioner') {
 																			echo 'Appellant/Petitioner';
 																		}else{

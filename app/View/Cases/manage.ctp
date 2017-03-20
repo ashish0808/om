@@ -216,7 +216,7 @@ echo $this->Js->writeBuffer(); ?>
 				if (isset($records) && !empty($records)) {
 					foreach ($records as $record){ ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" "><?php echo $record['ClientCase']['case_number'];?></td>
+						<td class=" "><?php echo $record['ClientCase']['complete_case_number'];?></td>
 						<td class=" "><?php echo $record['ClientCase']['computer_file_no'];?></td>
 						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>"; ?></td>
 						<td><?php echo $record['ClientCase']['case_year'];?></td>
