@@ -136,7 +136,23 @@ if(isset($caseDetails['ClientCase']['payment_status'])) {
 		</div>
 	</div>
 </div>
-
+<?php if(!empty($fee_settled)){ ?>
+<div class="row">
+	<div class="col-xs-12">
+		<div class="form-group">
+			<div class="col-sm-12 col-xs-12">
+				<label class="col-sm-2 control-label no-padding-right" for="form-field-dob">Balance Amount: </label>
+				<div class="col-sm-10">
+					<label style="padding-top: 7px;">
+						<?php $balanceAmt = $fee_settled - $amount_paid;
+						echo number_format((float)$balanceAmt, 2, '.', '');?>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<?php } ?>
 <div class="row">
 	<div class="col-xs-12">
 		<div class="form-group">
