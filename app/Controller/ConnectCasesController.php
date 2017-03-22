@@ -253,7 +253,7 @@ class ConnectCasesController extends AppController
 
 		$postedChildData = $postedChildArr['ClientCase'];
 		$postedChildData['is_main_case'] = 1;
-		$postedChildData['parent_case_id'] = 0;
+		$postedChildData['parent_case_id'] = NULL;
 
 		$this->ClientCase->save($postedChildData, false);
 	}
