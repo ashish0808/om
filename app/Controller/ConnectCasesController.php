@@ -199,7 +199,7 @@ class ConnectCasesController extends AppController
 					$postedParentId = $this->request->data['parentId'];
 					$this->_saveConnection($caseId, $postedParentId);
 
-					$this->Flash->success(__('Case detached successfully.'));
+					$this->Flash->success(__('Case attached successfully.'));
 				}
 			} else {
 
@@ -208,7 +208,7 @@ class ConnectCasesController extends AppController
 					$postedParentId = $this->request->data['parentId'];
 					$this->_saveConnection($caseId, $postedParentId);
 
-					$this->Flash->success(__('Case detached successfully.'));
+					$this->Flash->success(__('Case attached successfully.'));
 				}elseif(!empty($this->request->data['box'])) {
 
 					$postedChildIds = $this->request->data['box'];
@@ -221,7 +221,7 @@ class ConnectCasesController extends AppController
 						}
 					}
 
-					$this->Flash->success(__('Case detached successfully.'));
+					$this->Flash->success(__('Case attached successfully.'));
 				}
 			}
 

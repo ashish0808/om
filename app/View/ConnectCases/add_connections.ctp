@@ -25,7 +25,7 @@
                                                 <div class="widget-body">
                                                     <div class="widget-main">
                                                         <?php echo $this->Form->input('ClientCase.party_name', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Client Name')); ?>
-                                                        <?php echo $this->Form->input('ClientCase.case_number', array('label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Case Number','required' => false)); ?>
+                                                        <?php echo $this->Form->input('ClientCase.complete_case_number', array('label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Case Number','required' => false)); ?>
                                                         <?php echo $this->Form->input('ClientCase.case_year', array('label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Case Year','required' => false)); ?>
                                                         <?php echo $this->Form->input('ClientCase.client_phone', array('label' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Client Phone','required' => false)); ?>
                                                         <?php
@@ -119,7 +119,7 @@
 															</label>
 														<?php } ?>
 													</td>
-													<td><?php echo $record['case_number']; ?></td>
+													<td><?php echo $record['complete_case_number']; ?></td>
 													<td>
 														<?php echo $record['party_name']; ?>
 													</td>

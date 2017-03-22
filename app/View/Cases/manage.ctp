@@ -58,7 +58,7 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 								<div class="form-group">
 									<div class="col-sm-12 col-xs-12">
 										<label class="col-xs-12 control-label no-padding-right">Case Number: </label>
-										<?php echo $this->Form->input('ClientCase.case_number', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
+										<?php echo $this->Form->input('ClientCase.complete_case_number', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
 									</div>
 								</div>
 							</div>
@@ -178,7 +178,7 @@ echo $this->Js->writeBuffer(); ?>
 					<tr role="row">
 						<?php if(count($records) > 1) {?>
 							<th>
-								<?php echo $this->Paginator->sort('ClientCase.case_number', 'Case Number', array());?>
+								<?php echo $this->Paginator->sort('ClientCase.complete_case_number', 'Case Number', array());?>
 							</th>
 							<th class="col-xs-2">
 								<?php echo $this->Paginator->sort('ClientCase.computer_file_no', 'Computer File No', array());?>

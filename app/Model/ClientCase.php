@@ -568,7 +568,7 @@ class ClientCase extends AppModel {
 			$customSearchStr = ' AND '.$customSearchStr;
 		}
 
-		return $this->query("SELECT cc1.id, cc1.case_number, cc1.case_year, cc1.client_phone, cc1.party_name
+		return $this->query("SELECT cc1.id, cc1.case_number, cc1.complete_case_number, cc1.case_year, cc1.client_phone, cc1.party_name
 					FROM client_cases as cc1 LEFT OUTER JOIN client_cases as cc2 ON cc1.id=cc2.parent_case_id
 					WHERE cc2.id IS NULL AND cc1.case_number != '' AND (cc1.parent_case_id IS NULL OR cc1.parent_case_id=0) AND cc1.is_main_case = 1 AND cc1.id != $caseId AND cc1.user_id = $userId".$customSearchStr);
 	}

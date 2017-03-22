@@ -51,7 +51,9 @@
 											<?php if(!empty($parentCase)) { ?>
 												<?php $record = $parentCase; ?>
 												<tr class="even">
-													<td><?php echo $record['ClientCase']['case_number']; ?></td>
+													<td>
+														<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$record['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
+													</td>
 													<td>
 														<?php echo $record['ClientCase']['party_name']; ?>
 													</td>
@@ -145,7 +147,9 @@
 															<span class="lbl"></span>
 														</label>
 													</td>
-													<td><?php echo $record['ClientCase']['case_number']; ?></td>
+													<td>
+														<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$record['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
+													</td>
 													<td>
 														<?php echo $record['ClientCase']['party_name']; ?>
 													</td>
