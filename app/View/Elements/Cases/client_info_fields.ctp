@@ -15,7 +15,7 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12 hide companyField">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequired required">*</span> Company: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Company: </label>
 				<div class="col-sm-8">
 					<?php
 					echo $this->Form->input('ClientCase.user_companies_id', array('options' => $userCompanies, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
