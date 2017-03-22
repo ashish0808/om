@@ -42,7 +42,7 @@ class ClientCasesComponent extends Component
 	public function updateCaseStatus($caseStatus)
 	{
 		App::import('Model','CaseStatus');
-		$caseStatusObj = & new CaseStatus();
+		$caseStatusObj = new CaseStatus();
 
 		$caseStatusData = $caseStatusObj->find('first', array(
 			'conditions' => array(
@@ -67,7 +67,7 @@ class ClientCasesComponent extends Component
 		if(!empty($data['case_type_id'])) {
 
 			App::import('Model','CaseType');
-			$caseType = & new CaseType();
+			$caseType = new CaseType();
 
 			$caseTypeObj = $caseType->find('first', array(
 				'conditions' => array(
@@ -93,7 +93,7 @@ class ClientCasesComponent extends Component
 	public function generateFileNumber($userId)
 	{
 		App::import('Model','ClientCase');
-		$caseObj = & new ClientCase();
+		$caseObj = new ClientCase();
 
 		$currYear = date('Y');
 
@@ -143,7 +143,7 @@ class ClientCasesComponent extends Component
 	public function findByCaseId($caseId, $userId)
 	{
 		App::import('Model','ClientCase');
-		$clientCase = & new ClientCase();
+		$clientCase = new ClientCase();
 
 		$clientCase->contain('CaseType');
 
@@ -169,7 +169,7 @@ class ClientCasesComponent extends Component
 		} else {
 
 			App::import('Model','CaseStatus');
-			$caseStatusObj = & new CaseStatus();
+			$caseStatusObj = new CaseStatus();
 
 			$caseStatuses = $caseStatusObj->find('all', array(
 				'conditions' => array(
@@ -199,7 +199,7 @@ class ClientCasesComponent extends Component
 	private function _addListFilterWithStatusId($criteria, $listType)
 	{
 		App::import('Model','CaseStatus');
-		$caseStatusObj = & new CaseStatus();
+		$caseStatusObj = new CaseStatus();
 
 		$caseStatusData = $caseStatusObj->find('first', array(
 			'conditions' => array(
