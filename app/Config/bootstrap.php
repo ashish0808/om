@@ -113,11 +113,11 @@ CakeLog::config('error', array(
 
 /* start constants here*/
 //Messages for Actions performed Starts
-Configure::write('INACTIVE_USER', '<span class="setFlash error">This user is Inactive right now</span>');
-Configure::write('DELETED_USER', '<span class="setFlash error">This user is deleted.</span>');
-Configure::write('UNAUTHORIZED_ACCESS', '<span class="setFlash error">Unauthorized Access</span>');
-Configure::write('USER_NOT_FOUND', '<span class="setFlash error">The user could not be found. Please fill the correct information</span>');
-define('ERROR_OCCURRED', '<span class="setFlash error">An error occurred, Please try again later.</span>');
+Configure::write('INACTIVE_USER', 'This user is Inactive right now');
+Configure::write('DELETED_USER', 'This user is deleted.');
+Configure::write('UNAUTHORIZED_ACCESS', 'Unauthorized Access');
+Configure::write('USER_NOT_FOUND', 'The user could not be found. Please fill the correct information');
+define('ERROR_OCCURRED', 'An error occurred, Please try again later.');
 
 //Messages for Actions performed Ends
 Configure::write('DB_DATE_FORMAT', 'Y-m-d h:i:s');
@@ -130,12 +130,12 @@ define('NO_RECORD', 'No records found');
 define('SITE_NAME', 'Office Management');
 define('LIMIT', 10);
 define('REQUIRED', '<span class="red">*</span>');
-define('CASE_INFORMATION_ADDED', '<span class="setFlash success">Case information added successfully.</span>');
-define('CASE_DELETED', '<span class="setFlash success">Case deleted successfully.</span>');
-define('HEARING_ADDED', '<span class="setFlash success">Case Hearing added successfully.</span>');
-define('HEARING_DELETED', '<span class="setFlash success">Case Hearing deleted successfully.</span>');
-define('PAYMENT_DELETED', '<span class="setFlash success">Payment deleted successfully.</span>');
-define('DOCUMENT_DELETED', '<span class="setFlash success">Document deleted successfully.</span>');
+define('CASE_INFORMATION_ADDED', 'Case information added successfully.');
+define('CASE_DELETED', 'Case deleted successfully.');
+define('HEARING_ADDED', 'Case Hearing added successfully.');
+define('HEARING_DELETED', 'Case Hearing deleted successfully.');
+define('PAYMENT_DELETED', 'Payment deleted successfully.');
+define('DOCUMENT_DELETED', 'Document deleted successfully.');
 
 // Statuses
 define('PENDING_FOR_FILING', '1');
