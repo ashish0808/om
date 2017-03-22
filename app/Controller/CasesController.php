@@ -17,6 +17,7 @@ class CasesController extends AppController
 
 	public function manage($listType = '')
 	{
+		echo Router::url( $this->referer(), true ); die;
 		if ($this->request->isAjax()) {
 			$this->layout = 'ajax';
 		} else {
