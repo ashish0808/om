@@ -27,9 +27,9 @@
 				<tbody role="alert" aria-live="polite" aria-relevant="all">
 				<?php $i = ($this->params['paging']['Todo']['page']-1) * LIMIT + 1;
 				if (isset($Todos) && !empty($Todos)) {
-					foreach ($Todos as $record){ ?>
+					foreach ($Todos as $record) { ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" "><?php echo $record['ClientCase']['case_number'] ? $record['ClientCase']['case_number']: "<span class='red'>Miscellaneous</span>"; ?></td>
+						<td class=" "><?php echo $record['ClientCase']['case_number'] ? $record['ClientCase']['complete_case_number']: "<span class='red'>Miscellaneous</span>"; ?></td>
 						<td class=" "><?php echo $record['Todo']['title'];?></td>
 						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['Todo']['completion_date']); ?>
 						</td>

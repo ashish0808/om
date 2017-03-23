@@ -42,10 +42,36 @@
 							<div class="col-sm-6">
 								<div class="form-group">
 									<div class="col-sm-12 col-xs-12">
-										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Title:</b> </label>
+										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Case Number:</b> </label>
+										<div class="col-sm-8">
+											<?php
+											echo !empty($Todo['ClientCase']['complete_case_number']) ? strtoupper($Todo['ClientCase']['complete_case_number']) : 'Not Available';
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Todo Title:</b> </label>
 										<div class="col-sm-8">
 											<?php
 											echo strtoupper($Todo['Todo']['title']);
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Reminder Date:</b> </label>
+										<div class="col-sm-8">
+											<?php
+											echo $this->Time->format('D, M jS, Y', $Todo['Todo']['reminder_date']);
 											?>
 										</div>
 									</div>

@@ -42,10 +42,46 @@
 							<div class="col-sm-6">
 								<div class="form-group">
 									<div class="col-sm-12 col-xs-12">
+										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Case Number:</b> </label>
+										<div class="col-sm-8">
+											<?php
+											echo !empty($Dispatch['ClientCase']['complete_case_number']) ? $Dispatch['ClientCase']['complete_case_number'] : 'Not Available';
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
 										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Dispatch Title:</b> </label>
 										<div class="col-sm-8">
 											<?php
 											echo strtoupper($Dispatch['Dispatch']['title']);
+											?>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <b>Mode of Dispatch:</b> </label>
+										<div class="col-sm-8">
+											<?php 
+											if ($Dispatch['Dispatch']['mode_of_dispatch'] == 'by_hand') {
+												echo "By Hand";
+											} else if ($Dispatch['Dispatch']['mode_of_dispatch'] == 'courier') {
+												echo "Courier";
+											} else if ($Dispatch['Dispatch']['mode_of_dispatch'] == 'post') {
+												echo "Post";
+											} else if ($Dispatch['Dispatch']['mode_of_dispatch'] == 'email') {
+												echo "Email";
+											} else {
+												echo "Fax";
+											}
 											?>
 										</div>
 									</div>

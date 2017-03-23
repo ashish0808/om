@@ -37,19 +37,31 @@
 <!-- #sidebar-shortcuts -->
 
 <ul class="nav nav-list">
-<?php
-$dashBoardStatus = '';
-$lawyersStatus = '';
-$singleMenuClass = '';
-
-if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashboard') {
-    $singleMenuClass = 'active';
-} else {
+    
+    <?php
+    $dashBoardStatus = '';
+    $lawyersStatus = '';
     $singleMenuClass = '';
-}
-?>
+
+    if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashboard') {
+        $singleMenuClass = 'active';
+    } else {
+        $singleMenuClass = '';
+    }
+    ?>
     <li class="<?php echo $singleMenuClass; ?>">
         <?php echo $this->Html->link('<i class="icon-dashboard"></i><span class="menu-text"> Dashboard </span>', array('controller'=>'users','action'=>'dashboard'), array('escape' => false))?>
+    </li>
+
+    <?php
+    $caseProceedingMain = '';
+    if($this->params['controller'] == 'CaseProceedings' && $this->params['action'] != 'caseHistory')
+    {
+        $caseProceedingMain = 'active';
+    }
+    ?>
+    <li class="<?php echo $caseProceedingMain; ?>">
+        <?php echo $this->Html->link('<i class="icon-calendar"></i> Daily Dairy ', array('controller'=>'CaseProceedings','action'=>'index'), array('escape' => false))?>
     </li>
     
     <?php
@@ -160,15 +172,30 @@ if ($this->params['controller'] == 'users' && $this->params['action'] == 'dashbo
             </li>
         </ul>
     </li>
+
     <?php
-    $caseProceedingMain = '';
-    if($this->params['controller'] == 'CaseProceedings' && $this->params['action'] != 'caseHistory')
-    {
-        $caseProceedingMain = 'active';
+    $userCompanyMain = '';
+    $userCompanySub = '';
+    if($this->params['controller'] == 'UserCompanies') {
+        $userCompanyMain = 'open';
+        $userCompanySub = 'style="display:block;"';
     }
     ?>
-    <li class="<?php echo $caseProceedingMain; ?>">
-        <?php echo $this->Html->link('<i class="icon-calendar"></i> Daily Dairy ', array('controller'=>'CaseProceedings','action'=>'index'), array('escape' => false))?>
+    <li class="<?php echo $userCompanyMain; ?>">
+        <a href="#" class="dropdown-toggle">
+            <i class="icon-user"></i>
+            <span class="menu-text"> Client Companies </span>
+            <b class="arrow icon-angle-down"></b>
+        </a>
+
+        <ul class="submenu" <?php echo $userCompanySub; ?>>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'UserCompanies','action'=>'index'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'UserCompanies','action'=>'add'), array('escape' => false))?>
+            </li>
+        </ul>
     </li>
     <!--li class="<?php echo $caseDisptachMain; ?>">
         <?php echo $this->Html->link('<i class="icon-desktop"></i> Change Password ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>

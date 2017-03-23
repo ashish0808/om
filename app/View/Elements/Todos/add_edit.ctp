@@ -55,10 +55,10 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Description: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Reminder Date: </label>
 				<div class="col-sm-8">
 					<?php
-					echo $this->Form->textarea('Todo.description', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
+					echo $this->Form->input('Todo.reminder_date', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-sm-12 col-xs-12 date-picker', 'placeholder' => 'Reminder Date for Todo', 'data-date-format' => 'yyyy-mm-dd', 'required' => 'required', 'autocomplete' => 'off'));
 					?>
 				</div>
 			</div>
@@ -72,6 +72,20 @@
 					<?php
 					$statuses = array('pending' => 'Pending', 'completed' => 'Completed');
 					echo $this->Form->input('Todo.status', array('options' => $statuses, 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<div class="col-sm-12 col-xs-12">
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Description: </label>
+				<div class="col-sm-8">
+					<?php
+					echo $this->Form->textarea('Todo.description', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
 					?>
 				</div>
 			</div>

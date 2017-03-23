@@ -28,10 +28,11 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Compute File No: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> <span class="required">*</span>Mode of Dispatch: </label>
 				<div class="col-sm-8">
 					<?php
-					echo $this->Form->input('Dispatch.computer_file_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'value' => $computer_file_no, 'autocomplete' => 'off'));
+					$modes = array('by_hand' => 'By Hand', 'emal' => 'Email', 'courier' => 'Courier', 'post' => 'Post', 'fax' => 'Fax');
+					echo $this->Form->input('Dispatch.mode_of_dispatch', array('options' => $modes, 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
 					?>
 				</div>
 			</div>
@@ -40,10 +41,10 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Attachment: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Compute File No: </label>
 				<div class="col-sm-8">
 					<?php
-					echo $this->Form->file('Dispatch.attachment', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12'));
+					echo $this->Form->input('Dispatch.computer_file_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'value' => $computer_file_no, 'autocomplete' => 'off'));
 					?>
 				</div>
 			</div>
@@ -86,6 +87,41 @@
 			</div>
 		</div>
 	</div>
+	<?php
+	} else {
+	?>
+	<div class="col-sm-6">
+		<div class="form-group">
+			<div class="col-sm-12 col-xs-12">
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Attachment: </label>
+				<div class="col-sm-8">
+					<?php
+					echo $this->Form->file('Dispatch.attachment', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12'));
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<?php
+	}
+	?>
+	<?php
+	if ($this->action == 'edit') {
+	?>
+<div class="row">
+	<div class="col-sm-6">
+		<div class="form-group">
+			<div class="col-sm-12 col-xs-12">
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Attachment: </label>
+				<div class="col-sm-8">
+					<?php
+					echo $this->Form->file('Dispatch.attachment', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12'));
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 	<?php
 	}
 	?>
