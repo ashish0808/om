@@ -1,6 +1,6 @@
 <script type="text/javascript">
     try {
-        ace.settings.check('breadcrumbs', 'fixed')
+        // ace.settings.check('breadcrumbs', 'fixed')
     } catch (e) {
     }
 </script>

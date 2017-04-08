@@ -54,7 +54,7 @@
 		});
 	</script>
 </head>
-<body>
+<body class="navbar-fixed breadcrumbs-fixed no_skin">
 	<div class="loading-image" style="display:none;"></div>
     <div class="load-lightbox" style="display:none;"></div>
 	<div id="overlay_img">
@@ -63,13 +63,13 @@
 			array('id' => 'busy-indicator')
 		); ?>
 	</div>
-    <div class="navbar" id="navbar">
+    <div class="navbar navbar-fixed-top" id="navbar">
         <?php echo $this->element('header');?>
     </div>
     <div class="main-container" id="main-container">
         <script type="text/javascript">
             try {
-                ace.settings.check('main-container', 'fixed')
+                // ace.settings.check('main-container', 'fixed')
             } catch (e) {
             }
         </script>
@@ -78,12 +78,12 @@
             <a class="menu-toggler" id="menu-toggler" href="#">
                 <span class="menu-text"></span>
             </a>
-            <div class="sidebar" id="sidebar">
+            <div class="sidebar sidebar-fixed" id="sidebar">
                 <?php echo $this->element('left');?>
             </div>
 
             <div class="main-content">
-            	<div class="breadcrumbs" id="breadcrumbs">
+            	<div class="breadcrumbs breadcrumbs-fixed" id="breadcrumbs">
 					<?php echo $this->element('breadcrumbs');?>
 				</div>
             	<?php

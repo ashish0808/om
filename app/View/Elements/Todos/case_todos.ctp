@@ -29,7 +29,7 @@
 				if (isset($Todos) && !empty($Todos)) {
 					foreach ($Todos as $record) { ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" "><?php echo $record['ClientCase']['case_number'] ? $record['ClientCase']['complete_case_number']: "<span class='red'>Miscellaneous</span>"; ?></td>
+						<td class=" "><?php echo $record['ClientCase']['case_number'] ? $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id'])): "<span class='red'>Miscellaneous</span>"; ?></td>
 						<td class=" "><?php echo $record['Todo']['title'];?></td>
 						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['Todo']['completion_date']); ?>
 						</td>

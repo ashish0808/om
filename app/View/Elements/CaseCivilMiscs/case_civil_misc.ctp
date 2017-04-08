@@ -29,7 +29,10 @@
 				if (isset($caseCivilMiscs) && !empty($caseCivilMiscs)) {
 					foreach ($caseCivilMiscs as $record){ ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" "><?php echo $record['ClientCase']['complete_case_number']; ?></td>
+						<td>
+							<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
+							?>
+						</td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_no'];?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
 						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['CaseCivilMisc']['application_date']); ?></td>

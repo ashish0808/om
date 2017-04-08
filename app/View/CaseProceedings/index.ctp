@@ -105,6 +105,9 @@ echo $this->element('Cases/case_history');
 				<thead>
 					<tr role="row">
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Case Number
+						</th>
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Case Title
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
@@ -113,10 +116,10 @@ echo $this->element('Cases/case_history');
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Completion Date
 						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Priority
 						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Status
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
@@ -129,6 +132,10 @@ echo $this->element('Cases/case_history');
 				if (isset($Todos) && !empty($Todos)) {
 					foreach ($Todos as $record){ ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
+						<td>
+							<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
+							?>
+						</td>
 						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>";?></td>
 						<td class=" "><?php echo $record['Todo']['title'];?></td>
 						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['Todo']['completion_date']); ?>

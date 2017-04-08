@@ -13,8 +13,11 @@ if ($pageType == 'case_history') {
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
 							Case No.
+						</th>
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Case Title
 						</th>
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Cr. No.
@@ -23,13 +26,7 @@ if ($pageType == 'case_history') {
 							Sr. No.
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Party Name
-						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Court
-						</th>
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							Referred to Lok Adalat
 						</th>
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Next Date
@@ -43,20 +40,14 @@ if ($pageType == 'case_history') {
 					foreach ($CaseProceedings as $record) {
 					?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
-						<td class=" "><?php echo $record['ClientCase']['case_number']; ?></td>
+						<td>
+							<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
+							?>
+						</td>
+						<td class=" "><?php echo $record['ClientCase']['case_title'];?></td>
 						<td class=" "><?php echo $record['CaseProceeding']['court_room_no']; ?></td>
 						<td class=" "><?php echo $record['CaseProceeding']['court_serial_no']; ?></td>
-						<td class=" "><?php echo $record['ClientCase']['party_name'];?></td>
 						<td class=" "><?php echo $record['ClientCase']['Court']['name']; ?></td>
-						<td class=" ">
-						<?php
-						if ($record['CaseProceeding']['referred_to_lok_adalat']) {
-							echo 'Yes';
-						} else {
-							echo 'No';
-						}
-						?>
-						</td>
 						<td>
 						<?php
 							echo $this->Time->format('D, M jS, Y', $record['CaseProceeding']['next_date_of_hearing']);
