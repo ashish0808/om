@@ -83,7 +83,4 @@ echo $this->Form->create('Dispatch',array('url' => '/Dispatches/index','id'=>'Di
         <?php echo $this->element('Dispatches/case_dispatches'); ?>
     </div>
 </div>
-<script type="text/javascript">
-	$('[data-rel=tooltip]').tooltip();
-</script>
 <?php echo $this->Form->end(); ?>

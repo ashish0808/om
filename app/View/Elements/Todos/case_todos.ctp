@@ -1,3 +1,13 @@
+<?php
+if ($show_add) {
+?>
+<div class="row-fluid">
+	<?php echo $this->Html->link('Add', array('controller'=>'Todos','action'=>'add',trim(Inflector::slug($caseDetails['ClientCase']['computer_file_no']))), array('escape' => false, 'class' => 'tooltip-info btn btn-primary', 'data-rel' => 'tooltip', 'data-original-title'=>'Add new Todo'));
+	?>
+</div>
+<?php
+}
+?>
 <div class="row-fluid">
 	<div class="span12">
         <div class="row-fluid">

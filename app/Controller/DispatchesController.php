@@ -79,6 +79,8 @@ class DispatchesController extends AppController
                 $records[$key]['Dispatch']['attachment'] = '';
             }
         }*/
+        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+        $this->set('show_add', false);
         $this->set('Dispatches', $records);
     }
 
@@ -89,6 +91,7 @@ class DispatchesController extends AppController
      */
     public function add($computer_file_no = '')
     {
+        $computer_file_no = str_replace('_', '/', $computer_file_no);
         $this->layout = 'basic';
         $this->pageTitle = 'Add New Dispatch';
         $this->set('pageTitle', $this->pageTitle);
@@ -123,13 +126,24 @@ class DispatchesController extends AppController
                     }
                     if ($this->Dispatch->save($this->request->data)) {
                         $this->Flash->success(__('The dispatch misc has been saved.'));
-
-                        return $this->redirect(array('controller' => 'Dispatches', 'action' => 'index'));
+                        if ($this->data['Dispatch']['referer'] == 'caseDispatches') {
+                            return $this->redirect(array('controller' => 'Dispatches', 'action' => 'caseDispatches', $this->data['Dispatch']['case_id']));
+                        } else {
+                            return $this->redirect(array('controller' => 'Dispatches', 'action' => 'index'));
+                        }
                     } else {
                         $this->Flash->error(__('The dispatch could not be saved. Please, try again.'));
                     }
                 }
             }
+        }
+        // To see if the page has been accessed from case detail page or dispatches main page
+        $referer_url_params = Router::parse($this->referer('/', true));
+        $this->set('action', $referer_url_params['action']);
+        if (!empty($referer_url_params['pass'])) {
+            $this->set('caseId', $referer_url_params['pass'][0]);
+        } else {
+            $this->set('caseId', 0);
         }
         $this->set(compact('computer_file_no'));
     }
@@ -300,6 +314,8 @@ class DispatchesController extends AppController
         $this->Dispatch->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
         $Dispatches = $this->Dispatch->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId))), 'conditions' => array('client_case_id' => $caseId, 'Dispatch.user_id' => $this->Session->read('UserInfo.uid'))));
 
+        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+        $this->set('show_add', true);
         $this->set(compact('caseDetails', 'caseId', 'Dispatches'));
     }
 

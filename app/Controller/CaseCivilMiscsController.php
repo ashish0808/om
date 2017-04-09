@@ -83,6 +83,8 @@ class CaseCivilMiscsController extends AppController
                 $records[$key]['CaseCivilMisc']['attachment'] = '';
             }
         }*/
+        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+        $this->set('show_add', false);
         $this->set('caseCivilMiscs', $records);
         $this->set('status', $status);
     }
@@ -94,6 +96,7 @@ class CaseCivilMiscsController extends AppController
      */
     public function add($computer_file_no = '')
     {
+        $computer_file_no = str_replace('_', '/', $computer_file_no);
         $this->layout = 'basic';
         $this->pageTitle = 'Add CM/CRM';
         $this->set('pageTitle', $this->pageTitle);
@@ -125,7 +128,11 @@ class CaseCivilMiscsController extends AppController
 
                         if ($this->CaseCivilMisc->save($this->request->data)) {
                             $this->Flash->success(__('CM/CRM has been saved successfully.'));
-                            return $this->redirect(array('controller' => 'CaseCivilMiscs', 'action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
+                            if ($this->data['CaseCivilMisc']['referer'] == 'caseCivilMisc') {
+                                return $this->redirect(array('controller' => 'CaseCivilMiscs', 'action' => 'caseCivilMisc', $this->data['CaseCivilMisc']['case_id']));
+                            } else {
+                                return $this->redirect(array('controller' => 'CaseCivilMiscs', 'action' => 'index/'.$this->request->data['CaseCivilMisc']['status']));
+                            }
                         } else {
                             $this->Flash->error(__('The CM/CRM could not be saved. Please, try again.'));
                         }
@@ -136,6 +143,14 @@ class CaseCivilMiscsController extends AppController
                     $this->CaseCivilMisc->validationErrors['computer_file_no'] = ['Please enter valid computer_file_no'];
                 }
             }
+        }
+        // To see if the page has been accessed from case detail page or dispatches main page
+        $referer_url_params = Router::parse($this->referer('/', true));
+        $this->set('action', $referer_url_params['action']);
+        if (!empty($referer_url_params['pass'])) {
+            $this->set('caseId', $referer_url_params['pass'][0]);
+        } else {
+            $this->set('caseId', 0);
         }
         $this->set(compact('computer_file_no'));
     }
@@ -305,6 +320,8 @@ class CaseCivilMiscsController extends AppController
         $this->CaseCivilMisc->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
         $caseCivilMiscs = $this->CaseCivilMisc->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'application_date DESC'));
 
+        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+        $this->set('show_add', true);
         $this->set(compact('caseDetails', 'caseId', 'caseCivilMiscs'));
     }
 

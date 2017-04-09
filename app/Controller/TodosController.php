@@ -72,6 +72,9 @@ class TodosController extends AppController
         }
         $this->set('paginateLimit', LIMIT);
         $records = $this->Paginator->paginate('Todo', $criteria);
+
+        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+        $this->set('show_add', false);
         $this->set('Todos', $records);
     }
 
@@ -82,6 +85,7 @@ class TodosController extends AppController
      */
     public function add($computer_file_no = '')
     {
+        $computer_file_no = str_replace('_', '/', $computer_file_no);
         $this->layout = 'basic';
         $this->pageTitle = 'Add New Todo';
         $this->set('pageTitle', $this->pageTitle);
@@ -104,13 +108,24 @@ class TodosController extends AppController
                 if ($this->Todo->validates()) {
                     if ($this->Todo->save($this->request->data)) {
                         $this->Flash->success(__('The Todo has been saved.'));
-
-                        return $this->redirect(array('controller' => 'Todos', 'action' => 'index'));
+                        if ($this->data['Todo']['referer'] == 'caseTodos') {
+                            return $this->redirect(array('controller' => 'Todos', 'action' => 'caseTodos', $this->data['Todo']['case_id']));
+                        } else {
+                            return $this->redirect(array('controller' => 'Todos', 'action' => 'index'));
+                        }
                     } else {
                         $this->Flash->error(__('The Todo could not be saved. Please, try again.'));
                     }
                 }
             }
+        }
+        // To see if the page has been accessed from case detail page or dispatches main page
+        $referer_url_params = Router::parse($this->referer('/', true));
+        $this->set('action', $referer_url_params['action']);
+        if (!empty($referer_url_params['pass'])) {
+            $this->set('caseId', $referer_url_params['pass'][0]);
+        } else {
+            $this->set('caseId', 0);
         }
         $this->set(compact('computer_file_no'));
     }
@@ -287,6 +302,8 @@ class TodosController extends AppController
         $this->Todo->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
         $Todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'completion_date DESC'));
 
+        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+        $this->set('show_add', true);
         $this->set(compact('caseDetails', 'caseId', 'Todos'));
     }
 

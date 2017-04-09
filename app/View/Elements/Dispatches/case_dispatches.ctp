@@ -1,3 +1,13 @@
+<?php
+if ($show_add) {
+?>
+<div class="row-fluid">
+	<?php echo $this->Html->link('Add', array('controller'=>'Dispatches','action'=>'add',trim(Inflector::slug($caseDetails['ClientCase']['computer_file_no']))), array('escape' => false, 'class' => 'tooltip-info btn btn-primary', 'data-rel' => 'tooltip', 'data-original-title'=>'Add new Dispatch'));
+	?>
+</div>
+<?php
+}
+?>
 <div class="row-fluid">
 	<div role="grid" class="dataTables_wrapper" id="sample-table-2_wrapper">
 	<table class="table table-striped table-bordered table-hover dataTable" id="sample-table-2"
@@ -92,3 +102,6 @@
 	</table>
 	</div>
 </div>
+<script type="text/javascript">
+	$('[data-rel=tooltip]').tooltip();
+</script>

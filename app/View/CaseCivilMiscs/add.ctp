@@ -6,6 +6,10 @@
 			</h1>
 		</div>
 		<?php echo $this->Form->create('CaseCivilMisc', array('type'=>'file', 'url' => '/CaseCivilMiscs/add/', 'class' => 'form-horizontal', 'name' => 'add', 'id' => 'add')); ?>
+		<?php
+		echo $this->Form->hidden('CaseCivilMisc.case_id', array('value' => $caseId));
+		echo $this->Form->hidden('CaseCivilMisc.referer', array('value' => $action));
+		?>
 		<div class="col-sm-12 col-xs-12">
 			<div class="widget-box">
 				<div class="widget-header">
