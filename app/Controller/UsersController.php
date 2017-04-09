@@ -99,9 +99,9 @@ class UsersController extends AppController
         $pending_for_refiling_data = [];
         $pending_for_registration_data = [];
 
-        $caseData = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING_FOR_FILING, PENDING_FOR_REFILING, PENDING_FOR_REGISTRATION), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'))));
+        $caseData = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING_FOR_FILING, PENDING_FOR_REFILING, PENDING_FOR_REGISTRATION), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')), 'order' => 'limitation_expires_on asc'));
         if (!empty($caseData)) {
-            foreach($caseData as $key => $value) {
+            foreach ($caseData as $key => $value) {
                 if ($value['ClientCase']['case_status'] == PENDING_FOR_FILING) {
                     $pending_for_filing_data[] = $caseData[$key];
                     $pending_for_filing_count++;
