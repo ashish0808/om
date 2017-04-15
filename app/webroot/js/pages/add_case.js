@@ -28,9 +28,11 @@ function getFileNumberField(isExistingCase)
     if(isExistingCase==1) {
 
         $('.fileNumber').removeClass('hide');
+        $('.caseStatusManual').removeClass('hide');
     } else {
 
         $('.fileNumber').addClass('hide');
+        $('.caseStatusManual').addClass('hide');
     }
 }
 

@@ -160,9 +160,34 @@ class CasesController extends AppController
 		));
 		$this->set("caseTypes", $caseTypes);
 
+		$this->set("caseStatuses", $this->listExistingCaseStatuses());
+
 		$this->loadModel('Court');
 		$courts = $this->Court->listCourts();
 		$this->set("courts", $courts);
+	}
+
+	private function listExistingCaseStatuses()
+	{
+		$this->loadModel('CaseStatus');
+		$caseStatuses = $this->CaseStatus->find('all', array(
+			'conditions' => array(
+				'status' => array('admitted', 'pending', 'decided')
+			),
+			'fields' => array('CaseStatus.id', 'CaseStatus.status'),
+			'order' => 'status ASC'
+		));
+
+		$caseStatusesArr = array();
+		if(!empty($caseStatuses)) {
+
+			foreach($caseStatuses as $caseStatus){
+
+				$caseStatusesArr[$caseStatus['CaseStatus']['id']] = ucfirst(str_replace('_', ' ', $caseStatus['CaseStatus']['status']));
+			}
+		}
+
+		return $caseStatusesArr;
 	}
 
 	public function edit($caseId)
@@ -241,6 +266,8 @@ class CasesController extends AppController
 		$this->set("essentialWorksArr", $this->ClientCases->listEssentialWorks($caseDetails['ClientCase']['client_type']));
 
 		$this->set("defaultCollapseIn", $defaultCollapseIn);
+
+		$this->set("caseStatuses", $this->listExistingCaseStatuses());
 	}
 
 	public function editBasicDetails($caseId)
@@ -857,7 +884,8 @@ class CasesController extends AppController
 		$this->set('caseId',$caseId);
 
 		$this->loadModel('ClientCase', 'Court');
-		$this->ClientCase->contain('CaseStatus', 'CaseType');
+		$this->ClientCase->contain('CaseStatus', 'CaseType', 'CaseProceeding', 'CaseFiling', 'Dispatch');
+		//$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling', 'CaseStatus');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 		$this->set('caseDetails',$caseDetails);
 

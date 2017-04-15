@@ -53,12 +53,6 @@ class ClientCase extends AppModel {
 				'message' => 'Please enter party name'
 			)
 		),
-		'case_type_id' => array(
-			'ruleCaseType' => array(
-				'rule' => 'notBlank',
-				'message' => 'Please select case type',
-			),
-		),
 		'case_number' => array(
 			'ruleCaseNumber' => array(
 				'rule' => array('validateWithClientType', 'client_type'),
@@ -97,17 +91,27 @@ class ClientCase extends AppModel {
 				'message' => 'File number already registered'
 			)*/
 		),
-		'date_fixed' => array(
+		/*'date_fixed' => array(
 			'rule1' => array(
 				'rule' => array('validateWithClientType', 'client_type'),
 				'message' => 'Please enter date fixed',
 			)
-		),
+		),*/
 		'limitation_expires_on' => array(
 			'rule1' => array(
 				'rule' => array('validateWithClientTypeAppellant', 'client_type'),
 				'message' => 'Please enter limitation expiry date',
 			)
+		),
+		'case_status' => array(
+			'rule1' => array(
+				'rule' => array('validateFileNumber', 'is_existing'),
+				'message' => 'Please select case status',
+			),
+			/*'uniqueRule' => array(
+				'rule' => array('validateUniqueFileNumber', 'user_id'),
+				'message' => 'File number already registered'
+			)*/
 		),
 		'is_deleted' => array(
 			'boolean' => array(
