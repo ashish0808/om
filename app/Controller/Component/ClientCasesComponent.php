@@ -15,7 +15,7 @@ class ClientCasesComponent extends Component
 
 		$data['complete_case_number'] = $this->generateCaseNumber($data);
 
-		if(isset($data['date_fixed'])) {
+		if((!isset($data['case_status']) || empty($data['case_status'])) && isset($data['date_fixed'])) {
 
 			$caseStatus = "pending_for_filing";
 			if(!empty($data['date_fixed'])) {
@@ -82,9 +82,25 @@ class ClientCasesComponent extends Component
 			}
 		}
 
-		if(!empty($caseTypeName) && !empty($data['case_number']) && !empty($data['case_year'])) {
+		$caseNumberArr = array();
+		if(!empty($caseTypeName)) {
 
-			$caseNumber = $caseTypeName.'-'.$data['case_number'].'-'.$data['case_year'];
+			$caseNumberArr[] = $caseTypeName;
+		}
+
+		if(!empty($data['case_number'])) {
+
+			$caseNumberArr[] = $data['case_number'];
+		}
+
+		if(!empty($data['case_year'])) {
+
+			$caseNumberArr[] = $data['case_year'];
+		}
+
+		if(!empty($caseNumberArr)) {
+
+			$caseNumber = implode('-', $caseNumberArr);
 		}
 
 		return $caseNumber;

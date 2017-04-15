@@ -45,12 +45,13 @@
 																	</td>
 																	<td></td>
 																	<td class="details-field">
-																		<span class="view-label">Complete Case Number: </span> <?php echo $caseDetails['ClientCase']['complete_case_number']; ?>
+																		<span class="view-label">Case Number: </span> <?php echo $caseDetails['ClientCase']['complete_case_number']; ?>
 																	</td>
 																</tr>
 																<tr>
 																	<td class="details-field">
-																		<span class="view-label">Case Number: </span> <?php echo $caseDetails['ClientCase']['case_number']; ?>
+																		<span class="view-label">Party Name: </span>
+																		<?php echo $caseDetails['ClientCase']['party_name']; ?>
 																	</td>
 																	<td></td>
 																	<td class="details-field">
@@ -59,19 +60,6 @@
 																		 	echo $this->Time->format('D, M jS, Y', $caseDetails['ClientCase']['engaged_on']);
 																		 }
 																		 ?>
-																	</td>
-																</tr>
-																<tr>
-																	<td class="details-field">
-																		<span class="view-label">Case Type: </span>
-																		 <?php if(!empty($caseDetails['CaseType']['name'])) {
-																		 	echo $caseDetails['CaseType']['name'];
-																		 }
-																		 ?>
-																	</td>
-																	<td></td>
-																	<td class="details-field">
-																		<span class="view-label">Case Year: </span> <?php echo $caseDetails['ClientCase']['case_year']; ?>
 																	</td>
 																</tr>
 																<tr>
@@ -89,8 +77,8 @@
 																</tr>
 																<tr>
 																	<td class="details-field">
-																		<span class="view-label">Party Name: </span>
-																		 <?php echo $caseDetails['ClientCase']['party_name']; ?>
+																		<span class="view-label">Reference Number: </span>
+																		<?php echo $caseDetails['ClientCase']['reference_no']; ?>
 																	</td>
 																	<td></td>
 																	<td class="details-field">
@@ -128,15 +116,115 @@
 																	<td></td>
 																	<td class="details-field">
 																		<span class="view-label">Client Phone: </span>
-																		 <?php echo $caseDetails['ClientCase']['client_phone'];
+																		<?php echo $caseDetails['ClientCase']['client_phone'];
 																		 if(!empty($caseDetails['ClientCase']['client_phone2'])) {
 																		 	echo ', '.$caseDetails['ClientCase']['client_phone2'];
 																		 } ?>
 																	</td>
 																</tr>
+																<tr>
+																	<td colspan="3" class="details-field">
+																		<span class="view-label">Remarks: </span>
+																		<?php echo $caseDetails['ClientCase']['remarks']; ?>
+																	</td>
+																</tr>
 															</table>
 														</td>
 													</tr>
+												</table>
+
+												<table class="table table-striped table-bordered">
+													<tr>
+														<th colspan="5" style="text-align: center;">
+															Memo Of Hearings
+														</th>
+													</tr>
+													<tr>
+														<th>Date</th>
+														<th>Court Room No.</th>
+														<th>Court Serial No.</th>
+														<th>Status</th>
+														<th>Remarks</th>
+													</tr>
+													<?php if(!empty($caseDetails['CaseProceeding'])){
+													foreach($caseDetails['CaseProceeding'] as $caseProceeding){
+													?>
+													<tr>
+														<td>
+															<?php echo $caseProceeding['date_of_hearing'] ? $this->Time->format('D, M jS, Y', $caseProceeding['date_of_hearing']) : ''; ?>
+														</td>
+														<td><?php echo $caseProceeding['court_room_no']; ?></td>
+														<td><?php echo $caseProceeding['court_serial_no']; ?></td>
+														<td><?php echo ucfirst($caseProceeding['proceeding_status']); ?></td>
+														<td width="40%"><?php echo $caseProceeding['remarks']; ?></td>
+													</tr>
+													<?php } }else{ ?>
+													<tr>
+														<td colspan="5" class="details-field" style="text-align: center;">
+															No record found
+														</td>
+													</tr>
+													<?php } ?>
+												</table>
+
+												<table class="table table-striped table-bordered">
+													<tr>
+														<th colspan="5" style="text-align: center;">
+															Case Filings
+														</th>
+													</tr>
+													<tr>
+														<th>Date</th>
+														<th>Number</th>
+														<th>Type</th>
+													</tr>
+													<?php if(!empty($caseDetails['CaseFiling'])){
+													foreach($caseDetails['CaseFiling'] as $caseFiling){
+													?>
+													<tr>
+														<td>
+															<?php echo $caseFiling['filing_date'] ? $this->Time->format('D, M jS, Y', $caseFiling['filing_date']) : ''; ?>
+														</td>
+														<td><?php echo $caseFiling['filing_no']; ?></td>
+														<td><?php echo $caseFiling['filing_type']; ?></td>
+													</tr>
+													<?php } }else{ ?>
+													<tr>
+														<td colspan="5" class="details-field" style="text-align: center;">
+															No record found
+														</td>
+													</tr>
+													<?php } ?>
+												</table>
+
+												<table class="table table-striped table-bordered">
+													<tr>
+														<th colspan="5" style="text-align: center;">
+															Case Dispatches
+														</th>
+													</tr>
+													<tr>
+														<th>Date</th>
+														<th>Title</th>
+														<th>Remarks</th>
+													</tr>
+													<?php if(!empty($caseDetails['Dispatch'])){
+													foreach($caseDetails['Dispatch'] as $caseDispatch){
+													?>
+													<tr>
+														<td>
+															<?php echo $caseDispatch['date_of_dispatch'] ? $this->Time->format('D, M jS, Y', $caseDispatch['date_of_dispatch']) : ''; ?>
+														</td>
+														<td><?php echo $caseDispatch['title']; ?></td>
+														<td width="40%"><?php echo $caseDispatch['remarks']; ?></td>
+													</tr>
+													<?php } }else{ ?>
+													<tr>
+														<td colspan="5" class="details-field" style="text-align: center;">
+															No record found
+														</td>
+													</tr>
+													<?php } ?>
 												</table>
                                             </div>
                                 			<!--<div class="row">

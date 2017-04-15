@@ -76,11 +76,11 @@
 				<?php echo $this->Html->link('CM/CRM ', array('controller'=>'CaseCivilMiscs','action'=>'caseCivilMisc', $caseId), array('escape' => false, 'aria-expanded' => $manageCaseCivilMiscAE))?>
 			</li>
 
-			<li class="caseNumberRelatedFields <?php echo $manageCaseDispatchTab; ?>">
+			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageCaseDispatchTab; ?>">
 				<?php echo $this->Html->link('Case Dispatches ', array('controller'=>'Dispatches','action'=>'caseDispatches', $caseId), array('escape' => false, 'aria-expanded' => $manageCaseDispatchAE))?>
 			</li>
 
-			<li class="caseNumberRelatedFields <?php echo $manageTodoTab; ?>">
+			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageTodoTab; ?>">
 				<?php echo $this->Html->link('Case Todos ', array('controller'=>'Todos','action'=>'caseTodos', $caseId), array('escape' => false, 'aria-expanded' => $manageTodoAE))?>
 			</li>
 
