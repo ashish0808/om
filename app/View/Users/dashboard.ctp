@@ -37,7 +37,7 @@
 			</span>
 
 			<span class="btn btn-app btn-sm btn-success no-hover">
-				<span class="line-height-1 bigger-170"> 7 </span>
+				<span class="line-height-1 bigger-170" id="cases_with_no_next_date_count_div"> 0 </span>
 
 				<br>
 				<span class="line-height-1 smaller-90"> Albums </span>
@@ -227,6 +227,55 @@
 								<tbody>
 									<tr>
 										<td colspan="4" class="center"><i class="icon-spinner icon-spin blue bigger-170"></i></td>
+									</tr>
+								</tbody>
+							</table>
+						</div><!-- /.widget-main -->
+					</div><!-- /.widget-body -->
+				</div><!-- /.widget-box -->
+			</div><!-- /.col -->
+        </div>
+
+        <div class="hr hr32 hr-dotted"></div>
+
+        <div class="row-fluid">
+			<div class="col-xs-12 col-sm-6">
+				<div class="widget-box transparent">
+					<div class="widget-header widget-header-flat">
+						<h4 class="widget-title lighter">
+							<i class="icon-bullhorn red"></i>
+							Cases with No Proceeding Date
+						</h4>
+
+						<div class="widget-toolbar">
+							<a href="#" data-action="collapse">
+								<!--i class="ace-icon fa fa-chevron-up"></i-->
+								<i class="icon-arrow-up"></i>
+							</a>
+						</div>
+					</div>
+
+					<div class="widget-body">
+						<div class="widget-main no-padding" id="cases_with_no_next_date_div">
+							<table class="table table-bordered table-striped">
+								<thead class="thin-border-bottom">
+									<tr>
+										<th>
+											<i class="icon-caret-right blue"></i>Case No
+										</th>
+
+										<th class="hidden-480">
+											<i class="icon-caret-right blue"></i>Party Name
+										</th>
+
+										<th class="hidden-480">
+											<i class="icon-caret-right blue"></i>Limitation Expiry
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td colspan="4" class="center"><i class="icon-spinner icon-spin orange bigger-170"></i></td>
 									</tr>
 								</tbody>
 							</table>

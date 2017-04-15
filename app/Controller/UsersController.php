@@ -138,11 +138,14 @@ class UsersController extends AppController
     public function getCasesWithNoNextDate()
     {
         $this->layout = '';
-        $this->loadModel('ClientCase');
+        $this->loadModel('CaseProceeding');
 
-        $cases_with_pending_actions = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING, ADMITTED), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'OR' => array('is_ememo_filed' => false, 'is_paper_book' => false, 'is_diary_entry' => false, 'is_letter_communication' => false, 'is_lcr' => false))));
-        $cases_with_pending_actions_count = count($cases_with_pending_actions);
-        $this->set('cases_with_pending_actions', $cases_with_pending_actions);
-        $this->set('cases_with_pending_actions_count', $cases_with_pending_actions_count);
+        $this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+
+        $cases_with_no_next_date = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.case_status' => array(PENDING, ADMITTED), 'is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('proceeding_status' => 'pending', 'next_date_of_hearing' => null, 'date_of_hearing <' => date('Y-m-d'))));
+
+        $cases_with_no_next_date_count = count($cases_with_no_next_date);
+        $this->set('cases_with_no_next_date', $cases_with_no_next_date);
+        $this->set('cases_with_no_next_date_count', $cases_with_no_next_date_count);
     }
 }
