@@ -148,4 +148,15 @@ class UsersController extends AppController
         $this->set('cases_with_no_next_date', $cases_with_no_next_date);
         $this->set('cases_with_no_next_date_count', $cases_with_no_next_date_count);
     }
+
+    public function getTodos()
+    {
+        $this->layout = '';
+        $this->loadModel('Todo');
+
+        $todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('Todo.reminder_date <=' => date('Y-m-d'), 'status' => 'pending')));
+        $todos_count = count($todos);
+        $this->set('todos', $todos);
+        $this->set('todos_count', $todos_count);
+    }
 }

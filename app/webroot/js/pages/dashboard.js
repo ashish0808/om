@@ -17,4 +17,9 @@ $(document).ready(function() {
         $('#cases_with_no_next_date_div').html($(data).html(data).find("#cases_with_no_next_date").html());
         $('#cases_with_no_next_date_count_div').html($(data).html(data).find("#cases_with_no_next_date_count").html());
     });
+
+    $.get("getTodos", function(data) {
+        $('#todos_div').html($(data).html(data).find("#todos").html());
+        $('#todos_count_div').html($(data).html(data).find("#todos_count").html());
+    });
 });
