@@ -44,6 +44,36 @@ class ClientCasesComponent extends Component
 			}
 		}
 
+		$data = $this->updateEssentialWorks($data);
+
+		return $data;
+	}
+
+	public function updateEssentialWorks($data)
+	{
+		if(!empty($data['case_status'])) {
+
+			App::import('Model','CaseStatus');
+			$caseStatusObj = new CaseStatus();
+
+			$caseStatusData = $caseStatusObj->find('first', array(
+				'conditions' => array(
+					'id' => $data['case_status']
+				),
+				'fields' => array('id', 'status')
+			));
+
+			if(!empty($caseStatusData['CaseStatus']['status']) && $caseStatusData['CaseStatus']['status']=='decided') {
+
+				$essentialWorks = $this->listEssentialWorks();
+
+				foreach($essentialWorks as $essentialWorkKey=>$essentialWork) {
+
+					$data[$essentialWorkKey] = 1;
+				}
+			}
+		}
+
 		return $data;
 	}
 
