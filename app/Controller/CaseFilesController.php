@@ -89,6 +89,12 @@ class CaseFilesController extends AppController
         $this->set('CaseFiles', $records);
 	    $this->set('caseDetails', $caseDetails);
 	    $this->set('caseId', $caseId);
+
+	    $mainCaseFile = '';
+	    if (!empty($caseDetails['ClientCase']['main_file'])) {
+		    $mainCaseFile = $this->Aws->getObjectUrl($caseDetails['ClientCase']['main_file']);
+	    }
+	    $this->set("mainCaseFile", $mainCaseFile);
     }
 
     /**
@@ -117,6 +123,7 @@ class CaseFilesController extends AppController
 
 	            $caseFiles = $this->request->data['CaseFile']['files'];
 
+	            $fileSaved = false;
 	            $errorFiles = array();
 	            foreach($caseFiles as $caseFileArr) {
 
@@ -135,6 +142,8 @@ class CaseFilesController extends AppController
 			            $saveData['path'] = $fileKey;
 			            $saveData['name'] = $caseFileArr['name'];
 
+			            $fileSaved = true;
+
 			            if (!$this->CaseFile->save($saveData)) {
 
 				            $errorFiles[] = $caseFileArr['name'];
@@ -148,9 +157,12 @@ class CaseFilesController extends AppController
 	            if(empty($errorFiles)) {
 
 		            $this->Flash->success(__('Case files updated successfully.'));
-	            } else {
+	            } elseif($fileSaved==true) {
 
 		            $this->Flash->success(__('Few case files are updated. Please try remaining files again'));
+	            }else {
+
+		            $this->Flash->error(__('Nothing to upload.'));
 	            }
             } else {
 
@@ -190,4 +202,50 @@ class CaseFilesController extends AppController
 
         return $this->redirect(array('controller' => 'CaseFiles', 'action' => 'manage', $caseId));
     }
+
+	public function addMainCaseFile($caseId)
+	{
+		$this->layout = 'basic';
+		$this->pageTitle = 'Add Main Case File';
+		$this->set('pageTitle', $this->pageTitle);
+
+		$this->loadModel('ClientCase');
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+
+		if ($this->request->data) {
+
+			if (isset($_FILES['file']) && $_FILES['file']['error'] > 0) {
+
+				$this->Flash->error(__('Unable to upload.'));
+			} else {
+
+				if(!empty($_FILES['file']['tmp_name'])) {
+
+					$sourceFile = $_FILES['file']['tmp_name'];
+					$fileKey = time().'-'.$this->Session->read('UserInfo.uid').'-'.$_FILES['file']['name'];
+					// Upload file to S3
+					$this->Aws->upload($sourceFile, $fileKey);
+					if(!empty($caseDetails['ClientCase']['main_file'])) {
+
+						// Delete previous attached file
+						$this->Aws->delete($caseDetails['ClientCase']['main_file']);
+					}
+
+					$updateCaseDetails = array();
+					$updateCaseDetails['main_file'] = "'$fileKey'";
+					$this->ClientCase->updateAll($updateCaseDetails, array('ClientCase.id'=> $caseId));
+
+					$this->Flash->success(__('Case file updated successfully.'));
+
+					return $this->redirect(array('controller' => 'CaseFiles', 'action' => 'manage', $caseId));
+				}else {
+
+					$this->Flash->error(__('Nothing to upload.'));
+				}
+			}
+		}
+
+		$this->set('caseDetails', $caseDetails);
+		$this->set('caseId', $caseId);
+	}
 }

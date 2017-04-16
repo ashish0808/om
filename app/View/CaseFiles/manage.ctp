@@ -16,6 +16,7 @@
 								<div class="row">
                                 	<div class="col-sm-12">
                                 		<div class="clearfix pull-right custom-form-actions">
+                                			<?php echo $this->Html->link('Add Main Case File', array('controller'=>'CaseFiles','action'=>'addMainCaseFile', $caseId), array('escape' => false, 'class' => 'btn btn-info'))?>
                                 			<?php echo $this->Html->link('Add Case Files', array('controller'=>'CaseFiles','action'=>'add', $caseId), array('escape' => false, 'class' => 'btn btn-info'))?>
                                 		</div>
                                 	</div>
@@ -173,6 +174,17 @@
 									$('[data-rel=tooltip]').tooltip();
 								</script>
 								<?php echo $this->Form->end(); ?>
+
+								<?php if (!empty($mainCaseFile)) { ?>
+								<div class="row"><div class="col-sm-12">&nbsp;</div></div>
+								<div class="row">
+									<div class="col-sm-12">
+										<div class="clearfix pull-right custom-form-actions">
+											<a href="<?php echo $mainCaseFile;?>" target="_blank" class='btn btn-info'>Main Case File</a>
+										</div>
+									</div>
+								</div>
+								<?php } ?>
 							</div>
 						</div>
 					</div>
