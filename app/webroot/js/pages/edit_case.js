@@ -223,14 +223,12 @@ $(document).ready(function(){
 
     $("body").on('click', '.updateCaseFiling', function() {
 
-        var file_data = $("#EditClientCaseMainFile").prop("files")[0];
         var form_data = new FormData();
 
         form_data.append("data[CaseFiling][id]", $("#EditCaseFilingId").val());
         form_data.append("data[CaseFiling][filing_date]", $("#EditCaseFilingFilingDate").val());
         form_data.append("data[CaseFiling][filing_type]", $("#EditCaseFilingFilingType").val());
         form_data.append("data[CaseFiling][filing_no]", $("#EditCaseFilingFilingNo").val());
-        form_data.append("file", file_data);
 
         $.ajax({
             url: $('#editCaseFilingForm').attr('action'),

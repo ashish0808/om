@@ -10,7 +10,7 @@ App::uses('AppController', 'Controller');
  */
 class CasesController extends AppController
 {
-	public $helpers = array("Form", "Js" => array('Jquery'), 'Validation', 'Session');
+	public $helpers = array("Form", "Js" => array('Jquery'), 'Validation', 'Session', 'ClientCase');
 	//JS and Validation helpers are not in Use right now
 
 	public $components = array('Paginator', 'Flash', 'Session', 'RequestHandler', 'Email');
@@ -74,7 +74,7 @@ class CasesController extends AppController
 
 		$this->set('paginateLimit', LIMIT);
 
-		$criteriaStr = 'ClientCase.user_id='.$this->getLawyerId().' AND ClientCase.is_main_case=1';
+		$criteriaStr = 'ClientCase.user_id='.$this->getLawyerId();
 
 		if(!empty($criteria)) {
 
@@ -82,7 +82,6 @@ class CasesController extends AppController
 
 				$criteriaStr .= ' AND '.$criteriaKey.$criteriaVal;
 			}
-
 		}
 		//echo $criteriaStr; die;
 		//pr($criteria); die;
@@ -294,6 +293,11 @@ class CasesController extends AppController
 				if($caseDetails['ClientCase']['completed_step'] > 1) {
 
 					$data['completed_step'] = $caseDetails['ClientCase']['completed_step'];
+				}
+
+				if(empty($data['case_status'])) {
+
+					$data['case_status'] = $caseDetails['ClientCase']['case_status'];
 				}
 
 				if ($this->ClientCase->save($data)) {
@@ -612,11 +616,7 @@ class CasesController extends AppController
 				$result = array('status' => 'error', 'message' => $this->CaseFiling->validationErrors);
 			}
 
-			if(empty($_FILES['file']['tmp_name'])) {
-
-				$result['status'] = 'error';
-				$result['message']['main_file'][] = 'Please upload case file';
-			} elseif (isset($_FILES['file']) && $_FILES['file']['error'] > 0) {
+			if (isset($_FILES['file']) && $_FILES['file']['error'] > 0) {
 
 				$result['status'] = 'error';
 				$result['message']['main_file'][] = $_FILES['file']['error'];
@@ -628,24 +628,38 @@ class CasesController extends AppController
 				$data['client_case_id'] = $caseId;
 				$this->CaseFiling->save($data);
 
-				$sourceFile = $_FILES['file']['tmp_name'];
-				$fileKey = time().'-'.$this->Session->read('UserInfo.uid').'-'.$_FILES['file']['name'];
-				// Upload file to S3
-				$this->Aws->upload($sourceFile, $fileKey);
-
 				$this->loadModel('ClientCase');
 				$caseDetails = $this->ClientCase->read(null, $caseId);
+				if(!empty($_FILES['file']['tmp_name'])) {
 
-				if(!empty($caseDetails['ClientCase']['main_file'])) {
+					$sourceFile = $_FILES['file']['tmp_name'];
+					$fileKey = time().'-'.$this->Session->read('UserInfo.uid').'-'.$_FILES['file']['name'];
+					// Upload file to S3
+					$this->Aws->upload($sourceFile, $fileKey);
+					if(!empty($caseDetails['ClientCase']['main_file'])) {
 
-					// Delete previous attached file
-					$this->Aws->delete($caseDetails['ClientCase']['main_file']);
+						// Delete previous attached file
+						$this->Aws->delete($caseDetails['ClientCase']['main_file']);
+					}
 				}
 
-				$this->ClientCases = $this->Components->load('ClientCases');
-				$case_status = $this->ClientCases->updateCaseStatus('pending_for_registration');
+				$updateCaseDetails = array();
+				if(empty($caseDetails['ClientCase']['case_number'])) {
 
-				$this->ClientCase->updateAll(array('case_status' => $case_status, 'main_file' => "'$fileKey'"), array('ClientCase.id'=> $caseId));
+					$this->ClientCases = $this->Components->load('ClientCases');
+					$case_status = $this->ClientCases->updateCaseStatus('pending_for_registration');
+					$updateCaseDetails = array('case_status' => $case_status);
+				}
+
+				if(isset($fileKey) && !empty($fileKey)) {
+
+					$updateCaseDetails['main_file'] = "'$fileKey'";
+				}
+
+				if(!empty($updateCaseDetails)) {
+
+					$this->ClientCase->updateAll($updateCaseDetails, array('ClientCase.id'=> $caseId));
+				}
 			}
 		}
 
@@ -673,35 +687,10 @@ class CasesController extends AppController
 				$result = array('status' => 'error', 'message' => $this->CaseFiling->validationErrors);
 			}
 
-			if (isset($_FILES['file']) && $_FILES['file']['error'] > 0) {
-
-				$result = array('status' => 'error', 'message' => array(
-					'main_file' => array($_FILES['file']['error'])
-				));
-			}
-
 			if($result['status'] == 'success') {
 
 				$data = $this->request->data['CaseFiling'];
 				$this->CaseFiling->save($data);
-
-				if(!empty($_FILES['file']['tmp_name'])) {
-
-					$sourceFile = $_FILES['file']['tmp_name'];
-					$fileKey = time().'-'.$this->Session->read('UserInfo.uid').'-'.$_FILES['file']['name'];
-					// Upload file to S3
-					$this->Aws->upload($sourceFile, $fileKey);
-
-					$this->loadModel('ClientCase');
-
-					if(!empty($caseDetails['ClientCase']['main_file'])) {
-
-						// Delete previous attached file
-						$this->Aws->delete($caseDetails['ClientCase']['main_file']);
-					}
-
-					$this->ClientCase->updateAll(array('main_file' => "'$fileKey'"), array('ClientCase.id'=> $caseId));
-				}
 			}
 
 			echo json_encode($result);
@@ -888,6 +877,9 @@ class CasesController extends AppController
 		//$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling', 'CaseStatus');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 		$this->set('caseDetails',$caseDetails);
+
+		$this->ClientCases = $this->Components->load('ClientCases');
+		$this->set("essentialWorksArr", $this->ClientCases->listEssentialWorks($caseDetails['ClientCase']['client_type']));
 
 		$this->loadModel('CaseProceeding');
 		$this->set("pendingProceeding", $this->CaseProceeding->find('first', array(

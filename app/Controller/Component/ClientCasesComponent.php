@@ -8,10 +8,10 @@ class ClientCasesComponent extends Component
 	{
 		$data['completed_step'] = 1;
 
-		if(empty($data['is_existing'])) {
+		//if(empty($data['is_existing'])) {
 
-			$data['computer_file_no'] = $this->generateFileNumber($data['user_id']);
-		}
+			$data['computer_file_no'] = $this->generateFileNumber($data);
+		//}
 
 		$data['complete_case_number'] = $this->generateCaseNumber($data);
 
@@ -31,9 +31,17 @@ class ClientCasesComponent extends Component
 			$data['saved_incomplete'] = 1;
 		}
 
-		if(isset($data['client_type']) && $data['client_type']=='respondent') {
+		if(isset($data['client_type'])) {
 
-			$data['limitation_expires_on'] = '';
+			if($data['client_type']=='respondent') {
+
+				$data['limitation_expires_on'] = '';
+			}
+
+			if($data['client_type']=='petitioner') {
+
+				$data['is_ememo_filed'] = 1;
+			}
 		}
 
 		return $data;
@@ -106,17 +114,20 @@ class ClientCasesComponent extends Component
 		return $caseNumber;
 	}
 
-	public function generateFileNumber($userId)
+	public function generateFileNumber($data)
 	{
+		$userId = $data['user_id'];
+
 		App::import('Model','ClientCase');
 		$caseObj = new ClientCase();
 
-		$currYear = date('Y');
+		$engagedOn = strtotime($data['engaged_on']);
+		$currYear = date('Y', $engagedOn);
 
 		$clientCase = $caseObj->find('first', array(
 			'conditions' => array(
 				'user_id' => $userId,
-				'is_existing' => 0,
+				//'is_existing' => 0,
 				'computer_file_no LIKE' => '%/'.$currYear
 			),
 			'fields' => array('id', 'computer_file_no'),
@@ -138,7 +149,7 @@ class ClientCasesComponent extends Component
 		return '301/'.$currYear;
 	}
 
-	public function listEssentialWorks($clientType)
+	public function listEssentialWorks($clientType = '')
 	{
 		$essentialWorks = array(
 			'is_ememo_filed' => 'E-memo filed',

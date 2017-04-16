@@ -81,16 +81,16 @@ class ClientCase extends AppModel {
 				'message' => 'Please select court',
 			),
 		),
-		'computer_file_no' => array(
+		/*'computer_file_no' => array(
 			'rule1' => array(
 				'rule' => array('validateFileNumber', 'is_existing'),
 				'message' => 'Please enter file number',
-			),
+			),*/
 			/*'uniqueRule' => array(
 				'rule' => array('validateUniqueFileNumber', 'user_id'),
 				'message' => 'File number already registered'
 			)*/
-		),
+		//),
 		/*'date_fixed' => array(
 			'rule1' => array(
 				'rule' => array('validateWithClientType', 'client_type'),
@@ -112,6 +112,12 @@ class ClientCase extends AppModel {
 				'rule' => array('validateUniqueFileNumber', 'user_id'),
 				'message' => 'File number already registered'
 			)*/
+		),
+		'engaged_on' => array(
+			'required' => array(
+				'rule' => 'notBlank',
+				'message' => 'Please enter engaged on date'
+			)
 		),
 		'is_deleted' => array(
 			'boolean' => array(

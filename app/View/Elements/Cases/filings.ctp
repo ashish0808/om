@@ -47,9 +47,8 @@
 </div>
 
 <?php
-
 if(empty($caseDetails['CaseStatus']['status']) ||
-(!empty($caseDetails['CaseStatus']['status']) && in_array($caseDetails['CaseStatus']['status'], array('pending_for_filing', 'pending_for_refiling')))) { ?>
+(!empty($caseDetails['CaseStatus']['status']) && !in_array($caseDetails['CaseStatus']['status'], array('pending_for_registration')))) { ?>
 <?php echo $this->Form->create('CaseFiling', array('type'=>'file', 'url' => '/cases/addCaseFiling/'.$caseId, 'class' => 'form-horizontal', 'name' => 'caseFilingForm', 'id' => 'caseFilingForm', 'novalidate' => true)); ?>
 <div class="">
 	<div class="col-sm-4">
@@ -84,7 +83,7 @@ if(empty($caseDetails['CaseStatus']['status']) ||
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12" style="padding-left:40px;">
-				<label class="control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Upload Case File.: </label>
+				<label class="control-label no-padding-right" for="form-field-dob"> Upload Case File.: </label>
 				<?php echo $this->Form->input('ClientCase.main_file', array('label' => false, 'div' => false, 'type' => 'file', 'error' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
 				<div class="error-message editBasicDetailsError clear" id="error_main_file"></div>
 			</div>
@@ -99,7 +98,7 @@ if(empty($caseDetails['CaseStatus']['status']) ||
 	</div>
 </div>
 <?php echo $this->Form->end(); ?>
-<?php }elseif(!empty($caseDetails['CaseStatus']['status']) && $caseDetails['CaseStatus']['status']=='pending_for_registration'){ ?>
+<?php }if(!empty($caseDetails['CaseStatus']['status']) && $caseDetails['CaseStatus']['status']=='pending_for_registration'){ ?>
 <?php echo $this->Form->create('CaseFiling', array('type'=>'file', 'url' => '/cases/caseRegistration/'.$caseId, 'class' => 'form-horizontal', 'name' => 'caseRegistrationForm', 'id' => 'caseRegistrationForm', 'novalidate' => true)); ?>
 <div class="row">
 	<div class="col-sm-6">

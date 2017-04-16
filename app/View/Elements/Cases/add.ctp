@@ -29,13 +29,13 @@
 	</div>
 	<div class="col-sm-6">
 		<div class="form-group">
-			<div class="col-sm-12 col-xs-12 hide fileNumber">
+			<!--<div class="col-sm-12 col-xs-12 hide fileNumber">
 				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> File Number: </label>
 				<div class="col-sm-8">
 					<?php echo $this->Form->input('ClientCase.computer_file_no', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
 					<div class="error-message editBasicDetailsError clear" id="error_computer_file_no"></div>
 				</div>
-			</div>
+			</div>-->
 		</div>
 	</div>
 </div>
@@ -131,12 +131,8 @@
 					<?php echo $this->Form->input('ClientCase.date_fixed', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
 					<div class="error-message editBasicDetailsError clear" id="error_date_fixed"></div>
 					<?php } else {
-					$lastHearing = 'NA';
-					if(isset($pendingProceeding['CaseProceeding']) && !empty($pendingProceeding['CaseProceeding'])) {
-
-						$lastHearing = $pendingProceeding['CaseProceeding']['date_of_hearing'];
-					}
-					?>
+						$clientCaseHelper = $this->Helpers->load('ClientCase');
+						$lastHearing = $clientCaseHelper->getLastHearing($pendingProceeding); ?>
 						<input class="col-sm-12 col-xs-12" disabled="disabled" value="<?php echo $lastHearing; ?>" type="text">
 					<?php } ?>
 				</div>
@@ -146,9 +142,10 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Engaged On: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Engaged On: </label>
 				<div class="col-sm-8">
 					<?php echo $this->Form->input('ClientCase.engaged_on', array('label' => false, 'div' => false, 'type' => 'text', 'class' => 'col-sm-12 col-xs-12 date-picker', 'readonly' => true, 'data-date-format' => 'yyyy-mm-dd')); ?>
+					<div class="error-message editBasicDetailsError clear" id="error_engaged_on"></div>
 				</div>
 			</div>
 		</div>

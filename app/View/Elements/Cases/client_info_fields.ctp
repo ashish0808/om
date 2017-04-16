@@ -77,7 +77,7 @@
 	<div class="col-sm-6">
 		<div class="form-group">
 			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="customRequired required">*</span> Phone: </label>
+				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Phone: </label>
 				<div class="col-sm-8">
 					<?php echo $this->Form->input('ClientCase.client_phone', array('label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
 					<div class="error-message editBasicDetailsError clear" id="error_client_phone"></div>

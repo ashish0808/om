@@ -42,19 +42,6 @@
 	</div>
 </div>
 
-<div class="row">
-	<div class="col-sm-12">
-		<div class="form-group">
-			<div class="col-sm-12 col-xs-12">
-				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Upload Case File.: </label>
-				<div class="col-sm-8">
-					<?php echo $this->Form->input('ClientCase.main_file', array('id' => 'EditClientCaseMainFile', 'label' => false, 'div' => false, 'type' => 'file', 'error' => false, 'class' => 'col-sm-12 col-xs-12')); ?>
-					<div class="error-message editBasicDetailsError clear" id="edit_error_main_file"></div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 <?php if (!empty($mainCaseFile)) { ?>
 <div class="row">
 	<div class="col-sm-12">

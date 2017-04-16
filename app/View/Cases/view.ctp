@@ -124,12 +124,45 @@
 																</tr>
 																<tr>
 																	<td colspan="3" class="details-field">
+																		<span class="view-label">Date Fixed: </span>
+																		<?php $clientCaseHelper = $this->Helpers->load('ClientCase');
+																		echo $clientCaseHelper->getLastHearing($pendingProceeding); ?>
+
+																	</td>
+																</tr>
+																<tr>
+																	<td colspan="3" class="details-field">
 																		<span class="view-label">Remarks: </span>
 																		<?php echo $caseDetails['ClientCase']['remarks']; ?>
 																	</td>
 																</tr>
 															</table>
 														</td>
+													</tr>
+												</table>
+
+												<table class="table table-striped table-bordered">
+													<tr>
+														<th colspan="5" style="text-align: center;">
+															Essential Works
+														</th>
+													</tr>
+													<tr>
+														<?php foreach($essentialWorksArr as $essentialWork){ ?>
+														<th><?php echo $essentialWork; ?></th>
+														<?php } ?>
+													</tr>
+													<tr>
+														<?php foreach($essentialWorksArr as $essentialWorkKey=>$essentialWork){ ?>
+															<td>
+																<?php
+																if(isset($caseDetails['ClientCase'][$essentialWorkKey]) && !empty($caseDetails['ClientCase'][$essentialWorkKey])) {
+																	echo 'Yes';
+																} else {
+																	echo 'No';
+																} ?>
+															</td>
+														<?php } ?>
 													</tr>
 												</table>
 
@@ -226,6 +259,50 @@
 													</tr>
 													<?php } ?>
 												</table>
+
+												<?php if(!empty($caseDetails['CaseStatus']['status']) && $caseDetails['CaseStatus']['status']=='decided') { ?>
+												<table class="table table-striped table-bordered">
+													<tr>
+														<th colspan="5" style="text-align: center;">
+															Case Decision
+														</th>
+													</tr>
+													<tr>
+														<td>
+															<?php if($caseDetails['ClientCase']['certified_copy_required']==1){ ?>
+																<b>Certified copy required:</b> Yes <br />
+
+																<?php if(!empty($caseDetails['ClientCase']['certified_copy_applied_date'])) { ?>
+
+																	<b>Applied On:</b> <?php echo $caseDetails['ClientCase']['certified_copy_applied_date'] ? $this->Time->format('D, M jS, Y', $caseDetails['ClientCase']['certified_copy_applied_date']) : ''; ?> <br />
+																<?php }
+
+																if(!empty($caseDetails['ClientCase']['certified_copy_received_date'])) { ?>
+
+																	<b>Received On:</b> <?php echo $caseDetails['ClientCase']['certified_copy_received_date'] ? $this->Time->format('D, M jS, Y', $caseDetails['ClientCase']['certified_copy_received_date']) : ''; ?> <br />
+																<?php }
+
+																if(!empty($caseDetails['ClientCase']['order_supplied_date'])) { ?>
+
+																	<b>Supplied On:</b> <?php echo $caseDetails['ClientCase']['order_supplied_date'] ? $this->Time->format('D, M jS, Y', $caseDetails['ClientCase']['order_supplied_date']) : ''; ?> <br />
+
+																	<?php if(!empty($caseDetails['ClientCase']['supplied_via'])) {
+
+																		echo '<b>Supplied Via:</b> '.$caseDetails['ClientCase']['supplied_via'];
+
+																		if(!empty($caseDetails['ClientCase']['alongwith_lcr'])) {
+
+																			echo ' (Supplied along with lcr)';
+																		}
+																	}
+																}
+															}else{
+																echo '<b>Certified copy required:</b> No';
+															} ?>
+														</td>
+													</tr>
+												</table>
+												<?php } ?>
                                             </div>
                                 			<!--<div class="row">
 												<div class="col-sm-6">
