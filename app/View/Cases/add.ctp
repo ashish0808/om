@@ -5,7 +5,7 @@
 				<?php echo $pageTitle; ?>
 			</h1>
 		</div>
-		<?php echo $this->Form->create('ClientCase', array('url' => '/cases/add/', 'class' => 'form-horizontal dropzone', 'name' => 'add', 'id' => 'add', 'novalidate' => true)); ?>
+		<?php echo $this->Form->create('ClientCase', array('url' => '/cases/add/', 'class' => 'form-horizontal', 'name' => 'add', 'id' => 'add', 'novalidate' => true)); ?>
 		<div class="col-sm-12 col-xs-12">
 			<div class="widget-box">
 				<div class="widget-header">
