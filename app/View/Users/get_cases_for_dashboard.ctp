@@ -3,7 +3,7 @@
 		<thead class="thin-border-bottom">
 			<tr>
 				<th>
-					<i class="icon-caret-right blue"></i>Case No
+					<i class="icon-caret-right blue"></i>Computer File no
 				</th>
 
 				<th class="hidden-480">
@@ -22,7 +22,7 @@
 			?>
 			<tr>
 				<td>
-					<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
+					<?php echo $this->Html->link($record['ClientCase']['computer_file_no'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
 					?>
 				</td>
 				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
@@ -48,7 +48,7 @@
 		<thead class="thin-border-bottom">
 			<tr>
 				<th>
-					<i class="icon-caret-right blue"></i>Case No
+					<i class="icon-caret-right blue"></i>Computer File no
 				</th>
 
 				<th class="hidden-480">
@@ -67,7 +67,7 @@
 			?>
 			<tr>
 				<td>
-					<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
+					<?php echo $this->Html->link($record['ClientCase']['computer_file_no'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
 					?>
 				</td>
 				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
