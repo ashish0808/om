@@ -64,6 +64,7 @@ class DispatchesController extends AppController
             'limit' => LIMIT,
             'fields' => $fields,
             'order' => array('Dispatch.id' => 'desc'),
+            'conditions' => array('Dispatch.user_id' => $this->Session->read('UserInfo.uid')),
             'contain' => array('ClientCase'),
         );
 

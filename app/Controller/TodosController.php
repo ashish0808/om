@@ -63,7 +63,8 @@ class TodosController extends AppController
             'page' => 1,
             'limit' => LIMIT,
             'fields' => $fields,
-            'order' => array('Todo.id' => 'desc'),
+            'order' => array("Todo.status" => "DESC", "Todo.completion_date" => "DESC"),
+            'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid')),
             'contain' => array('ClientCase'),
         );
 
