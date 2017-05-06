@@ -33,12 +33,7 @@ class CaseFilesController extends AppController
 
 	    $this->loadModel('ClientCase');
 	    $caseDetails = $this->ClientCase->read(null, $caseId);
-	    if(empty($caseDetails['ClientCase']['case_number'])) {
-
-		    $this->Flash->error(__('Access denied'));
-
-		    return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
-	    }
+	    $this->checkCaseDetails($caseDetails);
 
         $fields = [];
 
@@ -97,6 +92,17 @@ class CaseFilesController extends AppController
 	    $this->set("mainCaseFile", $mainCaseFile);
     }
 
+	private function checkCaseDetails($caseDetails)
+	{
+		if(empty($caseDetails['ClientCase']['case_number']) ||
+			(isset($caseDetails['ClientCase']['user_id']) && $caseDetails['ClientCase']['user_id']!=$this->Session->read('UserInfo.lawyer_id'))) {
+
+			$this->Flash->error(__('Access denied'));
+
+			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+		}
+	}
+
     /**
      * It will add a new CaseFile for the given case of the user or as misc.
      *
@@ -110,12 +116,7 @@ class CaseFilesController extends AppController
 
 	    $this->loadModel('ClientCase');
 	    $caseDetails = $this->ClientCase->read(null, $caseId);
-	    if(empty($caseDetails['ClientCase']['case_number'])) {
-
-		    $this->Flash->error(__('Access denied'));
-
-		    return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
-	    }
+	    $this->checkCaseDetails($caseDetails);
 
         if ($this->request->is('post')) {
 
@@ -211,6 +212,8 @@ class CaseFilesController extends AppController
 
 		$this->loadModel('ClientCase');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
+
+		$this->checkCaseDetails($caseDetails);
 
 		if ($this->request->data) {
 

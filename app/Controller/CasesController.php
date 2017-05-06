@@ -198,6 +198,7 @@ class CasesController extends AppController
 
 		$this->loadModel('ClientCase');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
+		$this->checkCaseDetails($caseDetails);
 		$this->set('caseDetails', $caseDetails);
 	}
 
@@ -865,6 +866,16 @@ class CasesController extends AppController
 		exit;
 	}
 
+	public function checkCaseDetails($caseDetails)
+	{
+		if(isset($caseDetails['ClientCase']['user_id']) && $caseDetails['ClientCase']['user_id']!=$this->Session->read('UserInfo.lawyer_id')) {
+
+			$this->Flash->error(__('Access denied'));
+
+			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+		}
+	}
+
 	public function view($caseId)
 	{
 		$this->layout = 'basic';
@@ -876,6 +887,7 @@ class CasesController extends AppController
 		$this->ClientCase->contain('CaseStatus', 'CaseType', 'CaseProceeding', 'CaseFiling', 'Dispatch');
 		//$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling', 'CaseStatus');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
+		$this->checkCaseDetails($caseDetails);
 		$this->set('caseDetails',$caseDetails);
 
 		$this->ClientCases = $this->Components->load('ClientCases');
@@ -890,5 +902,43 @@ class CasesController extends AppController
 			'fields' => array('date_of_hearing'),
 			'order' => 'date_of_hearing DESC'
 		)));
+
+		$this->set('connectedCases',$this->getConnectedCases($caseDetails));
+	}
+
+	public function getConnectedCases($caseDetails)
+	{
+		$result = array();
+		if(isset($caseDetails['ClientCase'])) {
+
+			$this->loadModel('ClientCase');
+			$caseId = $caseDetails['ClientCase']['id'];
+
+			$parentId = $caseDetails['ClientCase']['parent_case_id'];
+			if(!empty($parentId)) {
+
+				$parentCase = $this->ClientCases->findByCaseId($parentId, $this->Session->read('UserInfo.lawyer_id'));
+
+				$result['is_child_case'] = true;
+				$result['parent_case'] = $parentCase;
+			} else {
+
+				$childCases = $this->ClientCase->find('all', array(
+					'conditions' => array(
+						'ClientCase.parent_case_id' => $caseId,
+						'ClientCase.user_id' => $this->Session->read('UserInfo.lawyer_id')
+					),
+					'order' => 'ClientCase.created ASC'
+				));
+
+				if(!empty($childCases)) {
+
+					$result['is_parent_case'] = true;
+					$result['child_cases'] = $childCases;
+				}
+			}
+		}
+
+		return $result;
 	}
 }

@@ -303,6 +303,48 @@
 													</tr>
 												</table>
 												<?php } ?>
+
+												<?php if(isset($connectedCases) && !empty($connectedCases)){ ?>
+												<table class="table table-striped table-bordered">
+													<tr>
+														<th colspan="5" style="text-align: center;">
+															<?php if(isset($connectedCases['is_parent_case'])){
+																echo 'Connected Child Cases';
+															} else {
+																echo 'Connected To Parent Case';
+															}
+															?>
+														</th>
+													</tr>
+													<tr>
+														<th>Case Number</th>
+														<th>Case Title</th>
+														<th>Client Name</th>
+													</tr>
+													<?php if(!empty($connectedCases['child_cases'])){
+													foreach($connectedCases['child_cases'] as $childCase){ ?>
+													<tr>
+														<td><?php echo $childCase['ClientCase']['complete_case_number']; ?></td>
+														<td><?php echo $childCase['ClientCase']['case_title']; ?></td>
+														<td><?php echo $childCase['ClientCase']['party_name']; ?></td>
+													</tr>
+													<?php }
+													}elseif(!empty($connectedCases['parent_case'])) { ?>
+													<tr>
+														<td><?php echo $connectedCases['parent_case']['ClientCase']['complete_case_number']; ?></td>
+														<td><?php echo $connectedCases['parent_case']['ClientCase']['case_title']; ?></td>
+														<td><?php echo $connectedCases['parent_case']['ClientCase']['party_name']; ?></td>
+													</tr>
+
+													<?php }else{ ?>
+													<tr>
+														<td colspan="5" class="details-field" style="text-align: center;">
+															No record found
+														</td>
+													</tr>
+													<?php } ?>
+												</table>
+												<?php } ?>
                                             </div>
                                 			<!--<div class="row">
 												<div class="col-sm-6">
