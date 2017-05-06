@@ -125,6 +125,10 @@
 										<?php if ($Todo['Todo']['status'] == 'pending') { ?>
 										<div class="col-sm-2 label label-lg label-yellow arrowed-in arrowed-in-right">
 										<?php
+										} else if ($Todo['Todo']['status'] == 'in_progress') {
+										?>
+										<div class="col-sm-2 label label-lg label-primary arrowed-in arrowed-in-right">
+										<?php
 										} else {
 										?>
 										<div class="col-sm-2 label label-lg label-success arrowed-in arrowed-in-right">

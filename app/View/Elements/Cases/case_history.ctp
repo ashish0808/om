@@ -13,7 +13,7 @@ if ($pageType == 'case_history') {
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
 							Case No.
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
@@ -25,8 +25,11 @@ if ($pageType == 'case_history') {
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Sr. No.
 						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Court
+						</th>
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Remarks
 						</th>
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Next Date
@@ -48,6 +51,7 @@ if ($pageType == 'case_history') {
 						<td class=" "><?php echo $record['CaseProceeding']['court_room_no']; ?></td>
 						<td class=" "><?php echo $record['CaseProceeding']['court_serial_no']; ?></td>
 						<td class=" "><?php echo $record['ClientCase']['Court']['name']; ?></td>
+						<td class=" "><?php echo $record['CaseProceeding']['remarks']; ?></td>
 						<td>
 						<?php
 							echo $this->Time->format('D, M jS, Y', $record['CaseProceeding']['next_date_of_hearing']);

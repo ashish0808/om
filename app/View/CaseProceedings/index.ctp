@@ -104,7 +104,7 @@ echo $this->element('Cases/case_history');
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Case Number
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
@@ -122,7 +122,7 @@ echo $this->element('Cases/case_history');
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Status
 						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Action
 						</th>
 					</tr>
@@ -133,7 +133,7 @@ echo $this->element('Cases/case_history');
 					foreach ($Todos as $record){ ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
 						<td>
-							<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
+							<?php echo $record['ClientCase']['id'] ? $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id'])) : "<span class='red'>Miscellaneous</span>";
 							?>
 						</td>
 						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>";?></td>
@@ -163,25 +163,40 @@ echo $this->element('Cases/case_history');
 						</td>
 						<td class=" ">
 							<?php
-							if ($record['Todo']['status'] == 'pending') {
-							?>
+							if ($record['Todo']['status'] == 'pending') { ?>
 								<div class="label label-lg label-yellow arrowed-in arrowed-in-right">
 								<?php
+							} else if ($record['Todo']['status'] == 'in_progress') {
+							?>
+								<div class="label label-lg label-primary arrowed-in arrowed-in-right">
+							<?php
 							} else {
 							?>
 								<div class="label label-lg label-success arrowed-in arrowed-in-right">
 							<?php
 							}
-							echo strtoupper($record['Todo']['status']);
+							if ($record['Todo']['status'] == 'in_progress') {
+								echo strtoupper('In Progress');
+							} else {
+								echo strtoupper($record['Todo']['status']);
+							}
 							?>
 						</td>
 						<td class=" ">
 							<?php
 							if ($record['Todo']['status'] == 'pending') {
-								echo $this->Html->link('<i class="icon-ok bigger-110"></i> Mark Complete', array('controller'=>'Todos','action'=>'changeStatus',$record['Todo']['id']), array('escape' => false, 'class' => 'btn btn-primary'));
+								echo $this->Html->link('<i class="icon-ok bigger-110"></i> Start', array('controller'=>'Todos','action'=>'changeStatus',$record['Todo']['id'], 'in_progress'), array('escape' => false, 'class' => 'btn btn-xs btn-primary'));
+								?>
+								<?php
+								echo $this->Html->link('<i class="icon-ok bigger-110"></i> Complete', array('controller'=>'Todos','action'=>'changeStatus',$record['Todo']['id'], 'completed'), array('escape' => false, 'class' => 'btn btn-xs btn-primary'));
+							} else if ($record['Todo']['status'] == 'in_progress') {
+								echo $this->Html->link('<i class="icon-ok bigger-110"></i> Complete', array('controller'=>'Todos','action'=>'changeStatus',$record['Todo']['id'], 'completed'), array('escape' => false, 'class' => 'btn btn-xs btn-primary'));
 							} else {
-								echo $this->Html->link('<i class="icon-ok bigger-110"></i> Reopen', array('controller'=>'Todos','action'=>'changeStatus',$record['Todo']['id']), array('escape' => false, 'class' => 'btn btn-primary'));
+								echo $this->Html->link('<i class="icon-ok bigger-110"></i> Reopen', array('controller'=>'Todos','action'=>'changeStatus',$record['Todo']['id'], 'pending'), array('escape' => false, 'class' => 'btn btn-xs btn-primary'));
 							}
+							?>
+							<?php
+							echo $this->Html->link('<i class="icon-ok bigger-110"></i> Postpone', array('controller'=>'Todos','action'=>'edit',$record['Todo']['id']), array('escape' => false, 'class' => 'btn btn-xs btn-primary'));
 							?>
 						</td>
 					</tr>

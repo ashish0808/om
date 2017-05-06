@@ -70,7 +70,7 @@
 				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"> Status: </label>
 				<div class="col-sm-8">
 					<?php
-					$statuses = array('pending' => 'Pending', 'completed' => 'Completed');
+					$statuses = array('pending' => 'Pending', 'in_progress' => 'In Progress', 'completed' => 'Completed');
 					echo $this->Form->input('Todo.status', array('options' => $statuses, 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off'));
 					?>
 				</div>
