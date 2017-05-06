@@ -57,24 +57,16 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 							<div class="col-sm-3 col-xs-12">
 								<div class="form-group">
 									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Case Type: </label>
+										<?php echo $this->Form->input('ClientCase.case_type_id', array('options' => $caseTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
 										<label class="col-xs-12 control-label no-padding-right">Case Number: </label>
 										<?php echo $this->Form->input('ClientCase.complete_case_number', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-3 col-xs-12">
-								<div class="form-group">
-									<div class="col-sm-12 col-xs-12">
-										<label class="col-xs-12 control-label no-padding-right">Computer File No: </label>
-										<?php echo $this->Form->input('ClientCase.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
-									</div>
-								</div>
-							</div>
-							<div class="col-sm-3 col-xs-12">
-								<div class="form-group">
-									<div class="col-sm-12 col-xs-12">
-										<label class="col-xs-12 control-label no-padding-right">Case Title: </label>
-										<?php echo $this->Form->input('ClientCase.case_title', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
 									</div>
 								</div>
 							</div>
@@ -86,12 +78,20 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 									</div>
 								</div>
 							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Case Title: </label>
+										<?php echo $this->Form->input('ClientCase.case_title', array('label' => false, 'div' => false, 'type' => 'text', 'error' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
 						</div>
 						<div class="row m-t-10">
 							<div class="col-sm-3 col-xs-12">
 								<div class="form-group">
 									<div class="col-sm-12 col-xs-12">
-										<label class="col-xs-12 control-label no-padding-right">Client type: </label>
+										<label class="col-xs-12 control-label no-padding-right">Client Type: </label>
 										<?php
 										$clientTypes = array('petitioner' => 'Appellant/Petitioner', 'respondent' => 'Respondent');
 										echo $this->Form->input('ClientCase.client_type', array('options' => $clientTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
@@ -109,8 +109,8 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 							<div class="col-sm-3 col-xs-12">
 								<div class="form-group">
 									<div class="col-sm-12 col-xs-12">
-										<label class="col-xs-12 control-label no-padding-right">Case Type: </label>
-										<?php echo $this->Form->input('ClientCase.case_type_id', array('options' => $caseTypes, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
+										<label class="col-xs-12 control-label no-padding-right">Computer File No: </label>
+										<?php echo $this->Form->input('ClientCase.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'col-xs-12 search-query', 'autocomplete' => 'off')); ?>
 									</div>
 								</div>
 							</div>
