@@ -63,7 +63,7 @@ class TodosController extends AppController
             'page' => 1,
             'limit' => LIMIT,
             'fields' => $fields,
-            'order' => array("Todo.status" => "DESC", "Todo.completion_date" => "DESC"),
+            'order' => array("Todo.status" => "DESC", "Todo.completion_date" => "ASC"),
             'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid')),
             'contain' => array('ClientCase'),
         );
@@ -174,6 +174,8 @@ class TodosController extends AppController
                             $this->Flash->success(__('The Todo has been saved.'));
                             if ($this->data['Todo']['referer'] == 'caseTodos') {
                                 return $this->redirect(array('controller' => 'Todos', 'action' => 'caseTodos', $this->data['Todo']['case_id']));
+                            } else if ($this->data['Todo']['referer'] == 'CaseProceedings') {
+                                return $this->redirect(array('controller' => 'CaseProceedings', 'action' => 'index'));
                             } else {
                                 return $this->redirect(array('controller' => 'Todos', 'action' => 'index'));
                             }
@@ -189,7 +191,11 @@ class TodosController extends AppController
 
             // To see if the page has been accessed from case detail page or dispatches main page
             $referer_url_params = Router::parse($this->referer('/', true));
-            $this->set('action', $referer_url_params['action']);
+            if ($referer_url_params['controller'] == 'CaseProceedings') {
+                $this->set('action', $referer_url_params['controller']);
+            } else {
+                $this->set('action', $referer_url_params['action']);
+            }
             if (!empty($referer_url_params['pass'])) {
                 $this->set('caseId', $referer_url_params['pass'][0]);
             } else {
@@ -260,29 +266,30 @@ class TodosController extends AppController
      *
      * @param string $id
      */
-    public function changeStatus($id = null)
+    public function changeStatus($id = null, $status = null)
     {
-        $TodoData = $this->Todo->find('first', array('contain' => array('ClientCase'), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'Todo.id' => $id)));
-        if (!empty($TodoData)) {            
-            if ($TodoData['Todo']['status'] == 'pending') {
-                $this->request->data['Todo']['status'] = 'completed';
+        if (!empty($id) && !empty($status) && in_array($status, ['pending', 'in_progress', 'completed'])) {
+            $TodoData = $this->Todo->find('first', array('contain' => array('ClientCase'), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'Todo.id' => $id)));
+            if (!empty($TodoData)) {            
+                $this->request->data['Todo']['status'] = $status;
+                $this->request->data['Todo']['title'] = $TodoData['Todo']['title'];
+                $this->request->data['Todo']['priority'] = $TodoData['Todo']['priority'];
+                $this->request->data['Todo']['completion_date'] = $TodoData['Todo']['completion_date'];
+                
+                $this->Todo->id = $id;
+                if ($this->Todo->save($this->request->data)) {
+                    $this->Flash->success(__('The Todo has been updated.'));
+                    $this->redirect(Router::url($this->referer(), true));
+                } else {
+                    $this->Flash->error(__('The Todo could not be updated. Please, try again.'));
+                    $this->redirect(Router::url($this->referer(), true));
+                }
             } else {
-                $this->request->data['Todo']['status'] = 'pending';
-            }
-            $this->request->data['Todo']['title'] = $TodoData['Todo']['title'];
-            $this->request->data['Todo']['priority'] = $TodoData['Todo']['priority'];
-            $this->request->data['Todo']['completion_date'] = $TodoData['Todo']['completion_date'];
-            
-            $this->Todo->id = $id;
-            if ($this->Todo->save($this->request->data)) {
-                $this->Flash->success(__('The Todo has been updated.'));
-                $this->redirect(Router::url($this->referer(), true));
-            } else {
-                $this->Flash->error(__('The Todo could not be updated. Please, try again.'));
+                $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
                 $this->redirect(Router::url($this->referer(), true));
             }
         } else {
-            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
+            $this->Flash->error(__("Please, try with valid record and status."));
             $this->redirect(Router::url($this->referer(), true));
         }
     }

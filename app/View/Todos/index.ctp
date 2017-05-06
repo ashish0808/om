@@ -56,7 +56,7 @@ echo $this->Form->create('Todo',array('url' => '/Todos/index','id'=>'TodoSearchF
                         echo $this->Form->input('Todo.computer_file_no', array('label' => false, 'required' => false, 'div' => false, 'class' => 'input-medium search-query', 'placeholder' => 'Computer File No', 'autocomplete' => 'off'));
                         ?>
                         <?php
-						$statuses = array('pending' => 'Pending', 'completed' => 'Completed');
+						$statuses = array('pending' => 'Pending', 'in_progress' => 'In Progress', 'completed' => 'Completed');
 						echo $this->Form->input('Todo.status', array('options' => $statuses, 'empty' => '--Select Status--', 'label' => false, 'div' => false, 'class' => 'input-medium search-query', 'autocomplete' => 'off', 'error' => false));
 						?>
                         <?php

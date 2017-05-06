@@ -20,15 +20,18 @@ if ($show_add) {
 							Case No
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							Case Title
+						</th>
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Title
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('Todo.completion_date', 'Completion Date', array());?>
 						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Priority
 						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							status
 						</th>
 						<th class="col-xs-2" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
@@ -40,6 +43,7 @@ if ($show_add) {
 					foreach ($Todos as $record) { ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
 						<td class=" "><?php echo $record['ClientCase']['complete_case_number'] ? $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id'])): "<span class='red'>Miscellaneous</span>"; ?></td>
+						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>";?></td>
 						<td class=" "><?php echo $record['Todo']['title'];?></td>
 						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['Todo']['completion_date']); ?>
 						</td>
@@ -69,12 +73,20 @@ if ($show_add) {
 							if ($record['Todo']['status'] == 'pending') { ?>
 								<div class="label label-lg label-yellow arrowed-in arrowed-in-right">
 								<?php
+							} else if ($record['Todo']['status'] == 'in_progress') {
+							?>
+								<div class="label label-lg label-primary arrowed-in arrowed-in-right">
+							<?php
 							} else {
 							?>
 								<div class="label label-lg label-success arrowed-in arrowed-in-right">
 							<?php
 							}
-							echo strtoupper($record['Todo']['status']);
+							if ($record['Todo']['status'] == 'in_progress') {
+								echo strtoupper('In Progress');
+							} else {
+								echo strtoupper($record['Todo']['status']);
+							}
 							?>
 						</td>
 						<td class=" ">

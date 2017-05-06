@@ -63,7 +63,7 @@ class CaseProceedingsController extends AppController
 
         // Find todos for the given date
         $this->loadModel('Todo');
-        $Todos = $this->Todo->find('all', array('contain' => array('ClientCase'), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'completion_date' => $date)));
+        $Todos = $this->Todo->find('all', array('contain' => array('ClientCase'), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'OR' => array(array('Todo.reminder_date <=' => $date, 'Todo.status' => array('pending', 'in_progress')), array('Todo.completion_date ' => $date, 'Todo.status' => array('pending', 'in_progress', 'completed')))), 'order' => array("Todo.status" => "DESC", "Todo.completion_date" => "ASC")));
 
         $this->set(compact('CaseProceedings', 'date', 'Todos', 'pageType'));
     }
