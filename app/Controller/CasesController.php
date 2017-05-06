@@ -735,6 +735,9 @@ class CasesController extends AppController
 				if(!empty($data['is_registered'])) {
 
 					$case_status_val = 'pending';
+				} else {
+
+					$this->ClientCases->updateCaseFilingLimitationExpiry($data);
 				}
 
 				$case_status_id = $this->ClientCases->updateCaseStatus($case_status_val);

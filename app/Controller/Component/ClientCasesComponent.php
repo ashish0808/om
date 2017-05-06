@@ -272,4 +272,27 @@ class ClientCasesComponent extends Component
 
 		return $criteria;
 	}
+
+	public function updateCaseFilingLimitationExpiry($data)
+	{
+		if(!empty($data['id']) && !empty($data['limitation_expires_on'])) {
+
+			App::import('Model','CaseFiling');
+			$caseFilingObj = new CaseFiling();
+			$caseFiling = $caseFilingObj->find('first', array(
+				'conditions' => array(
+					'client_case_id' => $data['id']
+				),
+				'order' => 'created DESC'
+			));
+
+			if(!empty($caseFiling)) {
+
+				$limitation_expires_on = $data['limitation_expires_on'];
+				$caseData = array('limitation_expires_date' => "'".$limitation_expires_on."'");
+
+				$caseFilingObj->updateAll($caseData, array('CaseFiling.id'=> $caseFiling['CaseFiling']['id']));
+			}
+		}
+	}
 }

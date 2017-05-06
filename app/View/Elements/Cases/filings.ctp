@@ -16,7 +16,7 @@
 					<th>Filing Date</th>
 					<th>Filing Type</th>
 					<th>Filing Number</th>
-					<th>Created</th>
+					<th>Limitation Expiry</th>
 					<th>Actions</th>
 				</tr>
 			</thead>
@@ -31,7 +31,14 @@
 							<td><?php echo date('Y-m-d', strtotime($case_filing['filing_date']));?></td>
 							<td><?php echo $case_filing['filing_type'];?></td>
 							<td><?php echo $case_filing['filing_no'];?></td>
-							<td><?php echo date('Y-m-d', strtotime($case_filing['created']));?></td>
+							<td>
+								<?php
+								if(!empty($case_filing['limitation_expires_date']) && $case_filing['limitation_expires_date']!='0000-00-00') {
+									echo date('Y-m-d', strtotime($case_filing['limitation_expires_date']));
+								} else {
+									echo 'NA';
+								} ?>
+							</td>
 							<td>
 								<?php echo $this->Html->link('<i class="icon-edit bigger-130"></i>', "javascript:void(0)", array('escape' => false, 'class' => 'blue editCaseFiling', 'pageTitle' => 'Edit Filing Details', 'pageName' => $editFilingLink.'/'.$case_filing['client_case_id'].'/'.$case_filing['id'])); ?>
 							</td>
