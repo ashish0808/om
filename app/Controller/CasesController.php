@@ -909,6 +909,36 @@ class CasesController extends AppController
 		$this->set('connectedCases',$this->getConnectedCases($caseDetails));
 	}
 
+	public function view_print($caseId)
+	{
+		$this->layout = '';
+		$this->pageTitle = 'View Case';
+		$this->set("pageTitle", $this->pageTitle);
+		$this->set('caseId',$caseId);
+
+		$this->loadModel('ClientCase', 'Court');
+		$this->ClientCase->contain('CaseStatus', 'CaseType', 'CaseProceeding', 'CaseFiling', 'Dispatch');
+		//$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling', 'CaseStatus');
+		$caseDetails = $this->ClientCase->read(null, $caseId);
+		$this->checkCaseDetails($caseDetails);
+		$this->set('caseDetails',$caseDetails);
+
+		$this->ClientCases = $this->Components->load('ClientCases');
+		$this->set("essentialWorksArr", $this->ClientCases->listEssentialWorks($caseDetails['ClientCase']['client_type']));
+
+		$this->loadModel('CaseProceeding');
+		$this->set("pendingProceeding", $this->CaseProceeding->find('first', array(
+			'conditions' => array(
+				'client_case_id' => $caseId,
+				'proceeding_status' => 'pending'
+			),
+			'fields' => array('date_of_hearing'),
+			'order' => 'date_of_hearing DESC'
+		)));
+
+		$this->set('connectedCases',$this->getConnectedCases($caseDetails));
+	}
+
 	public function getConnectedCases($caseDetails)
 	{
 		$result = array();

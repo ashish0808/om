@@ -383,14 +383,10 @@
     <!-- /.row -->
 </div><!-- /.page-content -->
 <?php echo $this->Html->css('print'); ?>
+<div class="hide" id="printCaseUrl"><?php echo $this->Html->url(array('controller' => 'Cases', 'action' => 'view_print', $caseId));?></div>
 <script type="text/javascript">
 function printDiv() {
-
-  var divToPrint = document.getElementById('viewCaseDetails');
-  var newWin=window.open('','Print-Window');
-  newWin.document.open();
-  newWin.document.write('<html><head><link rel=\"stylesheet\" href=\"/om/css/print.css\" type=\"text/css\" media=\"all\"/></head><body onload="window.focus();window.print();" onbeforeunload="window.close();">'+divToPrint.innerHTML+'</body></html>');
-  newWin.document.close();
-  setTimeout(function(){newWin.close();},10);
+	window.open($('#printCaseUrl').html(),null,
+    "height=200,width=400,status=yes,toolbar=no,menubar=no,location=no");
 }
 </script>
