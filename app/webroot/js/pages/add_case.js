@@ -29,10 +29,12 @@ function getFileNumberField(isExistingCase)
 
         $('.fileNumber').removeClass('hide');
         $('.caseStatusManual').removeClass('hide');
+        $('.caseStatusManual select').removeAttr('disabled');
     } else {
 
         $('.fileNumber').addClass('hide');
         $('.caseStatusManual').addClass('hide');
+        $('.caseStatusManual select').attr('disabled', 'disabled');
     }
 }
 
