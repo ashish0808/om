@@ -324,14 +324,18 @@
 													<?php if(!empty($connectedCases['child_cases'])){
 													foreach($connectedCases['child_cases'] as $childCase){ ?>
 													<tr>
-														<td><?php echo $childCase['ClientCase']['complete_case_number']; ?></td>
+														<td>
+															<?php echo $this->Html->link($childCase['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$childCase['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
+														</td>
 														<td><?php echo $childCase['ClientCase']['case_title']; ?></td>
 														<td><?php echo $childCase['ClientCase']['party_name']; ?></td>
 													</tr>
 													<?php }
 													}elseif(!empty($connectedCases['parent_case'])) { ?>
 													<tr>
-														<td><?php echo $connectedCases['parent_case']['ClientCase']['complete_case_number']; ?></td>
+														<td>
+															<?php echo $this->Html->link($connectedCases['parent_case']['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$connectedCases['parent_case']['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
+														</td>
 														<td><?php echo $connectedCases['parent_case']['ClientCase']['case_title']; ?></td>
 														<td><?php echo $connectedCases['parent_case']['ClientCase']['party_name']; ?></td>
 													</tr>
