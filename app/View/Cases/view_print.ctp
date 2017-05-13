@@ -2,7 +2,7 @@
 	<div class="row">
 		<div class="page-header" align="center">
 			<h1>
-				<?php echo $pageTitle; ?>
+				<?php echo $caseDetails['ClientCase']['case_title']; ?>
 			</h1>
 		</div>
 		<div class="col-sm-12">
@@ -298,9 +298,9 @@
 					<tr>
 						<th colspan="5" style="text-align: center;">
 							<?php if(isset($connectedCases['is_parent_case'])){
-								echo 'Connected Child Cases';
+								echo 'Connected Cases';
 							} else {
-								echo 'Connected To Parent Case';
+								echo 'Main Case';
 							}
 							?>
 						</th>

@@ -58,7 +58,7 @@ echo $this->Form->hidden('CaseProceeding.search_date', array('value' => $date));
 				<div class="col-sm-8">
 					<label class="control-label no-padding-right">
 					<?php
-						echo $caseProceeding['ClientCase']['case_number'];
+						echo $caseProceeding['ClientCase']['complete_case_number'];
 					?>
 					</label>
 					<div class="error-message editBasicDetailsError clear" id="edit_error_filing_no"></div>

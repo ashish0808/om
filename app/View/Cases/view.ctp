@@ -309,9 +309,9 @@
 													<tr>
 														<th colspan="5" style="text-align: center;">
 															<?php if(isset($connectedCases['is_parent_case'])){
-																echo 'Connected Child Cases';
+																echo 'Connected Cases';
 															} else {
-																echo 'Connected To Parent Case';
+																echo 'Main Case';
 															}
 															?>
 														</th>
