@@ -8,10 +8,10 @@ class ClientCasesComponent extends Component
 	{
 		$data['completed_step'] = 1;
 
-		//if(empty($data['is_existing'])) {
+		if(!isset($data['id']) || empty($data['id'])) {
 
 			$data['computer_file_no'] = $this->generateFileNumber($data);
-		//}
+		}
 
 		$data['complete_case_number'] = $this->generateCaseNumber($data);
 
