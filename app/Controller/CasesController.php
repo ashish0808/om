@@ -954,6 +954,17 @@ class CasesController extends AppController
 
 				$result['is_child_case'] = true;
 				$result['parent_case'] = $parentCase;
+
+				$otherConnectedCases = $this->ClientCase->find('all', array(
+					'conditions' => array(
+						'ClientCase.parent_case_id' => $parentId,
+						'ClientCase.id <>' => $caseId,
+						'ClientCase.user_id' => $this->Session->read('UserInfo.lawyer_id')
+					),
+					'order' => 'ClientCase.created ASC'
+				));
+
+				$result['other_connected_cases'] = $otherConnectedCases;
 			} else {
 
 				$childCases = $this->ClientCase->find('all', array(

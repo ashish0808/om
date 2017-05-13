@@ -100,3 +100,5 @@ span.view-label {
 .borderedTable th, .borderedTable td{
     border: solid 1px;
 }
+
+.pagebreak { page-break-before: always; }

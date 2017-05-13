@@ -50,10 +50,18 @@ class ConnectCasesController extends AppController
 		    $parentId = $caseDetails['ClientCase']['parent_case_id'];
 		    if(!empty($parentId)) {
 
-			    $this->pageTitle = 'Main Case';
-
 			    $parentCase = $this->getCaseDetails($parentId);
 			    $this->set('parentCase', $parentCase);
+
+			    $otherConnectedCases = $this->ClientCase->find('all', array(
+				    'conditions' => array(
+					    'ClientCase.parent_case_id' => $parentId,
+					    'ClientCase.id <>' => $caseId,
+					    'ClientCase.user_id' => $this->Session->read('UserInfo.lawyer_id')
+				    ),
+				    'order' => 'ClientCase.created ASC'
+			    ));
+			    $this->set('otherConnectedCases', $otherConnectedCases);
 		    } else {
 
 			    $this->ClientCase->contain('CaseType');

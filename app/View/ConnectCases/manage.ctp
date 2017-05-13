@@ -22,6 +22,10 @@
                                 		</div>
                                 	</div>
                                 </div>
+
+								<div class="col-sm-12">
+									<h4>Main Case</h4>
+								</div>
 								<div class="row-fluid">
 									<div class="span12">
 										<div class="row-fluid">
@@ -93,6 +97,72 @@
 										</div>
 									</div>
 								</div>
+
+
+								<?php if(!empty($otherConnectedCases)) { ?>
+								<div class="col-sm-12">
+									<h4>&nbsp;</h4>
+								</div>
+								<div class="col-sm-12">
+									<h4>Other Connected Cases</h4>
+								</div>
+								<div class="row-fluid">
+									<div class="span12">
+										<div class="row-fluid">
+											<div role="grid" class="dataTables_wrapper" id="sample-table-2_wrapper">
+											<table class="table table-striped table-bordered table-hover dataTable" id="sample-table-2"
+												   aria-describedby="sample-table-2_info">
+											<thead>
+											<tr role="row">
+												<th>
+													Case Number
+												</th>
+												<th>
+													Client Name
+												</th>
+												<th>
+													Case Type
+												</th>
+												<th>
+													Case Year
+												</th>
+												<th>
+													Phone
+												</th>
+											</tr>
+											</thead>
+											<tbody role="alert" aria-live="polite" aria-relevant="all">
+												<?php foreach ($otherConnectedCases as $i=>$otherConnectedCase){
+												$i = $i+1; ?>
+												<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
+													<td>
+														<?php echo $this->Html->link($otherConnectedCase['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$otherConnectedCase['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
+													</td>
+													<td>
+														<?php echo $otherConnectedCase['ClientCase']['party_name']; ?>
+													</td>
+													<td>
+														<?php
+														if(!empty($otherConnectedCase['CaseType']['name'])) {
+															echo $otherConnectedCase['CaseType']['name'];
+														} ?>
+													</td>
+													<td>
+														<?php echo $otherConnectedCase['ClientCase']['case_year']; ?>
+													</td>
+													<td>
+														<?php echo $otherConnectedCase['ClientCase']['client_phone']; ?>
+													</td>
+												</tr>
+											<?php } ?>
+											</tbody>
+											</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<?php } ?>
+
 								<?php }else{ ?>
 								<div class="row">
                                 	<div class="col-sm-12">
