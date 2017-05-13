@@ -55,7 +55,7 @@
 													<div>
 														<label>
 															<input name="connectionType" type="radio" checked="checked class="ace checkConnectionType" value="child" />
-															<span class="lbl"> Add Child Cases</span>
+															<span class="lbl"> Add Cases</span>
 														</label>&nbsp;
 														<label>
 															<input name="connectionType" type="radio" class="ace checkConnectionType" value="parent" />

@@ -193,7 +193,7 @@ echo $this->Js->writeBuffer(); ?>
 								<?php echo $this->Paginator->sort('ClientCase.party_name', 'Party Name', array());?>
 							</th>
 							<th>
-								<?php echo $this->Paginator->sort('ClientCase.client_case_count', 'Child Cases', array());?>
+								<?php echo $this->Paginator->sort('ClientCase.client_case_count', 'Connected Cases', array());?>
 							</th>
 							<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 								<?php echo $this->Paginator->sort('ClientCase.created', 'Created', array());?>
@@ -205,7 +205,7 @@ echo $this->Js->writeBuffer(); ?>
 							<th class="col-xs-2">Case Title</th>
 							<th>Case Year</th>
 							<th>Party Name</th>
-							<th>Child Cases</th>
+							<th>Connected Cases</th>
 							<th class="col-xs-2">Created</th>
 							<th>Action</th>
 						<?php } ?>
