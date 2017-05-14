@@ -339,7 +339,6 @@
 														<td><?php echo $connectedCases['parent_case']['ClientCase']['case_title']; ?></td>
 														<td><?php echo $connectedCases['parent_case']['ClientCase']['party_name']; ?></td>
 													</tr>
-
 													<?php }else{ ?>
 													<tr>
 														<td colspan="5" class="details-field" style="text-align: center;">
@@ -348,6 +347,30 @@
 													</tr>
 													<?php } ?>
 												</table>
+
+												<?php if(!empty($connectedCases['parent_case']) && !empty($connectedCases['other_connected_cases'])){ ?>
+												<table class="table table-striped table-bordered">
+													<tr>
+														<th colspan="5" style="text-align: center;">
+															Other Connected Cases
+														</th>
+													</tr>
+													<tr>
+														<th>Case Number</th>
+														<th>Case Title</th>
+														<th>Client Name</th>
+													</tr>
+													<?php foreach($connectedCases['other_connected_cases'] as $otherConnectedCase){  ?>
+													<tr>
+														<td>
+															<?php echo $this->Html->link($otherConnectedCase['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$otherConnectedCase['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
+														</td>
+														<td><?php echo $otherConnectedCase['ClientCase']['case_title']; ?></td>
+														<td><?php echo $otherConnectedCase['ClientCase']['party_name']; ?></td>
+													</tr>
+													<?php } ?>
+												</table>
+												<?php } ?>
 												<?php } ?>
                                             </div>
                                 			<!--<div class="row">

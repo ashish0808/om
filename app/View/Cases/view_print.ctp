@@ -293,6 +293,13 @@
 				</table>
 				<?php } ?>
 
+				<div class="pagebreak"> </div>
+				<div class="page-header">
+					<h1>
+						&nbsp;
+					</h1>
+				</div>
+
 				<?php if(isset($connectedCases) && !empty($connectedCases)){ ?>
 				<table class="borderedTable">
 					<tr>
@@ -333,6 +340,31 @@
 					</tr>
 					<?php } ?>
 				</table>
+
+				<?php if(!empty($connectedCases['parent_case']) && !empty($connectedCases['other_connected_cases'])){ ?>
+				<table class="borderedTable">
+					<tr>
+						<th colspan="5" style="text-align: center;">
+							Other Connected Cases
+						</th>
+					</tr>
+					<tr>
+						<th>Case Number</th>
+						<th>Case Title</th>
+						<th>Client Name</th>
+					</tr>
+					<?php foreach($connectedCases['other_connected_cases'] as $otherConnectedCase){  ?>
+					<tr>
+						<td>
+							<?php echo $otherConnectedCase['ClientCase']['complete_case_number']; ?>
+						</td>
+						<td><?php echo $otherConnectedCase['ClientCase']['case_title']; ?></td>
+						<td><?php echo $otherConnectedCase['ClientCase']['party_name']; ?></td>
+					</tr>
+					<?php } ?>
+				</table>
+				<?php } ?>
+
 				<?php } ?>
 			</div>
 		</div>
