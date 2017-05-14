@@ -61,7 +61,7 @@
     }
     ?>
     <li class="<?php echo $caseProceedingMain; ?>">
-        <?php echo $this->Html->link('<i class="icon-calendar"></i> Daily Dairy ', array('controller'=>'CaseProceedings','action'=>'index'), array('escape' => false))?>
+        <?php echo $this->Html->link('<i class="icon-calendar"></i> Daily Diary ', array('controller'=>'CaseProceedings','action'=>'index'), array('escape' => false))?>
     </li>
     
     <?php

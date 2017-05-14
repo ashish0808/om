@@ -194,6 +194,33 @@ class CaseProceedingsController extends AppController
         $this->set(compact('caseDetails', 'caseId', 'CaseProceedings', 'date', 'pageType'));
     }
 
+    public function add($caseId = null)
+    {
+        $this->layout = 'basic';
+        $this->pageTitle = 'Add Case History';
+        $this->set('pageTitle', $this->pageTitle);
+
+        $this->loadModel('ClientCase');
+        $clientCase = $this->ClientCase->find('first', array('conditions' => array('ClientCase.id' => $caseId, 'user_id' => $this->Session->read('UserInfo.uid')), 'contain' => array('Court')));
+        if (empty($clientCase)) {
+            $this->Flash->error(__('Please select the right case to add history.'));
+            return $this->redirect(Router::url($this->referer(), true));
+        }
+
+        if (!empty($this->request->data)) {
+            if (empty($this->request->data['CaseProceeding']['date_of_hearing']) || empty($this->request->data['CaseProceeding']['next_date_of_hearing'])) {
+                    $this->Flash->error(__('Current and next proceeding dates are mandatory.'));
+            } else {
+                $this->request->data['CaseProceeding']['proceeding_status'] = 'completed';
+                $this->request->data['CaseProceeding']['client_case_id'] = $caseId;
+                $this->CaseProceeding->save($this->request->data);
+                $this->Flash->success(__('Case History added successfully.'));
+                return $this->redirect(array('controller' => 'CaseProceedings', 'action' => 'caseHistory', $caseId));
+            }
+        }
+        $this->set(compact('clientCase', 'caseId'));
+    }
+
     private function _getCaseDetails($caseId)
     {
         $this->ClientCases = $this->Components->load('ClientCases');

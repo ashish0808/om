@@ -136,8 +136,6 @@ class CaseCivilMiscsController extends AppController
                         } else {
                             $this->Flash->error(__('The CM/CRM could not be saved. Please, try again.'));
                         }
-                    } else {
-                        pr($this->CaseCivilMisc->validationErrors);
                     }
                 } else {
                     $this->CaseCivilMisc->validationErrors['computer_file_no'] = ['Please enter valid computer_file_no'];

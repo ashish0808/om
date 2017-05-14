@@ -1,6 +1,12 @@
 <?php
 if ($pageType == 'case_history') {
 	$redirectUrl = $this->Html->url(array('controller' => 'CaseProceedings', 'action' => 'caseHistory', $caseId));
+?>
+<div class="row-fluid">
+	<?php echo $this->Html->link('Add Case History', array('controller'=>'CaseProceedings','action'=>'add',$caseDetails['ClientCase']['id']), array('escape' => false, 'class' => 'tooltip-info btn btn-primary', 'data-rel' => 'tooltip', 'data-original-title'=>'Add new CM/CRM'));
+	?>
+</div>
+<?php
 } else {
 	$redirectUrl = $this->Html->url(array('controller' => 'CaseProceedings', 'action' => 'index'));
 }
