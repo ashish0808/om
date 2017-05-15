@@ -80,7 +80,7 @@ class CaseProceedingsController extends AppController
                     $date = $this->request->data['CaseProceeding']['search_date'];
                 }
 
-                // Find the beind updated case proceeding data
+                // Find the being updated case proceeding data
                 $cpData = $this->CaseProceeding->find('first', array('conditions' => array('id' => $this->request->data['CaseProceeding']['id'])));
 
                 if (!empty($this->request->data['ClientCase'])) {
@@ -146,6 +146,9 @@ class CaseProceedingsController extends AppController
                         }
                     }
                 }
+                /*if ($this->request->data['ClientCase']['case_status'] == DECIDED) {
+                    return $this->redirect(array('controller' => 'Cases', 'action' => 'edit', $this->request->data['ClientCase']['id']));
+                }*/
             } else {
                 foreach ($this->request->data['CaseProceeding'] as $key => $value) {
                     if (in_array($key, array('date_of_hearing'))) {
@@ -162,7 +165,7 @@ class CaseProceedingsController extends AppController
             exit;
         }
 
-        $caseProceeding = $this->CaseProceeding->find('first', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('CaseProceeding.id' => $caseProceedingId)));
+        $caseProceeding = $this->CaseProceeding->find('first', array('contain' => array('CaseStatus', 'ClientCase' => array('Court', 'conditions' => array('user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('CaseProceeding.id' => $caseProceedingId)));
         $this->request->data = $caseProceeding;
         $this->set('caseProceeding', $caseProceeding);
         $this->set('caseProceedingId', $caseProceedingId);

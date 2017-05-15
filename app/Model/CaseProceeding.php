@@ -71,6 +71,13 @@ class CaseProceeding extends AppModel {
 			'conditions' => '',
 			'fields' => '',
 			'order' => ''
-		)
+		),
+		'CaseStatus' => array(
+			'className' => 'CaseStatus',
+			'foreignKey' => 'case_status',
+			'conditions' => '',
+			'fields' => '',
+			'order' => ''
+		),
 	);
 }

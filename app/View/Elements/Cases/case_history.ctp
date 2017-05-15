@@ -19,9 +19,21 @@ if ($pageType == 'case_history') {
 				   aria-describedby="sample-table-2_info">
 				<thead>
 					<tr role="row">
-						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
-							Case No.
+						<?php 
+						if ($pageType == 'case_history') {
+							?>
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+							Proceeding Date
 						</th>
+						<?php
+						} else {
+						?>
+						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+							Case No
+						</th>
+						<?php
+						}
+						?>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Case Title
 						</th>
@@ -40,7 +52,7 @@ if ($pageType == 'case_history') {
 						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							Next Date
 						</th>
-						<th class="col-xs-2" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
+						<th class="col-xs-1" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
 					</tr>
 				</thead>
 				<tbody role="alert" aria-live="polite" aria-relevant="all">
@@ -49,10 +61,20 @@ if ($pageType == 'case_history') {
 					foreach ($CaseProceedings as $record) {
 					?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
+						<?php 
+						if ($pageType == 'case_history') {
+							?>
+						<td class=" "><?php echo $this->Time->format('D, M jS, Y', $record['CaseProceeding']['date_of_hearing']);?></td>
+						<?php
+						} else {
+						?>
 						<td>
 							<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
 							?>
 						</td>
+						<?php
+						}
+						?>
 						<td class=" "><?php echo $record['ClientCase']['case_title'];?></td>
 						<td class=" "><?php echo $record['CaseProceeding']['court_room_no']; ?></td>
 						<td class=" "><?php echo $record['CaseProceeding']['court_serial_no']; ?></td>

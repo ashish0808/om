@@ -149,7 +149,7 @@ echo $this->Form->hidden('CaseProceeding.search_date', array('value' => $date));
 						?>
 						<label class="control-label no-padding-right">
 						<?php
-							echo strtoupper($caseProceeding['CaseProceeding']['case_status']);
+							echo strtoupper($caseProceeding['CaseStatus']['status']);
 						?>
 						</label>
 						<?php
