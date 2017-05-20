@@ -112,11 +112,20 @@
 									</td>
 								</tr>
 								<tr>
-									<td colspan="3" class="details-field">
+									<td class="details-field">
 										<span class="view-label">Date Fixed: </span>
 										<?php $clientCaseHelper = $this->Helpers->load('ClientCase');
 										echo $clientCaseHelper->getLastHearing($pendingProceeding); ?>
-
+									</td>
+									<td></td>
+									<td class="details-field">
+										<span class="view-label">Status: </span>
+										<?php
+										 if(!empty($caseDetails['CaseStatus']['status'])) {
+											echo ucfirst(str_replace('_', ' ', $caseDetails['CaseStatus']['status']));
+										 } else{
+											echo 'NA';
+										 } ?>
 									</td>
 								</tr>
 								<tr>
@@ -163,9 +172,9 @@
 					</tr>
 					<tr>
 						<th>Date</th>
-						<th>Court Room No.</th>
-						<th>Court Serial No.</th>
-						<th>Status</th>
+						<th>Cr. No.</th>
+						<th>Sr. No.</th>
+						<th>Next Hearing</th>
 						<th>Remarks</th>
 					</tr>
 					<?php if(!empty($caseDetails['CaseProceeding'])){
@@ -177,7 +186,7 @@
 						</td>
 						<td><?php echo $caseProceeding['court_room_no']; ?></td>
 						<td><?php echo $caseProceeding['court_serial_no']; ?></td>
-						<td><?php echo ucfirst($caseProceeding['proceeding_status']); ?></td>
+						<td><?php echo $caseProceeding['next_date_of_hearing'] ? $this->Time->format('D, M jS, Y', $caseProceeding['next_date_of_hearing']) : ''; ?></td>
 						<td width="40%"><?php echo $caseProceeding['remarks']; ?></td>
 					</tr>
 					<?php } }else{ ?>
@@ -293,78 +302,75 @@
 				</table>
 				<?php } ?>
 
-				<div class="pagebreak"> </div>
-				<div class="page-header">
-					<h1>
-						&nbsp;
-					</h1>
-				</div>
-
 				<?php if(isset($connectedCases) && !empty($connectedCases)){ ?>
-				<table class="borderedTable">
-					<tr>
-						<th colspan="5" style="text-align: center;">
-							<?php if(isset($connectedCases['is_parent_case'])){
-								echo 'Connected Cases';
-							} else {
-								echo 'Main Case';
-							}
-							?>
-						</th>
-					</tr>
-					<tr>
-						<th>Case Number</th>
-						<th>Case Title</th>
-						<th>Client Name</th>
-					</tr>
-					<?php if(!empty($connectedCases['child_cases'])){
-					foreach($connectedCases['child_cases'] as $childCase){ ?>
-					<tr>
-						<td><?php echo $childCase['ClientCase']['complete_case_number']; ?></td>
-						<td><?php echo $childCase['ClientCase']['case_title']; ?></td>
-						<td><?php echo $childCase['ClientCase']['party_name']; ?></td>
-					</tr>
-					<?php }
-					}elseif(!empty($connectedCases['parent_case'])) { ?>
-					<tr>
-						<td><?php echo $connectedCases['parent_case']['ClientCase']['complete_case_number']; ?></td>
-						<td><?php echo $connectedCases['parent_case']['ClientCase']['case_title']; ?></td>
-						<td><?php echo $connectedCases['parent_case']['ClientCase']['party_name']; ?></td>
-					</tr>
+					<div class="pagebreak"> </div>
+					<div class="page-header">
+						<h1>
+							&nbsp;
+						</h1>
+					</div>
+					<table class="borderedTable">
+						<tr>
+							<th colspan="5" style="text-align: center;">
+								<?php if(isset($connectedCases['is_parent_case'])){
+									echo 'Connected Cases';
+								} else {
+									echo 'Main Case';
+								}
+								?>
+							</th>
+						</tr>
+						<tr>
+							<th>Case Number</th>
+							<th>Case Title</th>
+							<th>Client Name</th>
+						</tr>
+						<?php if(!empty($connectedCases['child_cases'])){
+							foreach($connectedCases['child_cases'] as $childCase){ ?>
+							<tr>
+								<td><?php echo $childCase['ClientCase']['complete_case_number']; ?></td>
+								<td><?php echo $childCase['ClientCase']['case_title']; ?></td>
+								<td><?php echo $childCase['ClientCase']['party_name']; ?></td>
+							</tr>
+							<?php }
+						}elseif(!empty($connectedCases['parent_case'])) { ?>
+							<tr>
+								<td><?php echo $connectedCases['parent_case']['ClientCase']['complete_case_number']; ?></td>
+								<td><?php echo $connectedCases['parent_case']['ClientCase']['case_title']; ?></td>
+								<td><?php echo $connectedCases['parent_case']['ClientCase']['party_name']; ?></td>
+							</tr>
+						<?php }else{ ?>
+							<tr>
+								<td colspan="5" class="details-field" style="text-align: center;">
+									No record found
+								</td>
+							</tr>
+						<?php } ?>
+					</table>
 
-					<?php }else{ ?>
-					<tr>
-						<td colspan="5" class="details-field" style="text-align: center;">
-							No record found
-						</td>
-					</tr>
+					<?php if(!empty($connectedCases['parent_case']) && !empty($connectedCases['other_connected_cases'])){ ?>
+						<table class="borderedTable">
+							<tr>
+								<th colspan="5" style="text-align: center;">
+									Other Connected Cases
+								</th>
+							</tr>
+							<tr>
+								<th>Case Number</th>
+								<th>Case Title</th>
+								<th>Client Name</th>
+							</tr>
+							<?php foreach($connectedCases['other_connected_cases'] as $otherConnectedCase){  ?>
+							<tr>
+								<td>
+									<?php echo $otherConnectedCase['ClientCase']['complete_case_number']; ?>
+								</td>
+								<td><?php echo $otherConnectedCase['ClientCase']['case_title']; ?></td>
+								<td><?php echo $otherConnectedCase['ClientCase']['party_name']; ?></td>
+							</tr>
+							<?php } ?>
+						</table>
 					<?php } ?>
-				</table>
-
-				<?php if(!empty($connectedCases['parent_case']) && !empty($connectedCases['other_connected_cases'])){ ?>
-				<table class="borderedTable">
-					<tr>
-						<th colspan="5" style="text-align: center;">
-							Other Connected Cases
-						</th>
-					</tr>
-					<tr>
-						<th>Case Number</th>
-						<th>Case Title</th>
-						<th>Client Name</th>
-					</tr>
-					<?php foreach($connectedCases['other_connected_cases'] as $otherConnectedCase){  ?>
-					<tr>
-						<td>
-							<?php echo $otherConnectedCase['ClientCase']['complete_case_number']; ?>
-						</td>
-						<td><?php echo $otherConnectedCase['ClientCase']['case_title']; ?></td>
-						<td><?php echo $otherConnectedCase['ClientCase']['party_name']; ?></td>
-					</tr>
-					<?php } ?>
-				</table>
-				<?php } ?>
-
 				<?php } ?>
 			</div>
 		</div>
