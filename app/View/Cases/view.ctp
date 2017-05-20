@@ -123,11 +123,20 @@
 																	</td>
 																</tr>
 																<tr>
-																	<td colspan="3" class="details-field">
+																	<td class="details-field">
 																		<span class="view-label">Date Fixed: </span>
 																		<?php $clientCaseHelper = $this->Helpers->load('ClientCase');
 																		echo $clientCaseHelper->getLastHearing($pendingProceeding); ?>
-
+																	</td>
+																	<td></td>
+																	<td class="details-field">
+																		<span class="view-label">Status: </span>
+																		<?php
+																		 if(!empty($caseDetails['CaseStatus']['status'])) {
+																		 	echo ucfirst(str_replace('_', ' ', $caseDetails['CaseStatus']['status']));
+																		 } else{
+																		 	echo 'NA';
+																		 } ?>
 																	</td>
 																</tr>
 																<tr>
@@ -174,9 +183,9 @@
 													</tr>
 													<tr>
 														<th>Date</th>
-														<th>Court Room No.</th>
-														<th>Court Serial No.</th>
-														<th>Status</th>
+														<th>Cr. No.</th>
+														<th>Sr. No.</th>
+														<th>Next Hearing</th>
 														<th>Remarks</th>
 													</tr>
 													<?php if(!empty($caseDetails['CaseProceeding'])){
@@ -188,7 +197,7 @@
 														</td>
 														<td><?php echo $caseProceeding['court_room_no']; ?></td>
 														<td><?php echo $caseProceeding['court_serial_no']; ?></td>
-														<td><?php echo ucfirst($caseProceeding['proceeding_status']); ?></td>
+														<td><?php echo $caseProceeding['next_date_of_hearing'] ? $this->Time->format('D, M jS, Y', $caseProceeding['next_date_of_hearing']) : ''; ?></td>
 														<td width="40%"><?php echo $caseProceeding['remarks']; ?></td>
 													</tr>
 													<?php } }else{ ?>
