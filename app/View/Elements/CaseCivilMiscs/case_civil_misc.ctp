@@ -2,7 +2,7 @@
 if ($show_add) {
 ?>
 <div class="row-fluid">
-	<?php echo $this->Html->link('Add', array('controller'=>'CaseCivilMiscs','action'=>'add',trim(Inflector::slug($caseDetails['ClientCase']['computer_file_no']))), array('escape' => false, 'class' => 'tooltip-info btn btn-primary', 'data-rel' => 'tooltip', 'data-original-title'=>'Add new CM/CRM'));
+	<?php echo $this->Html->link('Add New CM/CRM', array('controller'=>'CaseCivilMiscs','action'=>'add',trim(Inflector::slug($caseDetails['ClientCase']['computer_file_no']))), array('escape' => false, 'class' => 'tooltip-info btn btn-primary', 'data-rel' => 'tooltip', 'data-original-title'=>'Add new CM/CRM'));
 	?>
 </div>
 <?php
