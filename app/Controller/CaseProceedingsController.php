@@ -68,6 +68,44 @@ class CaseProceedingsController extends AppController
         $this->set(compact('CaseProceedings', 'date', 'Todos', 'pageType'));
     }
 
+	public function print_daily_diary()
+	{
+		$this->layout = '';
+		$this->pageTitle = 'Daily Diary';
+		$this->set('pageTitle', $this->pageTitle);
+
+		$date = date('Y-m-d');
+		$criteria = ['date_of_hearing' => $date];
+		if (!empty($this->request->data)) {
+			foreach ($this->request->data['CaseProceeding'] as $key => $value) {
+				if (in_array($key, array('date_of_hearing'))) {
+					if (!empty($value)) {
+						$criteria[$key] = $value;
+						$this->request->params['named'][$key] = $value;
+						$date = $this->request->data['CaseProceeding']['date_of_hearing'];
+					}
+				}
+			}
+		}
+
+		if(isset($this->request->data['submitBtn']) && ($this->request->data['submitBtn']=='both' || $this->request->data['submitBtn']=='proceedings')) {
+
+			$this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+			$CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => $criteria));
+
+			$this->set('CaseProceedings', $CaseProceedings);
+		}
+
+		if(isset($this->request->data['submitBtn']) && ($this->request->data['submitBtn']=='both' || $this->request->data['submitBtn']=='todos')) {
+
+			// Find todos for the given date
+			$this->loadModel('Todo');
+			$Todos = $this->Todo->find('all', array('contain' => array('ClientCase'), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'OR' => array(array('Todo.reminder_date <=' => $date, 'Todo.status' => array('pending', 'in_progress')), array('Todo.completion_date ' => $date, 'Todo.status' => array('pending', 'in_progress', 'completed')))), 'order' => array("Todo.status" => "DESC", "Todo.completion_date" => "ASC")));
+
+			$this->set('Todos', $Todos);
+		}
+	}
+
     public function editCaseProceeding($caseProceedingId, $date, $pageType)
     {
         $this->layout = 'ajax';

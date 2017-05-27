@@ -168,6 +168,27 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 </div>
 <?php echo $this->Form->end();
 echo $this->Js->writeBuffer(); ?>
+
+<?php if(count($records) > 0) {?>
+<?php if(!empty($criteria)){ ?>
+<div class="row"><div class="col-md-12">&nbsp;</div></div>
+<div class="row">
+	<div class="col-md-12">
+		<?php echo $this->Form->create('ClientCase',array('url' => '/Cases/exportExcel','id'=>'exportExcel','name'=>'exportExcel','target'=>'_blank', 'novalidate' => true)); ?>
+		<?php foreach($criteria as $criteriaKey => $criteriaValue){
+			echo $this->Form->input('ClientCase.'.$criteriaKey, array('label' => false, 'required' => false, 'value' => $criteriaValue, 'div' => false, 'type' => 'hidden', 'autocomplete' => 'off'));
+		}
+		?>
+		<div class="form-group pull-right">
+			<div class="col-sm-12 col-xs-12">
+			<?php echo $this->Form->button("Export To Excel",
+				array("class"=>"btn btn-purple btn-sm","escape"=>false, "type"=>"submit", "div" => false)); ?>
+			</div>
+		</div>
+        <?php echo $this->Form->end(); ?>
+	</div>
+</div>
+<?php } ?>
 <div class="row-fluid">
 	<div class="span12">
         <div class="row-fluid">
@@ -218,7 +239,7 @@ echo $this->Js->writeBuffer(); ?>
 					<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
 						<td class=" "><?php echo $record['ClientCase']['complete_case_number'];?></td>
 						<td class=" "><?php echo $record['ClientCase']['computer_file_no'];?></td>
-						<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>"; ?></td>
+							<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>"; ?></td>
 						<td><?php echo $record['ClientCase']['case_year'];?></td>
 						<td><?php echo $record['ClientCase']['party_name'];?></td>
 						<td><?php echo $record['ClientCase']['client_case_count'] ? $record['ClientCase']['client_case_count']: 0; ?></td>
@@ -283,6 +304,7 @@ echo $this->Js->writeBuffer(); ?>
         </div>
     </div>
 </div>
+<?php } ?>
 <script type="text/javascript">
 	$('[data-rel=tooltip]').tooltip();
 </script>
