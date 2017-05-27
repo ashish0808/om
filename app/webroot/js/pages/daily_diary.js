@@ -22,22 +22,26 @@ $(document).ready(function() {
                     var formData = new FormData();
                     data = JSON.parse(data);
                     var url = $('#projectModal').attr('redirectUrl');
-                    if (data.pageType == 'daily_diary') {
-                        formData.append('data[CaseProceeding][date_of_hearing]', data.date);
-                        $.ajax({
-                            type: "POST",
-                            cache: false,
-                            processData: false,
-                            contentType: false,
-                            url: url,
-                            data: formData,
-                            success: function(html) {
-                                hideLoading();
-                                $('#content').html(html);
-                            }
-                        });
+                    if (data.is_case_decided) {
+                        window.location.href = $('#editCaseProceedingForm').attr('decided_case_url') + '/' + data.case_id
                     } else {
-                        $(location).attr('href', url);
+                        if (data.pageType == 'daily_diary') {
+                            formData.append('data[CaseProceeding][date_of_hearing]', data.date);
+                            $.ajax({
+                                type: "POST",
+                                cache: false,
+                                processData: false,
+                                contentType: false,
+                                url: url,
+                                data: formData,
+                                success: function(html) {
+                                    hideLoading();
+                                    $('#content').html(html);
+                                }
+                            });
+                        } else {
+                            $(location).attr('href', url);
+                        }
                     }
                 }
             }

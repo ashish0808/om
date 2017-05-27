@@ -112,6 +112,7 @@ class CaseProceedingsController extends AppController
         $this->loadModel('ClientCase');
 
         if (!empty($this->request->data)) {
+            $is_case_decided = false;
             if (!empty($this->request->data['CaseProceeding']['id'])) {
                 // This is the search date to be shown on search field
                 if (!empty($this->request->data['CaseProceeding']['search_date'])) {
@@ -184,9 +185,9 @@ class CaseProceedingsController extends AppController
                         }
                     }
                 }
-                /*if ($this->request->data['ClientCase']['case_status'] == DECIDED) {
-                    return $this->redirect(array('controller' => 'Cases', 'action' => 'edit', $this->request->data['ClientCase']['id']));
-                }*/
+                if ($this->request->data['ClientCase']['case_status'] == DECIDED && $cpData['CaseProceeding']['case_status']) {
+                    $is_case_decided = true;
+                }
             } else {
                 foreach ($this->request->data['CaseProceeding'] as $key => $value) {
                     if (in_array($key, array('date_of_hearing'))) {
@@ -199,7 +200,7 @@ class CaseProceedingsController extends AppController
                 }
             }
             // echo "{date: $date, pageType: $pageType}";
-            echo json_encode(array('date' => $date, 'pageType' => $pageType));
+            echo json_encode(array('date' => $date, 'pageType' => $pageType, 'is_case_decided' => $is_case_decided, 'case_id' => $cpData['CaseProceeding']['client_case_id']));
             exit;
         }
 
