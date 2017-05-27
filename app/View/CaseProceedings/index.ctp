@@ -69,7 +69,21 @@ echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/','i
         </div>
     </div>
 </div>
-
+<div class="row"><div class="col-md-12">&nbsp;</div></div>
+<div class="row">
+	<div class="col-md-12">
+		<?php echo $this->Form->create('CaseProceedings',array('url' => '/CaseProceedings/print_daily_diary','id'=>'printProceedings','name'=>'printProceedings','target'=>'_blank', 'novalidate' => true)); ?>
+		<?php echo $this->Form->input('CaseProceeding.date_of_hearing', array('label' => false, 'required' => false, 'value' => $date, 'div' => false, 'type' => 'hidden', 'autocomplete' => 'off')); ?>
+		<div class="form-group pull-right">
+			<div class="col-sm-12 col-xs-12">
+			<?php echo $this->Form->button("Print Proceedings", array("name" => "submitBtn", "class"=>"btn btn-purple btn-sm","escape"=>false, "type"=>"submit", "div" => false, 'value' => 'proceedings')); ?>
+			<?php echo $this->Form->button("Print Todos", array("name" => "submitBtn", "class"=>"btn btn-purple btn-sm","escape"=>false, "type"=>"submit", "div" => false, 'value' => 'todos')); ?>
+			<?php echo $this->Form->button("Print Both", array("name" => "submitBtn", "class"=>"btn btn-purple btn-sm","escape"=>false, "type"=>"submit", "div" => false, 'value' => 'both')); ?>
+			</div>
+		</div>
+        <?php echo $this->Form->end(); ?>
+	</div>
+</div>
 <div class="row-fluid">
 	<div class="span12">
         

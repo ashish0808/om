@@ -27,6 +27,11 @@
  */
 	//Router::connect('/', array('controller' => 'pages', 'action' => 'display', 'home'));
 	Router::connect('/', array('controller' => 'users', 'action' => 'login','admin'=>true));
+	/*Router::connect(
+		'/cases/manage/:computer_file_no/**',
+		array('controller' => 'cases', 'action' => 'manage'),
+		array('computer_file_no' => '\D+')
+	);*/
 /**
  * ...and connect the rest of 'Pages' controller's URLs.
  */

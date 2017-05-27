@@ -13,9 +13,220 @@ class CasesController extends AppController
 	public $helpers = array("Form", "Js" => array('Jquery'), 'Validation', 'Session', 'ClientCase');
 	//JS and Validation helpers are not in Use right now
 
-	public $components = array('Paginator', 'Flash', 'Session', 'RequestHandler', 'Email');
+	public $components = array('Paginator', 'Flash', 'Session', 'RequestHandler', 'Email', 'PhpExcel');
 
 	public function manage($listType = '')
+	{
+		if ($this->request->isAjax()) {
+			$this->layout = 'ajax';
+		} else {
+			$this->layout = 'basic';
+		}
+
+		$pageName = 'Manage Cases';
+
+		$this->pageTitle = $pageName;
+		$this->set('pageTitle', $this->pageTitle);
+
+		$this->loadModel('ClientCase');
+		$this->loadModel('CaseStatus');
+
+		$stringFields = array('complete_case_number', 'case_title', 'party_name');
+
+		$fields = [];
+		$records = array();
+		$criteria = [];
+		$exportCriteria = [];
+		$this->ClientCases = $this->Components->load('ClientCases');
+
+		if (!empty($this->request->data)) {
+			foreach ($this->request->data['ClientCase'] as $key => $value) {
+				if (!empty($value)) {
+
+					$value = trim($value);
+					$exportCriteria[$key] = $value;
+					if(in_array($key, $stringFields)) {
+
+						$criteria[$key] = ' LIKE "%'.$value.'%"';
+					} else {
+
+						$criteria[$key] = " = '".$value."'";
+					}
+
+					$this->request->params['named'][$key] = $value;
+				}
+			}
+		}
+
+		if (!empty($this->request->params['named'])) {
+			foreach ($this->request->params['named'] as $key => $value) {
+				$exportCriteria[$key] = $value;
+				if (!in_array($key, ['page', 'sort', 'direction'])) {
+
+					if (!empty($value)) {
+
+						$value = trim($value);
+						if(in_array($key, $stringFields)) {
+
+							$criteria[$key] = ' LIKE "%'.$value.'%"';
+						} else {
+
+							$criteria[$key] = " = '".$value."'";
+						}
+
+						$this->request->data['ClientCase'][$key] = $value;
+					}
+				}
+			}
+		}
+
+		$this->Paginator->settings = array(
+			'page' => 1,
+			'limit' => LIMIT,
+			'fields' => $fields,
+			'order' => array('ClientCase.id' => 'desc')
+		);
+
+		$criteriaStr = 'ClientCase.user_id='.$this->getLawyerId();
+
+		if(!empty($criteria)) {
+
+			$criteria = $this->ClientCases->listFilterWithStatus($criteria, '');
+			foreach($criteria as $criteriaKey => $criteriaVal) {
+
+				$criteriaStr .= ' AND '.$criteriaKey.$criteriaVal;
+			}
+
+			$records = $this->Paginator->paginate('ClientCase', $criteriaStr);
+		}
+
+		$caseStatuses = $this->CaseStatus->find('all', array(
+			'conditions' => array(
+				"NOT" => array( "CaseStatus.status" => array('decided', 'not_with_us') )
+			),
+			'fields' => array('id', 'status')
+		));
+		$caseStatusesArr = array();
+		if(!empty($caseStatuses)) {
+
+			foreach($caseStatuses as $caseStatus){
+
+				$caseStatusesArr[$caseStatus['CaseStatus']['id']] = ucfirst(str_replace('_', ' ', $caseStatus['CaseStatus']['status']));
+			}
+		}
+		$this->set('caseStatuses', $caseStatusesArr);
+
+		$this->loadModel('CaseType');
+		$caseTypes = $this->CaseType->find('list', array(
+			'fields' => array('CaseType.id', 'CaseType.name'),
+			'order' => 'name ASC'
+		));
+		$this->set("caseTypes", $caseTypes);
+
+		$this->set('listType', $listType);
+		$this->set('records', $records);
+		$this->set('criteria', $exportCriteria);
+	}
+
+	public function exportExcel()
+	{
+		$this->loadModel('ClientCase');
+		$this->loadModel('CaseStatus');
+
+		$stringFields = array('complete_case_number', 'case_title', 'party_name', 'computer_file_no');
+
+		$criteria = [];
+		$this->ClientCases = $this->Components->load('ClientCases');
+
+		if (!empty($this->request->data)) {
+			foreach ($this->request->data['ClientCase'] as $key => $value) {
+				if (!in_array($key, ['page', 'sort', 'direction'])) {
+
+					if (!empty($value)) {
+
+						$value = trim($value);
+						if(in_array($key, $stringFields)) {
+
+							$criteria[$key] = ' LIKE "%'.$value.'%"';
+						} else {
+
+							$criteria[$key] = " = '".$value."'";
+						}
+					}
+				}
+			}
+		}
+
+		$orderBy = array('ClientCase.id' => 'desc');
+
+		if((isset($this->request->data['ClientCase']['sort']) && !empty($this->request->data['ClientCase']['sort']))
+		&& (isset($this->request->data['ClientCase']['direction']) && !empty($this->request->data['ClientCase']['direction']))) {
+
+			$orderBy = array();
+			$orderBy[$this->request->data['ClientCase']['sort']] = $this->request->data['ClientCase']['direction'];
+		}
+
+		$count = $this->ClientCase->find('count', array('conditions' => array("ClientCase.user_id" => $this->getLawyerId())));
+
+		$this->Paginator->settings = array(
+			'page' => 1,
+			'limit' => $count,
+			'order' => $orderBy
+		);
+
+		$criteriaStr = 'ClientCase.user_id='.$this->getLawyerId();
+
+		if(!empty($criteria)) {
+
+			$criteria = $this->ClientCases->listFilterWithStatus($criteria, '');
+			foreach($criteria as $criteriaKey => $criteriaVal) {
+
+				$criteriaStr .= ' AND '.$criteriaKey.$criteriaVal;
+			}
+
+			$records = $this->Paginator->paginate('ClientCase', $criteriaStr);
+
+			// create new empty worksheet and set default font
+			$this->PhpExcel->createWorksheet()
+				->setDefaultFont('Calibri', 12);
+
+			// define table cells
+			$table = array(
+				array('label' => 'Case Number', 'filter' => true),
+				array('label' => 'Computer File No.', 'filter' => true),
+				array('label' => 'Case Title', 'filter' => true),
+				array('label' => 'Case Year', 'filter' => true),
+				array('label' => 'Party Name', 'filter' => true),
+				array('label' => 'Connected Cases', 'filter' => true),
+				array('label' => 'Created', 'filter' => true),
+				//array('label' => __('Description'), 'width' => 50, 'wrap' => true),
+			);
+
+			// add heading with different font and bold text
+			$this->PhpExcel->addTableHeader($table, array('name' => 'Cambria', 'bold' => true));
+
+			// add data
+			foreach ($records as $record) {
+				$this->PhpExcel->addTableRow(array(
+					$record['ClientCase']['complete_case_number'],
+					$record['ClientCase']['computer_file_no'],
+					$record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "Miscellaneous",
+					$record['ClientCase']['case_year'],
+					$record['ClientCase']['party_name'],
+					$record['ClientCase']['client_case_count'] ? $record['ClientCase']['client_case_count']: 0,
+					$record['ClientCase']['created']
+				));
+			}
+
+			// close table and output
+			$this->PhpExcel->addTableFooter()
+				->output();
+		}
+
+		die;
+	}
+
+	public function manageWithList($listType = '')
 	{
 		if ($this->request->isAjax()) {
 			$this->layout = 'ajax';
