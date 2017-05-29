@@ -179,7 +179,7 @@ class UsersController extends AppController
         $this->layout = '';
         $this->loadModel('Todo');
 
-        $todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('Todo.completion_date <=' => date('Y-m-d'), 'status' => 'pending'), 'order' => 'Todo.completion_date ASC', 'limit' => 5));
+        $todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('Todo.completion_date <=' => date('Y-m-d'), 'status' => 'pending', 'user_id' => $this->Session->read('UserInfo.uid')), 'order' => 'Todo.completion_date ASC', 'limit' => 5));
         $todos_count = count($todos);
         $this->set('todos', $todos);
         $this->set('todos_count', $todos_count);
