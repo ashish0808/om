@@ -28,11 +28,11 @@
 				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
 				<td class="">
 					<?php
-						$str =  (!$record['ClientCase']['is_ememo_filed']) ? 'E-memo Filing, ' : '';
-						$str .= (!$record['ClientCase']['is_paper_book']) ? 'Paper Book, ' : '';
-						$str .= (!$record['ClientCase']['is_diary_entry']) ? 'Diary Entry, ' : '';
-						$str .= (!$record['ClientCase']['is_letter_communication']) ? 'Letter Communication, ' : '';
-						$str .= (!$record['ClientCase']['is_lcr']) ? 'LCR,' : '';
+						$str =  (!$record['ClientCase']['is_ememo_filed']) ? 'E-memo Filing,' : '';
+						$str .= (!$record['ClientCase']['is_paper_book']) ? ' Paper Book,' : '';
+						$str .= (!$record['ClientCase']['is_diary_entry']) ? ' Diary Entry,' : '';
+						$str .= (!$record['ClientCase']['is_letter_communication']) ? ' Letter Communication,' : '';
+						$str .= (!$record['ClientCase']['is_lcr']) ? ' LCR,' : '';
 						echo rtrim($str, ",");
 					?>
 				</td>
