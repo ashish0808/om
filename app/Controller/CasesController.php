@@ -171,7 +171,8 @@ class CasesController extends AppController
 		$this->Paginator->settings = array(
 			'page' => 1,
 			'limit' => $count,
-			'order' => $orderBy
+			'order' => $orderBy,
+			'contain' => array('Court')
 		);
 
 		$criteriaStr = 'ClientCase.user_id='.$this->getLawyerId();
@@ -198,7 +199,18 @@ class CasesController extends AppController
 				array('label' => 'Case Year', 'filter' => true),
 				array('label' => 'Party Name', 'filter' => true),
 				array('label' => 'Connected Cases', 'filter' => true),
+				array('label' => 'Status', 'filter' => true),
 				array('label' => 'Created', 'filter' => true),
+				array('label' => 'Engaged On', 'filter' => true),
+				array('label' => 'Court', 'filter' => true),
+				array('label' => 'Presiding Officer', 'filter' => true),
+				array('label' => 'Client Type', 'filter' => true),
+				array('label' => 'Client Phone', 'filter' => true),
+				array('label' => 'Client Email', 'filter' => true),
+				array('label' => 'Client Address', 'filter' => true),
+				array('label' => 'Fee Settled', 'filter' => true),
+				array('label' => 'Payment Received', 'filter' => true),
+				array('label' => 'Payment Status', 'filter' => true),
 				//array('label' => __('Description'), 'width' => 50, 'wrap' => true),
 			);
 
@@ -207,6 +219,46 @@ class CasesController extends AppController
 
 			// add data
 			foreach ($records as $record) {
+
+				$caseStatus = 'NA';
+				$courtName = '';
+				$clientType = ucfirst($record['ClientCase']['client_type']);
+				$phone2 = '';
+				$feeSettled = '';
+				$paymentReceived = '';
+				$paymentStatus = '';
+
+				if(!empty($record['CaseStatus']['status'])) {
+					$caseStatus = ucfirst(str_replace('_', ' ', $record['CaseStatus']['status']));
+				}
+
+				if(!empty($record['Court']['name'])) {
+					$courtName = $record['Court']['name'];
+				}
+
+				if($record['ClientCase']['client_type']=='petitioner') {
+					$clientType = 'Appellant/Petitioner';
+				}
+
+				if(!empty($record['ClientCase']['client_phone2'])) {
+					$phone2 = ', '.$record['ClientCase']['client_phone2'];
+				}
+
+				if(isset($record['ClientCase']['fee_settled'])) {
+
+					$feeSettled = $record['ClientCase']['fee_settled'];
+				}
+
+				if(isset($record['ClientCase']['payment_received'])) {
+
+					$paymentReceived = $record['ClientCase']['payment_received'];
+				}
+
+				if(isset($record['ClientCase']['payment_status'])) {
+
+					$paymentStatus = ucfirst($record['ClientCase']['payment_status']);
+				}
+
 				$this->PhpExcel->addTableRow(array(
 					$record['ClientCase']['complete_case_number'],
 					$record['ClientCase']['computer_file_no'],
@@ -214,7 +266,18 @@ class CasesController extends AppController
 					$record['ClientCase']['case_year'],
 					$record['ClientCase']['party_name'],
 					$record['ClientCase']['client_case_count'] ? $record['ClientCase']['client_case_count']: 0,
-					$record['ClientCase']['created']
+					$caseStatus,
+					$record['ClientCase']['created'],
+					$record['ClientCase']['engaged_on'],
+					$courtName,
+					$record['ClientCase']['presiding_officer'],
+					$clientType,
+					$record['ClientCase']['client_phone'].$phone2,
+					$record['ClientCase']['client_email'],
+					$record['ClientCase']['client_address1'].' '.$record['ClientCase']['client_address2'],
+					$feeSettled,
+					$paymentReceived,
+					$paymentStatus
 				));
 			}
 
