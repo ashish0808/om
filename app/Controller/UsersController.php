@@ -99,7 +99,7 @@ class UsersController extends AppController
         $pending_for_refiling_data = [];
         $pending_for_registration_data = [];
 
-        $caseData = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING_FOR_FILING, PENDING_FOR_REFILING, PENDING_FOR_REGISTRATION), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')), 'order' => 'limitation_expires_on asc'));
+        $caseData = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING_FOR_FILING, PENDING_FOR_REFILING, PENDING_FOR_REGISTRATION), 'limitation_expires_on <=' => date('Y-m-d', strtotime('+7 days')), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')), 'order' => 'limitation_expires_on asc'));
         if (!empty($caseData)) {
             foreach ($caseData as $key => $value) {
                 if ($value['ClientCase']['case_status'] == PENDING_FOR_FILING) {
@@ -127,26 +127,51 @@ class UsersController extends AppController
     public function getCasesWithPendingActions()
     {
         $this->layout = '';
-        $this->loadModel('ClientCase');
 
-        $cases_with_pending_actions = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING, ADMITTED), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'OR' => array('is_ememo_filed' => false, 'is_paper_book' => false, 'is_diary_entry' => false, 'is_letter_communication' => false, 'is_lcr' => false))));
+        $cases_with_pending_actions = $this->__getCasesWithPendingActions(5);
         $cases_with_pending_actions_count = count($cases_with_pending_actions);
         $this->set('cases_with_pending_actions', $cases_with_pending_actions);
         $this->set('cases_with_pending_actions_count', $cases_with_pending_actions_count);
     }
 
+    public function getCasesWithPendingActionsAll()
+    {
+        $this->layout = 'basic';
+
+        $records = $this->__getCasesWithPendingActions(0);
+        $this->set('records', $records);
+        $this->set('pageTitle', 'Cases with Pending Actions');
+    }
+
+    private function __getCasesWithPendingActions($limit)
+    {
+        $this->loadModel('ClientCase');
+        return $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING, ADMITTED), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'OR' => array('is_ememo_filed' => false, 'is_paper_book' => false, 'is_diary_entry' => false, 'is_letter_communication' => false, 'is_lcr' => false)), 'limit' => $limit));
+    }
+
     public function getCasesWithNoNextDate()
     {
         $this->layout = '';
-        $this->loadModel('CaseProceeding');
 
-        $this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-
-        $cases_with_no_next_date = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.case_status' => array(PENDING, ADMITTED), 'is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('proceeding_status' => 'pending', 'next_date_of_hearing' => null, 'date_of_hearing <' => date('Y-m-d'))));
+        $cases_with_no_next_date = $this->__getCasesWithNoNextDate(5);
 
         $cases_with_no_next_date_count = count($cases_with_no_next_date);
         $this->set('cases_with_no_next_date', $cases_with_no_next_date);
         $this->set('cases_with_no_next_date_count', $cases_with_no_next_date_count);
+    }
+
+    public function getCasesWithNoNextDateAll()
+    {
+        $this->layout = 'basic';
+        $records = $this->__getCasesWithNoNextDate(0);
+        $this->set('records', $records);
+        $this->set('pageTitle', 'Cases with No Proceeding Date');
+    }
+
+    private function __getCasesWithNoNextDate($limit) {
+        $this->loadModel('CaseProceeding');
+        $this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+        return $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.case_status' => array(PENDING), 'is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('proceeding_status' => 'pending', 'next_date_of_hearing' => null, 'date_of_hearing <' => date('Y-m-d')), 'limit' => $limit));
     }
 
     public function getTodos()
@@ -154,7 +179,7 @@ class UsersController extends AppController
         $this->layout = '';
         $this->loadModel('Todo');
 
-        $todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('Todo.reminder_date <=' => date('Y-m-d'), 'status' => 'pending')));
+        $todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('Todo.completion_date <=' => date('Y-m-d'), 'status' => 'pending', 'Todo.user_id' => $this->Session->read('UserInfo.uid')), 'order' => 'Todo.completion_date ASC', 'limit' => 5));
         $todos_count = count($todos);
         $this->set('todos', $todos);
         $this->set('todos_count', $todos_count);

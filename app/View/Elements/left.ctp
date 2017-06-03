@@ -67,7 +67,7 @@
     <?php
     $caseMain = '';
     $caseSub = '';
-    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches') || ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] == 'caseCivilMisc') || ($this->params['controller'] == 'Todos' && $this->params['action'] == 'caseTodos')) {
+    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches') || ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] == 'caseCivilMisc') || ($this->params['controller'] == 'Todos' && $this->params['action'] == 'caseTodos') || ($this->params['controller'] == 'users' && $this->params['action'] == 'getCasesWithPendingActionsAll') || ($this->params['controller'] == 'users' && $this->params['action'] == 'getCasesWithNoNextDateAll')) {
   		$caseMain = 'open';
   		$caseSub = 'style="display:block;"';
     }
@@ -86,6 +86,12 @@
             <li>
                 <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Search ', array('controller'=>'cases','action'=>'manage'), array('escape' => false))?>
             </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Cases Without Proceeding Date ', array('controller'=>'users','action'=>'getCasesWithNoNextDateAll'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Cases With Pending Actions ', array('controller'=>'users','action'=>'getCasesWithPendingActionsAll'), array('escape' => false))?>
+            </li>
             <!--<li>
                 <?php //echo $this->Html->link('<i class="icon-double-angle-right"></i> Decided ', array('controller'=>'cases','action'=>'manage', 'decided'), array('escape' => false))?>
             </li>
@@ -97,7 +103,7 @@
     <?php
     $caseCivilMiscMain = '';
     $caseCivilMiscSub = '';
-    if($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] != 'caseCivilMisc')
+    if ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] != 'caseCivilMisc')
     {
         $caseCivilMiscMain = 'open';
         $caseCivilMiscSub = 'style="display:block;"';
@@ -125,7 +131,7 @@
     <?php
     $caseDisptachMain = '';
     $caseDisptachSub = '';
-    if($this->params['controller'] == 'Dispatches' && $this->params['action'] != 'caseDispatches')
+    if ($this->params['controller'] == 'Dispatches' && $this->params['action'] != 'caseDispatches')
     {
         $caseDisptachMain = 'open';
         $caseDisptachSub = 'style="display:block;"';
@@ -150,7 +156,7 @@
     <?php
     $todoMain = '';
     $todoSub = '';
-    if($this->params['controller'] == 'Todos' && $this->params['action'] != 'caseTodos')
+    if ($this->params['controller'] == 'Todos' && $this->params['action'] != 'caseTodos')
     {
         $todoMain = 'open';
         $todoSub = 'style="display:block;"';
@@ -176,7 +182,7 @@
     <?php
     $userCompanyMain = '';
     $userCompanySub = '';
-    if($this->params['controller'] == 'UserCompanies') {
+    if ($this->params['controller'] == 'UserCompanies') {
         $userCompanyMain = 'open';
         $userCompanySub = 'style="display:block;"';
     }

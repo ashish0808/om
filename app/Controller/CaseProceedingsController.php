@@ -112,13 +112,14 @@ class CaseProceedingsController extends AppController
         $this->loadModel('ClientCase');
 
         if (!empty($this->request->data)) {
+            $is_case_decided = false;
             if (!empty($this->request->data['CaseProceeding']['id'])) {
                 // This is the search date to be shown on search field
                 if (!empty($this->request->data['CaseProceeding']['search_date'])) {
                     $date = $this->request->data['CaseProceeding']['search_date'];
                 }
 
-                // Find the beind updated case proceeding data
+                // Find the being updated case proceeding data
                 $cpData = $this->CaseProceeding->find('first', array('conditions' => array('id' => $this->request->data['CaseProceeding']['id'])));
 
                 if (!empty($this->request->data['ClientCase'])) {
@@ -184,6 +185,9 @@ class CaseProceedingsController extends AppController
                         }
                     }
                 }
+                if ($this->request->data['ClientCase']['case_status'] == DECIDED && $cpData['CaseProceeding']['case_status']) {
+                    $is_case_decided = true;
+                }
             } else {
                 foreach ($this->request->data['CaseProceeding'] as $key => $value) {
                     if (in_array($key, array('date_of_hearing'))) {
@@ -196,11 +200,11 @@ class CaseProceedingsController extends AppController
                 }
             }
             // echo "{date: $date, pageType: $pageType}";
-            echo json_encode(array('date' => $date, 'pageType' => $pageType));
+            echo json_encode(array('date' => $date, 'pageType' => $pageType, 'is_case_decided' => $is_case_decided, 'case_id' => $cpData['CaseProceeding']['client_case_id']));
             exit;
         }
 
-        $caseProceeding = $this->CaseProceeding->find('first', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('CaseProceeding.id' => $caseProceedingId)));
+        $caseProceeding = $this->CaseProceeding->find('first', array('contain' => array('CaseStatus', 'ClientCase' => array('Court', 'conditions' => array('user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('CaseProceeding.id' => $caseProceedingId)));
         $this->request->data = $caseProceeding;
         $this->set('caseProceeding', $caseProceeding);
         $this->set('caseProceedingId', $caseProceedingId);

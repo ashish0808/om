@@ -58,7 +58,7 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-book red"></i>
-							Cases Pending for Filing
+							Cases Pending for Filing (In Next 7 Days)
 						</h4>
 
 						<div class="widget-toolbar">
@@ -102,7 +102,7 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-bell red"></i>
-							Cases Pending for Filing Objections
+							Cases Pending for Filing Objections (In Next 7 Days)
 						</h4>
 
 						<div class="widget-toolbar">
@@ -195,7 +195,8 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-star red"></i>
-							Cases with Pending Actions
+							Cases with Pending Actions (<?php echo $this->Html->link('View All', array('controller' => 'users', 'action' => 'getCasesWithPendingActionsAll'));
+					?>)
 						</h4>
 
 						<div class="widget-toolbar">
@@ -244,7 +245,8 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-bullhorn red"></i>
-							Cases with No Proceeding Date
+							Cases with No Proceeding Date (<?php echo $this->Html->link('View All', array('controller' => 'users', 'action' => 'getCasesWithNoNextDateAll'));
+					?>)
 						</h4>
 
 						<div class="widget-toolbar">
@@ -288,7 +290,8 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-bullhorn red"></i>
-							Pending Todos
+							Pending Todos (<?php echo $this->Html->link('View All', array('controller' => 'Todos', 'action' => 'index'));
+					?>)
 						</h4>
 
 						<div class="widget-toolbar">
