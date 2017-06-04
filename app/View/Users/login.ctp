@@ -66,11 +66,11 @@
             </div>
             <!-- /widget-main -->
 
-            <!--<div class="toolbar clearfix">
-                <div>
-                    
-                </div>
-            </div>-->
+            <div class="toolbar clearfix">
+				<div>
+					<?php echo $this->Html->link("<i class='icon-arrow-left'></i> I forgot my password", array('controller'=>'users','action'=>'forgot_password'), array('class' => 'forgot-password-link', "escape" => false)); ?>
+				</div>
+            </div>
         </div>
         <!-- /widget-body -->
         <?php echo $this->Form->end();?>

@@ -169,24 +169,41 @@ class User extends AppModel {
     );
 
     public $validateChangePassword = array(
-        'new' => array(
-            'required' => array(
-                'on' => 'create',
-                'rule' => array('minLength', '5'),
-                'message' => 'Password minimum 5 characters long',
-                'required' => true,
-                'allowEmpty' => false,
-                'last' => true,
-            ),
-        ),
-        'confirm' => array(
-            'required' => array(
-                'rule' => array('equalToField', 'new'),
-                'message' => 'New and confirm password should be same',
-                'required' => true,
-                'last' => true,
-            ),
-        ),
+	    'current_password' => array(
+		    'rule2' => array(
+			    'rule' => 'checkCurrentPassword',
+			    'allowEmpty' => false,
+			    'message' => 'Wrong current password',
+		    ),
+		    'rule1' => array(
+			    'rule' => array('notBlank'),
+			    'allowEmpty' => false,
+			    'message' => 'Please enter a password',
+		    ),
+	    ),
+	    'new' => array(
+		    'rule2' => array(
+			    'rule' => array('minLength', '5'),
+			    'allowEmpty' => false,
+			    'message' => 'Password must be mimimum 5 characters long',
+		    ),
+		    'rule1' => array(
+			    'rule' => array('notBlank'),
+			    'allowEmpty' => false,
+			    'message' => 'Please enter a password',
+		    ),
+	    ),
+	    'confirm' => array(
+		    'ruleName' => array(
+			    'rule' => array('notBlank'),
+			    'message' => 'Please enter confirm password',
+			    'last' => true,
+		    ),
+		    'ruleName2' => array(
+			    'rule' => array('compareFields', 'new'),
+			    'message' => 'Confirm password and password must be same',
+		    ),
+	    ),
     );
 
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
@@ -312,6 +329,27 @@ class User extends AppModel {
         }
     }
     //Comparing confirm fields with fields Ends
+
+	public function checkCurrentPassword()
+	{
+		$dataPosted = $this->data[$this->name];
+		$currUser = $this->find('first', array(
+				'conditions' => array('id' => $dataPosted['id']),
+				'fields' => array('user_pwd')
+			)
+		);
+
+		if(!empty($currUser['User']['user_pwd'])) {
+
+			if($currUser['User']['user_pwd'] == $dataPosted['current_password']) {
+
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
     //Checks if user is active or not
     public function isUserActive($userDetails)

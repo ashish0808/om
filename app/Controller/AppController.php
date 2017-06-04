@@ -109,7 +109,7 @@ class AppController extends Controller {
 
     public function checkUserAccess($currentUrl)
     {
-	    if($currentUrl == 'users/login') {
+	    if($currentUrl == 'users/login' || $currentUrl == 'users/forgot_password') {
 
 		    return true;
 	    }

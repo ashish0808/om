@@ -208,16 +208,10 @@
                             Settings
                         </a>
                     </li>-->
-
                     <li>
-                        <a href="#">
-                            <i class="icon-user"></i>
-                            Profile
-                        </a>
+                    	<?php echo $this->Html->link('<i class="icon-user"></i> Change Password', array('controller'=>'users','action'=>'change_password'), array('escape' => false))?>
                     </li>
-
                     <li class="divider"></li>
-
                     <li>
                         <?php echo $this->Html->link('<i class="icon-off"></i> Logout', array('controller'=>'users','action'=>'logout'), array('escape' => false))?>
                     </li>

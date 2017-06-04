@@ -5,7 +5,7 @@ class UsersController extends AppController
     public $helpers = array('Form', 'Js' => array('Jquery'), 'Validation');
     //JS and Validation helpers are not in Use right now
 
-    public $components = array('RequestHandler', 'Email', 'SendEmail');
+    public $components = array('RequestHandler', 'Flash', 'Email', 'SendEmail');
 
     /**
      * Function performs two actions i.e. Login and Forgot Password.
@@ -184,4 +184,83 @@ class UsersController extends AppController
         $this->set('todos', $todos);
         $this->set('todos_count', $todos_count);
     }
+
+	function change_password()
+	{
+		$this->layout = 'basic';
+		$this->pageTitle = 'Change Password';
+		$this->set("pageTitle", $this->pageTitle);
+
+		if (!empty($this->data)) {
+
+			$this->User->set($this->request->data);
+
+			$this->User->validate = $this->User->validateChangePassword;
+			if ($this->User->validate) {
+
+				$saveData = array();
+
+				$saveData['User'] = array(
+					'id' => $this->data['User']['id'],
+					'user_pwd' => $this->data['User']['new']
+				);
+
+				if ($this->User->save($saveData)) {
+
+					$this->Flash->success(__('Password has been changed.'));
+					$this->redirect(array('controller' => 'Users', 'action' => 'change_password'));
+				}
+			}
+		} else {
+			$this->data = $this->User->findById($this->Session->read('UserInfo.uid'));
+		}
+	}
+
+	public function forgot_password()
+	{
+		$this->layout = 'login';
+		$this->pageTitle = SITE_NAME;
+		$this->set('pageTitle', $this->pageTitle);
+		$this->set('token', $this->generateToken());
+
+		App::import('model', 'User');
+		$userModel = new User();
+
+		if (!$this->Session->read('uid')) {
+			if ($this->request->data) {
+				$this->User->set($this->request->data);
+
+				$this->User->validate = $this->User->validateForgotPassword;
+				if ($this->User->validate) {
+					$userDetails = $userModel->getDetails('first', array('User.email' => $this->request->data['User']['forgot_email']), array('id', 'first_name', 'last_name', 'email', 'user_type'));
+					if ($userDetails) {
+						/*App::import('Component','SendEmailComponent');
+						$SendEmail = & new SendEmail();*/
+
+						$emailData = array();
+						if ($this->SendEmail->send($emailData, 'FORGOT_PASSWORD')) {
+
+							$userInfo = array();
+							$userInfo['User']['id'] = $userDetails['User']['id'];
+							$userInfo['User']['is_forgot'] = 1;
+							$userModel->updateUserInfo($userDetails, 'User');
+							$this->Flash->success(__('Email sent successfully'));
+						} else {
+
+							$this->Flash->error(__('Email cannot be sent, Please try again later'));
+						}
+					} else {
+
+						$this->Flash->error(__('The user could not be found. Please fill the correct information'));
+					}
+
+					$this->redirect(array('controller' => 'users', 'action' => 'forgot_password'));
+				}
+
+			}
+		} else {
+			$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+			exit();
+		}
+	}
 }
