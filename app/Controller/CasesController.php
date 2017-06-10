@@ -285,8 +285,7 @@ class CasesController extends AppController
 			$this->PhpExcel->addTableFooter()
 				->output();
 		}
-
-		die;
+		exit;
 	}
 
 	public function manageWithList($listType = '')
