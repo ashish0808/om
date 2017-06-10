@@ -174,7 +174,7 @@ echo $this->Js->writeBuffer(); ?>
 <div class="row"><div class="col-md-12">&nbsp;</div></div>
 <div class="row">
 	<div class="col-md-12">
-		<?php echo $this->Form->create('ClientCase',array('url' => '/Cases/exportExcel','id'=>'exportExcel','name'=>'exportExcel','target'=>'_blank', 'novalidate' => true)); ?>
+		<?php echo $this->Form->create('ClientCase',array('url' => '/cases/exportExcel','id'=>'exportExcel','name'=>'exportExcel','target'=>'_blank', 'novalidate' => true)); ?>
 		<?php foreach($criteria as $criteriaKey => $criteriaValue){
 			echo $this->Form->input('ClientCase.'.$criteriaKey, array('label' => false, 'required' => false, 'value' => $criteriaValue, 'div' => false, 'type' => 'hidden', 'autocomplete' => 'off'));
 		}
