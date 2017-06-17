@@ -12,22 +12,22 @@
                 <div class="widget-main" id="forgotPasswordContainer">
                     <h4 class="header red lighter bigger">
                         <i class="icon-key"></i>
-                        Retrieve Password
+                        Reset Password
                     </h4>
-
                     <div class="space-6"></div>
-                    <p>
-                        Enter your email to reset password
-                    </p>
                     <?php echo $this->Session->flash();?>
-                    <?php echo $this->Form->create("User", array("url" => array("controller" => "users", "action" => "forgot_password"), "id" => "forgotPassword")); ?>
+                    <?php echo $this->Form->create("User", array("url" => array("controller" => "users", "action" => "reset_password", $resetKey), "id" => "resetPassword")); ?>
                         <fieldset>
                             <label class="block clearfix">
                     			<span class="block input-icon input-icon-right">
-                    				<?php
-                    				echo $this->Form->hidden("action", array("value" => "forgot"));
-                    				echo $this->Form->input("forgot_email", array("class" => "form-control","required" => "required","placeholder" => "Email","label"=>"Email","value"=>""));?>
-                    				<i class="icon-envelope"></i>
+                    				<?php echo $this->Form->input("new", array("class" => "form-control","required" => "required", "placeholder" => "New Password", "type" => "password","label"=>"New Password"));?>
+                    				<i class="icon-lock"></i>
+                    			</span>
+                            </label>
+                            <label class="block clearfix">
+                    			<span class="block input-icon input-icon-right">
+                    				<?php echo $this->Form->input("confirm", array("class" => "form-control","required" => "required", "placeholder" => "Confirm Password", "type" => "password","label"=>"Confirm Password"));?>
+                    				<i class="icon-lock"></i>
                     			</span>
                             </label>
 

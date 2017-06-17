@@ -29,7 +29,7 @@ class UsersController extends AppController
 
                         $this->User->recursive = 3;
 
-                        $userDetails = $userModel->getDetails('first', array('User.email' => $this->request->data['User']['login_email'], 'User.user_pwd' => $this->request->data['User']['user_pwd']), array('id', 'first_name', 'last_name', 'email', 'user_type', 'status', 'is_deleted'));
+                        $userDetails = $userModel->getDetails('first', array('User.email' => $this->request->data['User']['login_email'], 'User.user_pwd' => $this->request->data['User']['user_pwd']), array('id', 'first_name', 'last_name', 'email', 'user_type', 'status', 'is_deleted', 'is_forgot'));
 
                         if ($userDetails) {
                             if (!$userModel->isUserActive($userDetails)) {
@@ -47,6 +47,9 @@ class UsersController extends AppController
                             $this->User->id = $userDetails['User']['id'];
                             $userInfo['User']['last_login'] = time(); //date(Configure::read('DB_DATE_FORMAT'));
                             $userInfo['User']['last_login_ip'] = $_SERVER['REMOTE_ADDR'];
+	                        $userInfo['User']['is_forgot'] = 0;
+	                        $userInfo['User']['forgot_password_key'] = '';
+	                        $userInfo['User']['forgot_password_time'] = NULL;
                             $this->User->save($userInfo, array('validate' => false));
 
                             $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
@@ -231,40 +234,101 @@ class UsersController extends AppController
 		$userModel = new User();
 
 		if (!$this->Session->read('uid')) {
+
 			if ($this->request->data) {
+
 				$this->User->set($this->request->data);
 
 				$this->User->validate = $this->User->validateForgotPassword;
 				if ($this->User->validate) {
+
 					$userDetails = $userModel->getDetails('first', array('User.email' => $this->request->data['User']['forgot_email']), array('id', 'first_name', 'last_name', 'email', 'user_type'));
+
 					if ($userDetails) {
-						/*App::import('Component','SendEmailComponent');
-						$SendEmail = & new SendEmail();*/
+						$forgot_password_key = md5($userDetails['User']['email'].'_'.time());
+						$this->SendEmail = $this->Components->load('SendEmail');
 
-						$emailData = array();
-						if ($this->SendEmail->send($emailData, 'FORGOT_PASSWORD')) {
+						$resetPasswordUrl = Router::url([
+							'controller' => 'users',
+							'action' => 'reset_password',
+							$forgot_password_key
+						], true);
 
-							$userInfo = array();
-							$userInfo['User']['id'] = $userDetails['User']['id'];
-							$userInfo['User']['is_forgot'] = 1;
-							$userModel->updateUserInfo($userDetails, 'User');
-							$this->Flash->success(__('Email sent successfully'));
-						} else {
+						$emailData = array('User' => $userDetails['User'], 'forgotPasswordKey' => $resetPasswordUrl);
+						$this->SendEmail->send($emailData, 'FORGOT_PASSWORD');
 
-							$this->Flash->error(__('Email cannot be sent, Please try again later'));
-						}
+						$userInfo = array();
+						$userInfo['User']['id'] = $userDetails['User']['id'];
+						$userInfo['User']['is_forgot'] = 1;
+						$userInfo['User']['forgot_password_key'] = $forgot_password_key;
+						$userInfo['User']['forgot_password_time'] = date("Y-m-d H:i:s");
+
+						$userModel->updateUserInfo($userInfo, 'User');
+						$this->Flash->success(__('Email sent successfully'));
 					} else {
 
 						$this->Flash->error(__('The user could not be found. Please fill the correct information'));
 					}
-
-					$this->redirect(array('controller' => 'users', 'action' => 'forgot_password'));
 				}
 
+				$this->redirect(array('controller' => 'users', 'action' => 'forgot_password'));
 			}
 		} else {
 			$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 			exit();
 		}
 	}
+
+	public function reset_password($resetKey)
+	{
+		$this->layout = 'login';
+		$this->pageTitle = SITE_NAME;
+		$this->set('pageTitle', $this->pageTitle);
+
+		if (!$this->Session->read('uid')) {
+
+			//echo date("Y-m-d H:i:s"); die;
+
+			App::import('model', 'User');
+			$userModel = new User();
+			$userDetails = $userModel->getDetails('first', array(
+				'User.forgot_password_key' => $resetKey
+			), array('id', 'forgot_password_time'));
+
+			if(empty($userDetails) || empty($userDetails['User']['forgot_password_time']) || (strtotime($userDetails['User']['forgot_password_time']) < strtotime(date("Y-m-d H:i:s", strtotime('-2 hours'))))) {
+
+				$this->Flash->error(__('Invalid URL'));
+				$this->redirect(array('controller' => 'users', 'action' => 'login'));
+			}
+
+			if ($this->request->data) {
+
+				$this->User->set($this->request->data);
+
+				$this->User->validate = $this->User->validateResetPassword;
+				if ($this->User->validate) {
+
+					$userInfo = array();
+					$userInfo['User']['id'] = $userDetails['User']['id'];
+					$userInfo['User']['user_pwd'] = $this->data['User']['new'];
+					$userInfo['User']['is_forgot'] = 0;
+					$userInfo['User']['forgot_password_key'] = '';
+					$userInfo['User']['forgot_password_time'] = NULL;
+
+					if ($this->User->save($userInfo)) {
+
+						$this->Flash->success(__('Password has been changed'));
+					}
+				}
+			}
+		} else {
+			$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+			exit();
+		}
+
+		$this->set('resetKey', $resetKey);
+	}
 }
+
+//ALTER TABLE `users` ADD `forgot_password_key` VARCHAR(100) NOT NULL AFTER `is_forgot`, ADD `forgot_password_time` DATETIME NOT NULL AFTER `forgot_password_key`;
+//ALTER TABLE `users` CHANGE `forgot_password_time` `forgot_password_time` DATETIME NULL;

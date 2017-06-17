@@ -206,6 +206,32 @@ class User extends AppModel {
 	    ),
     );
 
+	public $validateResetPassword = array(
+		'new' => array(
+			'rule2' => array(
+				'rule' => array('minLength', '5'),
+				'allowEmpty' => false,
+				'message' => 'Password must be mimimum 5 characters long',
+			),
+			'rule1' => array(
+				'rule' => array('notBlank'),
+				'allowEmpty' => false,
+				'message' => 'Please enter a password',
+			),
+		),
+		'confirm' => array(
+			'ruleName' => array(
+				'rule' => array('notBlank'),
+				'message' => 'Please enter confirm password',
+				'last' => true,
+			),
+			'ruleName2' => array(
+				'rule' => array('compareFields', 'new'),
+				'message' => 'Confirm password and password must be same',
+			),
+		),
+	);
+
 	// The Associations below have been created with all possible keys, those that are not needed can be removed
 
 	/**
@@ -310,9 +336,7 @@ class User extends AppModel {
 
     public function updateUserInfo($data, $model)
     {
-        return true;
-        if ($this->$model->save($data)) {
-        }
+        $this->save($data);
     }
 
     //Comparing confirm fields with fields Starts
