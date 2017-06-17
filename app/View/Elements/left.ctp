@@ -92,6 +92,9 @@
             <li>
                 <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Cases With Pending Actions ', array('controller'=>'users','action'=>'getCasesWithPendingActionsAll'), array('escape' => false))?>
             </li>
+            <li>
+				<?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Deleted ', array('controller'=>'cases','action'=>'manage', 'deleted'), array('escape' => false))?>
+			</li>
             <!--<li>
                 <?php //echo $this->Html->link('<i class="icon-double-angle-right"></i> Decided ', array('controller'=>'cases','action'=>'manage', 'decided'), array('escape' => false))?>
             </li>

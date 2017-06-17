@@ -58,9 +58,8 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-book red"></i>
-							Cases Pending for Filing (In Next 7 Days)
+							Cases Pending for Filing (In Next 7 Days) (<?php echo $this->Html->link('View All', array('controller' => 'cases', 'action' => 'manage', 'pending_for_filing')); ?>)
 						</h4>
-
 						<div class="widget-toolbar">
 							<a href="#" data-action="collapse">
 								<!--i class="ace-icon fa fa-chevron-up"></i-->
@@ -102,7 +101,7 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-bell red"></i>
-							Cases Pending for Filing Objections (In Next 7 Days)
+							Cases Pending for Filing Objections (In Next 7 Days) (<?php echo $this->Html->link('View All', array('controller' => 'cases', 'action' => 'manage', 'pending_for_refiling')); ?>)
 						</h4>
 
 						<div class="widget-toolbar">
@@ -151,7 +150,7 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-bullhorn red"></i>
-							Cases Pending for Registration
+							Cases Pending for Registration (<?php echo $this->Html->link('View All', array('controller' => 'cases', 'action' => 'manage', 'pending_for_registration')); ?>)
 						</h4>
 
 						<div class="widget-toolbar">

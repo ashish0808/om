@@ -304,4 +304,26 @@ class ClientCasesComponent extends Component
 			}
 		}
 	}
+
+	public function getCaseStatusByName($listType)
+	{
+		if(!empty($listType) && $listType != 'deleted') {
+
+			App::import('Model','CaseStatus');
+			$caseStatusObj = new CaseStatus();
+			$caseStatus = $caseStatusObj->find('first', array(
+				'conditions' => array(
+					'status' => $listType
+				),
+				'fields' => array('CaseStatus.id', 'CaseStatus.status')
+			));
+
+			if(!empty($caseStatus)) {
+
+				return $caseStatus['CaseStatus']['id'];
+			}
+		}
+
+		return '';
+	}
 }
