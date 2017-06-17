@@ -99,23 +99,27 @@ class UsersController extends AppController
         $pending_for_refiling_data = [];
         $pending_for_registration_data = [];
 
-        $caseData = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING_FOR_FILING, PENDING_FOR_REFILING, PENDING_FOR_REGISTRATION), 'limitation_expires_on <=' => date('Y-m-d', strtotime('+7 days')), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')), 'order' => 'limitation_expires_on asc'));
+        $caseData = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING_FOR_FILING, PENDING_FOR_REFILING, PENDING_FOR_REGISTRATION), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')), 'order' => 'limitation_expires_on asc'));
         if (!empty($caseData)) {
             foreach ($caseData as $key => $value) {
                 if ($value['ClientCase']['case_status'] == PENDING_FOR_FILING) {
-                    $pending_for_filing_data[] = $caseData[$key];
-                    $pending_for_filing_count++;
+                    if ($pending_for_filing_count < 5) {
+                        $pending_for_filing_data[] = $caseData[$key];
+                        $pending_for_filing_count++;
+                    }
                 } else if ($value['ClientCase']['case_status'] == PENDING_FOR_REFILING) {
-                    $pending_for_refiling_data[] = $caseData[$key];
-                    $pending_for_refiling_count++;
+                    if ($pending_for_refiling_count < 5) {
+                        $pending_for_refiling_data[] = $caseData[$key];
+                        $pending_for_refiling_count++;
+                    }
                 } else if ($value['ClientCase']['case_status'] == PENDING_FOR_REGISTRATION) {
-                    $pending_for_registration_data[] = $caseData[$key];
-                    $pending_for_registration_count++;
+                    if ($pending_for_registration_count < 5) {
+                        $pending_for_registration_data[] = $caseData[$key];
+                        $pending_for_registration_count++;
+                    }
                 }
             }
         }
-        // pr($pending_for_filing_count);
-        // pr($pending_for_filing_data);die;
         $this->set('pending_for_filing_data', $pending_for_filing_data);
         $this->set('pending_for_filing_count', $pending_for_filing_count);
         $this->set('pending_for_refiling_data', $pending_for_refiling_data);
