@@ -17,13 +17,25 @@ class CasesController extends AppController
 
 	public function manage($listType = '')
 	{
+		$this->ClientCases = $this->Components->load('ClientCases');
+		$selectedStatusId = '';
+
 		if ($this->request->isAjax()) {
+
 			$this->layout = 'ajax';
 		} else {
+
 			$this->layout = 'basic';
+			$selectedStatusId = $this->ClientCases->getCaseStatusByName($listType);
 		}
 
+		$this->set('selectedCaseStatus', $selectedStatusId);
+
 		$pageName = 'Manage Cases';
+		if($listType == 'deleted') {
+
+			$pageName = 'Manage Deleted Cases';
+		}
 
 		$this->pageTitle = $pageName;
 		$this->set('pageTitle', $this->pageTitle);
@@ -37,9 +49,8 @@ class CasesController extends AppController
 		$records = array();
 		$criteria = [];
 		$exportCriteria = [];
-		$this->ClientCases = $this->Components->load('ClientCases');
 
-		if (!empty($this->request->data)) {
+		if ($listType != 'deleted' && !empty($this->request->data)) {
 			foreach ($this->request->data['ClientCase'] as $key => $value) {
 				if (!empty($value)) {
 
@@ -58,7 +69,7 @@ class CasesController extends AppController
 			}
 		}
 
-		if (!empty($this->request->params['named'])) {
+		if ($listType != 'deleted' && !empty($this->request->params['named'])) {
 			foreach ($this->request->params['named'] as $key => $value) {
 				$exportCriteria[$key] = $value;
 				if (!in_array($key, ['page', 'sort', 'direction'])) {
@@ -88,6 +99,14 @@ class CasesController extends AppController
 		);
 
 		$criteriaStr = 'ClientCase.user_id='.$this->getLawyerId();
+
+		if($listType == 'deleted') {
+
+			$criteria['is_deleted'] = " = 1";
+		} else {
+
+			$criteriaStr .= ' AND ClientCase.is_deleted != 1';
+		}
 
 		if(!empty($criteria)) {
 
@@ -1257,5 +1276,66 @@ class CasesController extends AppController
 		}
 
 		return $result;
+	}
+
+	/**
+	 * delete the given ID from DB and its associated attachment from AWS.
+	 *
+	 * @param string $id
+	 */
+	public function delete($id = null)
+	{
+		$this->loadModel('ClientCase');
+		$caseData = $this->ClientCase->find('first', array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'ClientCase.id' => $id)));
+		if (!empty($caseData)) {
+
+			if ($this->request->is(array('get', 'delete'))) {
+
+				$caseInfo = array();
+				$caseInfo['ClientCase']['id'] = $id;
+				$caseInfo['ClientCase']['is_deleted'] = 1;
+
+				if ($this->ClientCase->save($caseInfo)) {
+
+					$this->Flash->success(__('Case has been deleted successfully.'));
+				} else {
+					$this->Flash->error(__('Case could not be deleted. Please, try again.'));
+				}
+			} else {
+				$this->Flash->error(__('The selected http method is not allowed.'));
+			}
+		} else {
+			$this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
+		}
+
+		return $this->redirect(Router::url($this->referer(), true));
+	}
+
+	public function restore($id = null)
+	{
+		$this->loadModel('ClientCase');
+		$caseData = $this->ClientCase->find('first', array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'ClientCase.id' => $id)));
+		if (!empty($caseData)) {
+
+			if ($this->request->is(array('get', 'restore'))) {
+
+				$caseInfo = array();
+				$caseInfo['ClientCase']['id'] = $id;
+				$caseInfo['ClientCase']['is_deleted'] = 0;
+
+				if ($this->ClientCase->save($caseInfo)) {
+
+					$this->Flash->success(__('Case has been restored successfully.'));
+				} else {
+					$this->Flash->error(__('Case could not be restored. Please, try again.'));
+				}
+			} else {
+				$this->Flash->error(__('The selected http method is not allowed.'));
+			}
+		} else {
+			$this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
+		}
+
+		return $this->redirect(Router::url($this->referer(), true));
 	}
 }
