@@ -13,7 +13,19 @@ $this->Paginator->options(array(
 </div>
 
 <?php
-if(isset($listType) && $listType != 'deleted') {
+if (isset($listType) && $listType == 'deleted') {?>
+<div class="row-fluid">
+	<div class="span12">
+		<div class="row-fluid">
+			<span style="color: red">Note:</span> These cases will be here for 30 days. After that they will be deleted permanently. Till then you can restore them to their original state by clicking restore icon.
+		</div>
+	</div>
+</div>
+<?php
+}
+?>
+<?php
+if (isset($listType) && $listType != 'deleted') {
 $data = $this->Js->get('#CaseSearchForm')->serializeForm(array('isForm' => true, 'inline' => true));
 $this->Js->get('#CaseSearchForm')->event(
     'submit',
@@ -169,7 +181,7 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 echo $this->Js->writeBuffer();
 }
 ?>
-<?php if(empty($records) && isset($listType) && $listType == 'deleted') {?>
+<?php if (empty($records) && isset($listType) && $listType == 'deleted') {?>
 	<div class="row-fluid">
 		<div class="span12">
 			<div class="row-fluid">

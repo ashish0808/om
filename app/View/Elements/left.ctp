@@ -93,7 +93,7 @@
                 <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Cases With Pending Actions ', array('controller'=>'users','action'=>'getCasesWithPendingActionsAll'), array('escape' => false))?>
             </li>
             <li>
-				<?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Deleted ', array('controller'=>'cases','action'=>'manage', 'deleted'), array('escape' => false))?>
+				<?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Deleted Cases ', array('controller'=>'cases','action'=>'manage', 'deleted'), array('escape' => false))?>
 			</li>
             <!--<li>
                 <?php //echo $this->Html->link('<i class="icon-double-angle-right"></i> Decided ', array('controller'=>'cases','action'=>'manage', 'decided'), array('escape' => false))?>
@@ -183,6 +183,32 @@
     </li>
 
     <?php
+    $expenseMain = '';
+    $expenseSub = '';
+    if ($this->params['controller'] == 'CasePayments' && $this->params['action'] != 'caseExpenses')
+    {
+        $expenseMain = 'open';
+        $expenseSub = 'style="display:block;"';
+    }
+    ?>
+    <li class="<?php echo $todoMain; ?>">
+        <a href="#" class="dropdown-toggle">
+            <i class="icon-bell"></i>
+            <span class="menu-text"> Expenses </span>
+            <b class="arrow icon-angle-down"></b>
+        </a>
+
+        <ul class="submenu" <?php echo $expenseSub; ?>>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> List ', array('controller'=>'CasePayments','action'=>'index'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Add ', array('controller'=>'CasePayments','action'=>'add'), array('escape' => false))?>
+            </li>
+        </ul>
+    </li>
+
+    <?php
     $userCompanyMain = '';
     $userCompanySub = '';
     if ($this->params['controller'] == 'UserCompanies') {
@@ -206,9 +232,6 @@
             </li>
         </ul>
     </li>
-    <!--li class="<?php echo $caseDisptachMain; ?>">
-        <?php echo $this->Html->link('<i class="icon-desktop"></i> Change Password ', array('controller'=>'Todos','action'=>'index'), array('escape' => false))?>
-    </li-->
     <li class="<?php echo $caseDisptachMain; ?>">
         <?php echo $this->Html->link('<i class="icon-off"></i> Logout ', array('controller'=>'users','action'=>'logout'), array('escape' => false))?>
     </li>

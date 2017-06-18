@@ -3,8 +3,8 @@
 		<ul class="nav nav-tabs" id="myTab2">
 
 			<?php
-			$viewCaseTab = $editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = $manageCaseCivilMiscTab = $manageTodoTab = '';
-			$viewCaseAE = $editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = $manageCaseCivilMiscAE = $manageTodoAE = 'false';
+			$viewCaseTab = $editCaseTab = $manageCaseFilesTab = $manageCaseConnectsTab = $manageCaseHistoryTab = $manageCaseDispatchTab = $manageCaseCivilMiscTab = $manageTodoTab = $manageExpenseTab = '';
+			$viewCaseAE = $editCaseAE = $manageCaseFilesAE = $manageCaseConnectsAE = $manageCaseHistoryAE = $manageCaseDispatchAE = $manageCaseCivilMiscAE = $manageTodoAE = $manageExpenseAE = 'false';
 
 			if (lcfirst($this->params['controller']) == 'cases' && $this->params['action'] == 'view') {
 				$viewCaseTab = 'active';
@@ -42,6 +42,11 @@
 			if ($this->params['controller'] == 'Todos') {
 				$manageTodoTab = 'active';
 				$manageTodoAE = 'true';
+			}
+
+			if ($this->params['controller'] == 'CasePayments') {
+				$manageExpenseTab = 'active';
+				$manageExpenseAE = 'true';
 			}
 
 			?>
@@ -82,6 +87,10 @@
 
 			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageTodoTab; ?>">
 				<?php echo $this->Html->link('Case Todos ', array('controller'=>'Todos','action'=>'caseTodos', $caseId), array('escape' => false, 'aria-expanded' => $manageTodoAE))?>
+			</li>
+
+			<li class="caseNumberRelatedFields <?php echo $emptyCaseNumberField; ?> <?php echo $manageExpenseTab; ?>">
+				<?php echo $this->Html->link('Case Expenses ', array('controller'=>'CasePayments','action'=>'caseExpenses', $caseId), array('escape' => false, 'aria-expanded' => $manageExpenseAE))?>
 			</li>
 
 		</ul>

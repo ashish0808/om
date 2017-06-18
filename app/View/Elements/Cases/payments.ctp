@@ -25,12 +25,12 @@
 						$amount_paid = $amount_paid+$case_payment['amount'];
 						?>
 						<tr>
-							<td><?php echo $case_payment['date_of_payment'];?></td>
+							<td><?php echo $this->Time->format('D, M jS, Y', $case_payment['date_of_payment']);?></td>
 							<td><?php echo number_format((float)$case_payment['amount'], 2, '.', '');?></td>
 							<td><?php echo $case_payment['PaymentMethod']['method'];?></td>
 							<td><?php echo (!empty($case_payment['is_verified'])) ? 'Yes' : 'No'; ?></td>
 							<td><?php echo $case_payment['notes'];?></td>
-							<td><?php echo date('Y-m-d', strtotime($case_payment['created']));?></td>
+							<td><?php echo $this->Time->format('D, M jS, Y', $case_payment['created']); ?></td>
 							<td>
 								<?php //echo $this->Html->link('<i class="icon-zoom-in bigger-130"></i>', "javascript:void(0)", array('escape' => false, 'class' => 'blue', 'pageTitle' => 'View Payment Details', 'pageName' => $viewPaymentLink.'/'.$case_payment['client_case_id'].'/'.$case_payment['id'])); ?>
 								<?php echo $this->Html->link('<i class="icon-edit bigger-130"></i>', "javascript:void(0)", array('escape' => false, 'class' => 'blue editCasePayment', 'pageTitle' => 'Edit Payment Details', 'pageName' => $editPaymentLink.'/'.$case_payment['client_case_id'].'/'.$case_payment['id'])); ?>

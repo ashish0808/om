@@ -500,7 +500,7 @@ class CasesController extends AppController
 
 		$this->loadModel('ClientCase');
 
-		$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling', 'CaseStatus', 'CaseProceeding');
+		$this->ClientCase->contain(array('CasePayment' => array('conditions' => array('type' => 'fee')), 'CasePayment.PaymentMethod', 'CaseFiling', 'CaseStatus', 'CaseProceeding'));
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 
 		$this->request->data['ClientCase'] = $caseDetails['ClientCase'];
@@ -699,7 +699,8 @@ class CasesController extends AppController
 
 				$data = $this->request->data['CasePayment'];
 				$data['client_case_id'] = $caseId;
-				unset($data['fee_settled']);
+				$data['user_id'] = $this->Session->read('UserInfo.uid');
+                unset($data['fee_settled']);
 
 				if(!empty($data['amount'])) {
 
@@ -737,7 +738,7 @@ class CasesController extends AppController
 
 					$this->CasePayment->save($data);
 
-					$this->ClientCase->contain('CasePayment');
+					$this->ClientCase->contain(array('CasePayment' => array('conditions' => array('type' => 'fee'))));
 					$caseDetails = $this->ClientCase->read(null, $caseId);
 					$caseData = $this->getPaymentStatus($caseDetails);
 					$this->ClientCase->updateAll($caseData, array('ClientCase.id'=> $caseId));
@@ -770,7 +771,7 @@ class CasesController extends AppController
 	{
 		$this->loadModel('ClientCase');
 
-		$this->ClientCase->contain('CasePayment');
+		$this->ClientCase->contain(array('CasePayment' => array('conditions' => array('type' => 'fee'))));
 		$caseDetails = $this->ClientCase->read(null, $caseId);
 
 		$caseData = array();
@@ -879,7 +880,7 @@ class CasesController extends AppController
 
 				$this->CasePayment->delete($casePayment['CasePayment']['id']);
 
-				$this->ClientCase->contain('CasePayment');
+				$this->ClientCase->contain(array('CasePayment' => array('conditions' => array('type' => 'fee'))));
 				$caseDetails = $this->ClientCase->read(null, $caseId);
 				$caseData = $this->getPaymentStatus($caseDetails);
 				$this->ClientCase->updateAll($caseData, array('ClientCase.id'=> $caseId));
