@@ -67,7 +67,7 @@
     <?php
     $caseMain = '';
     $caseSub = '';
-    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches') || ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] == 'caseCivilMisc') || ($this->params['controller'] == 'Todos' && $this->params['action'] == 'caseTodos') || ($this->params['controller'] == 'users' && $this->params['action'] == 'getCasesWithPendingActionsAll') || ($this->params['controller'] == 'users' && $this->params['action'] == 'getCasesWithNoNextDateAll')) {
+    if ($this->params['controller'] == 'cases' || ($this->params['controller'] == 'CaseProceedings' && $this->params['action'] == 'caseHistory') || ($this->params['controller'] == 'Dispatches' && $this->params['action'] == 'caseDispatches') || ($this->params['controller'] == 'CaseCivilMiscs' && $this->params['action'] == 'caseCivilMisc') || ($this->params['controller'] == 'Todos' && $this->params['action'] == 'caseTodos') || ($this->params['controller'] == 'users' && $this->params['action'] == 'getCasesWithPendingActionsAll') || ($this->params['controller'] == 'users' && $this->params['action'] == 'getCasesWithNoNextDateAll') || ($this->params['controller'] == 'users' && $this->params['action'] == 'getDecidedCasesAll')) {
   		$caseMain = 'open';
   		$caseSub = 'style="display:block;"';
     }
@@ -91,6 +91,9 @@
             </li>
             <li>
                 <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Cases With Pending Actions ', array('controller'=>'users','action'=>'getCasesWithPendingActionsAll'), array('escape' => false))?>
+            </li>
+            <li>
+                <?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Pending Decided Case Procedure ', array('controller'=>'users','action'=>'getDecidedCasesAll'), array('escape' => false))?>
             </li>
             <li>
 				<?php echo $this->Html->link('<i class="icon-double-angle-right"></i> Deleted Cases ', array('controller'=>'cases','action'=>'manage', 'deleted'), array('escape' => false))?>
@@ -193,7 +196,7 @@
     ?>
     <li class="<?php echo $todoMain; ?>">
         <a href="#" class="dropdown-toggle">
-            <i class="icon-bell"></i>
+            <i class="icon-rupee"></i>
             <span class="menu-text"> Expenses </span>
             <b class="arrow icon-angle-down"></b>
         </a>

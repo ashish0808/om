@@ -13,6 +13,11 @@ $(document).ready(function() {
         $('#cases_with_pending_actions_count_div').html($(data).html(data).find("#cases_with_pending_actions_count").html());
     });
 
+    $.get("getDecidedCases", function(data) {
+        $('#decided_cases_div').html($(data).html(data).find("#decided_cases").html());
+        $('#decided_cases_count_div').html($(data).html(data).find("#decided_cases_count").html());
+    });
+
     $.get("getCasesWithNoNextDate", function(data) {
         $('#cases_with_no_next_date_div').html($(data).html(data).find("#cases_with_no_next_date").html());
         $('#cases_with_no_next_date_count_div').html($(data).html(data).find("#cases_with_no_next_date_count").html());

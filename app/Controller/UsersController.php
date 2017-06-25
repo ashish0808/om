@@ -131,6 +131,40 @@ class UsersController extends AppController
         $this->set('pending_for_registration_count', $pending_for_registration_count);
     }
 
+    public function getDecidedCases()
+    {
+        $this->layout = '';
+        $records = $this->__getDecidedCases(5);
+        $this->set('decided_cases', $records);
+        $this->set('decided_cases_count', count($records));
+    }
+
+    public function getDecidedCasesAll()
+    {
+        $this->layout = 'basic';
+        $records = $this->__getDecidedCases(0);
+        $this->set('records', $records);
+        $this->set('pageTitle', 'Pending Decided Case Procedure');
+    }
+
+    private function __getDecidedCases($limit)
+    {
+        $this->loadModel('ClientCase');
+        $records = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(DECIDED), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'decided_procedure_completed' => false, 'certified_copy_required' => true), 'limit' => $limit));
+        if (!empty($records)) {
+            foreach ($records as $key => $value) {
+                if (empty($value['ClientCase']['certified_copy_applied_date'])) {
+                    $records[$key]['ClientCase']['message'] = 'Apply Certified Copy';
+                } else if (empty($value['ClientCase']['certified_copy_received_date'])) {
+                    $records[$key]['ClientCase']['message'] = 'Receive Certified Copy';
+                } else if (!$value['ClientCase']['is_order_supplied_to_party']) {
+                    $records[$key]['ClientCase']['message'] = 'Supply Certified Copy to Client';
+                }
+            }
+        }
+        return $records;
+    }
+
     public function getCasesWithPendingActions()
     {
         $this->layout = '';

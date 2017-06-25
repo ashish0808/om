@@ -49,6 +49,13 @@
 				<br>
 				<span class="line-height-1 smaller-90"> Todos </span>
 			</span>
+
+			<span class="btn btn-app btn-sm btn-default no-hover">
+				<span class="line-height-1 bigger-170" id="decided_cases_count_div"> 0 </span>
+
+				<br>
+				<span class="line-height-1 smaller-90"> Decided </span>
+			</span>
 		</div>
 		<div class="hr hr32 hr-dotted"></div>
 
@@ -289,6 +296,55 @@
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
 							<i class="icon-bullhorn red"></i>
+							Decided Cases Alert (<?php echo $this->Html->link('View All', array('controller' => 'users', 'action' => 'getDecidedCasesAll')); ?>)
+						</h4>
+
+						<div class="widget-toolbar">
+							<a href="#" data-action="collapse">
+								<!--i class="ace-icon fa fa-chevron-up"></i-->
+								<i class="icon-arrow-up"></i>
+							</a>
+						</div>
+					</div>
+
+					<div class="widget-body">
+						<div class="widget-main no-padding" id="decided_cases_div">
+							<table class="table table-bordered table-striped">
+								<thead class="thin-border-bottom">
+									<tr>
+										<th>
+											<i class="icon-caret-right blue"></i>Case No
+										</th>
+
+										<th class="hidden-480">
+											<i class="icon-caret-right blue"></i>Case Title
+										</th>
+
+										<th class="hidden-480">
+											<i class="icon-caret-right blue"></i>Alert
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td colspan="4" class="center"><i class="icon-spinner icon-spin orange bigger-170"></i></td>
+									</tr>
+								</tbody>
+							</table>
+						</div><!-- /.widget-main -->
+					</div><!-- /.widget-body -->
+				</div><!-- /.widget-box -->
+			</div><!-- /.col -->
+        </div>
+        
+        <div class="hr hr32 hr-dotted"></div>
+        
+        <div class="row-fluid">
+			<div class="col-xs-12 col-sm-6">
+				<div class="widget-box transparent">
+					<div class="widget-header widget-header-flat">
+						<h4 class="widget-title lighter">
+							<i class="icon-bullhorn red"></i>
 							Pending Todos (<?php echo $this->Html->link('View All', array('controller' => 'Todos', 'action' => 'index'));
 					?>)
 						</h4>
@@ -329,7 +385,7 @@
 					</div><!-- /.widget-body -->
 				</div><!-- /.widget-box -->
 			</div><!-- /.col -->
-        </div>
+		</div>
     </div>
 </div>
 <script type="text/javascript">
