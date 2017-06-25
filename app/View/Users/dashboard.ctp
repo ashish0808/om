@@ -85,7 +85,7 @@
 										</th>
 
 										<th class="hidden-480">
-											<i class="icon-caret-right blue"></i>Party Name
+											<i class="icon-caret-right blue"></i>Case Title
 										</th>
 
 										<th class="hidden-480">
@@ -129,7 +129,7 @@
 										</th>
 
 										<th class="hidden-480">
-											<i class="icon-caret-right blue"></i>Party Name
+											<i class="icon-caret-right blue"></i>Case Title
 										</th>
 
 										<th class="hidden-480">
@@ -178,7 +178,7 @@
 										</th>
 
 										<th class="hidden-480">
-											<i class="icon-caret-right blue"></i>Party Name
+											<i class="icon-caret-right blue"></i>Case Title
 										</th>
 
 										<th class="hidden-480">
@@ -223,7 +223,7 @@
 										</th>
 
 										<th class="hidden-480">
-											<i class="icon-caret-right blue"></i>Party Name
+											<i class="icon-caret-right blue"></i>Case Title
 										</th>
 
 										<th class="hidden-480">
@@ -273,7 +273,7 @@
 										</th>
 
 										<th class="hidden-480">
-											<i class="icon-caret-right blue"></i>Party Name
+											<i class="icon-caret-right blue"></i>Case Title
 										</th>
 
 										<th class="hidden-480">

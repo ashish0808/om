@@ -14,10 +14,9 @@
 				<thead>
 					<tr role="row">
 						<th>Case Number</th>
-						<th class="col-xs-2">Computer File No</th>
-						<th class="col-xs-2">Case Title</th>
+						<th>Computer File No</th>
+						<th>Case Title</th>
 						<th>Pending Actions</th>
-						<th>Party Name</th>
 						<th>Action</th>
 					</tr>
 				</thead>
@@ -39,7 +38,6 @@
 						echo rtrim($str, ",");
 						?>
 						</td>
-						<td><?php echo $record['ClientCase']['party_name'];?></td>
 						<td class=" ">
 							<div class="hidden-phone visible-desktop action-buttons">
 								<?php echo $this->Html->link('<i class="icon-tasks bigger-130"></i>', array('controller'=>'cases','action'=>'view',$record['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>

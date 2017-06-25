@@ -38,7 +38,7 @@
 													Case Number
 												</th>
 												<th>
-													Client Name
+													Case Title
 												</th>
 												<th>
 													Case Type
@@ -59,7 +59,7 @@
 														<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$record['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
 													</td>
 													<td>
-														<?php echo $record['ClientCase']['party_name']; ?>
+														<?php echo $record['ClientCase']['case_title']; ?>
 													</td>
 													<td>
 														<?php
@@ -118,7 +118,7 @@
 													Case Number
 												</th>
 												<th>
-													Client Name
+													Case Title
 												</th>
 												<th>
 													Case Type
@@ -139,7 +139,7 @@
 														<?php echo $this->Html->link($otherConnectedCase['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$otherConnectedCase['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
 													</td>
 													<td>
-														<?php echo $otherConnectedCase['ClientCase']['party_name']; ?>
+														<?php echo $otherConnectedCase['ClientCase']['case_title']; ?>
 													</td>
 													<td>
 														<?php
@@ -190,7 +190,7 @@
 													Case Number
 												</th>
 												<th>
-													Client Name
+													Case Title
 												</th>
 												<th>
 													Case Type
@@ -221,7 +221,7 @@
 														<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller'=>'cases','action'=>'view',$record['ClientCase']['id']), array('escape' => false, 'class' => 'green tooltip-success', 'data-rel' => 'tooltip', 'data-original-title'=>'View Case'))?>
 													</td>
 													<td>
-														<?php echo $record['ClientCase']['party_name']; ?>
+														<?php echo $record['ClientCase']['case_title']; ?>
 													</td>
 													<td>
 														<?php

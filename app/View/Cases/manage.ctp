@@ -239,9 +239,6 @@ echo $this->Js->writeBuffer();
 								<th>
 									<?php echo $this->Paginator->sort('ClientCase.case_year', 'Case Year', array());?>
 								</th>
-								<th class="col-xs-2">
-									<?php echo $this->Paginator->sort('ClientCase.party_name', 'Party Name', array());?>
-								</th>
 								<th>
 									<?php echo $this->Paginator->sort('ClientCase.client_case_count', 'Connected Cases', array());?>
 								</th>
@@ -254,7 +251,6 @@ echo $this->Js->writeBuffer();
 								<th class="col-xs-2">Computer File No</th>
 								<th class="col-xs-2">Case Title</th>
 								<th>Case Year</th>
-								<th>Party Name</th>
 								<th>Connected Cases</th>
 								<th class="col-xs-2">Created</th>
 								<th>Action</th>
@@ -270,7 +266,6 @@ echo $this->Js->writeBuffer();
 							<td class=" "><?php echo $record['ClientCase']['computer_file_no'];?></td>
 								<td class=" "><?php echo $record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "<span class='red'>Miscellaneous</span>"; ?></td>
 							<td><?php echo $record['ClientCase']['case_year'];?></td>
-							<td><?php echo $record['ClientCase']['party_name'];?></td>
 							<td><?php echo $record['ClientCase']['client_case_count'] ? $record['ClientCase']['client_case_count']: 0; ?></td>
 							<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['ClientCase']['created']); ?></td>
 							<td class=" ">

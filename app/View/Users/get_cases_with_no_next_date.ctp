@@ -7,7 +7,7 @@
 				</th>
 
 				<th class="hidden-480">
-					<i class="icon-caret-right blue"></i>Party Name
+					<i class="icon-caret-right blue"></i>Case Title
 				</th>
 
 				<th>
@@ -25,7 +25,7 @@
 					<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
 					?>
 				</td>
-				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
+				<td class="hidden-480"><?php echo $record['ClientCase']['case_title']; ?></td>
 				<td class="">
 					<?php echo $record['CaseProceeding']['date_of_hearing']; ?>
 				</td>

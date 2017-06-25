@@ -7,7 +7,7 @@
 				</th>
 
 				<th class="hidden-480">
-					<i class="icon-caret-right blue"></i>Party Name
+					<i class="icon-caret-right blue"></i>Case Title
 				</th>
 
 				<th>
@@ -25,7 +25,7 @@
 					<?php echo $this->Html->link($record['ClientCase']['computer_file_no'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
 					?>
 				</td>
-				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
+				<td class="hidden-480"><?php echo $record['ClientCase']['case_title']; ?></td>
 				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('D, M jS, Y', $record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
 			</tr>
 			<?php
@@ -52,7 +52,7 @@
 				</th>
 
 				<th class="hidden-480">
-					<i class="icon-caret-right blue"></i>Party Name
+					<i class="icon-caret-right blue"></i>Case Title
 				</th>
 
 				<th>
@@ -70,7 +70,7 @@
 					<?php echo $this->Html->link($record['ClientCase']['computer_file_no'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
 					?>
 				</td>
-				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
+				<td class="hidden-480"><?php echo $record['ClientCase']['case_title']; ?></td>
 				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('D, M jS, Y', $record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
 			</tr>
 			<?php
@@ -98,7 +98,7 @@
 				</th>
 
 				<th class="hidden-480">
-					<i class="icon-caret-right blue"></i>Party Name
+					<i class="icon-caret-right blue"></i>Case Title
 				</th>
 
 				<th>
@@ -116,7 +116,7 @@
 					<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
 					?>
 				</td>
-				<td class="hidden-480"><?php echo $record['ClientCase']['party_name']; ?></td>
+				<td class="hidden-480"><?php echo $record['ClientCase']['case_title']; ?></td>
 				<td class=""><?php echo (!empty($record['ClientCase']['limitation_expires_on'])) ? $this->Time->format('D, M jS, Y', $record['ClientCase']['limitation_expires_on']) : "Not Available"; ?></td>
 			</tr>
 			<?php
