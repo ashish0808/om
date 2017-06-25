@@ -20,15 +20,18 @@ if ($show_add) {
 							Case No
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
-							CM/CRM No
+							Case Title
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+							CM/CRM No
+						</th>
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.cm_type', 'Type', array());?>
 						</th>
 						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.application_date', 'Date', array());?>
 						</th>
-						<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
+						<th class="col-xs-1" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1">
 							<?php echo $this->Paginator->sort('CaseCivilMisc.status', 'Status', array());?>
 						</th>
 						<th class="col-xs-2" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
@@ -43,6 +46,7 @@ if ($show_add) {
 							<?php echo $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id']));
 							?>
 						</td>
+						<td class=" "><?php echo $record['ClientCase']['case_title'];?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_no'];?></td>
 						<td class=" "><?php echo $record['CaseCivilMisc']['cm_type']; ?></td>
 						<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['CaseCivilMisc']['application_date']); ?></td>

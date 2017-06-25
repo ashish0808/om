@@ -14,13 +14,16 @@ if ($show_add) {
 		   aria-describedby="sample-table-2_info">
 		<thead>
 			<tr role="row">
-				<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+				<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 					Case No
+				</th>
+				<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+					Case Title
 				</th>
 				<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 					Title
 				</th>
-				<th class="col-xs-3" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
+				<th class="col-xs-2" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1" colspan="1">
 					<?php echo $this->Paginator->sort('Dispatch.date_of_dispatch', 'Date of Dispatch', array());?>
 				</th>
 				<th class="col-xs-3" role="columnheader" rowspan="1" colspan="1" aria-label="">Action</th>
@@ -32,6 +35,7 @@ if ($show_add) {
 			foreach ($Dispatches as $record){ ?>
 			<tr class="<?php echo ($i%2==1)?'odd':'even';?>">
 				<td class=" "><?php echo $record['ClientCase']['complete_case_number'] ? $this->Html->link($record['ClientCase']['complete_case_number'], array('controller' => 'Cases', 'action' => 'view', $record['ClientCase']['id'])): "<span class='red'>Miscellaneous</span>"; ?></td>
+				<td class=" "><?php echo $record['ClientCase']['case_title'];?></td>
 				<td class=" "><?php echo $record['Dispatch']['title'];?></td>
 				<td class=""><?php echo $this->Time->format('D, M jS, Y', $record['Dispatch']['date_of_dispatch']); ?>
 				</td>
