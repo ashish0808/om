@@ -107,7 +107,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
-							<i class="icon-bell red"></i>
+							<i class="icon-time red"></i>
 							Cases Pending for Filing Objections (<?php echo $this->Html->link('View All', array('controller' => 'cases', 'action' => 'manage', 'pending_for_refiling')); ?>)
 						</h4>
 
@@ -156,7 +156,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
-							<i class="icon-bullhorn red"></i>
+							<i class="icon-file red"></i>
 							Cases Pending for Registration (<?php echo $this->Html->link('View All', array('controller' => 'cases', 'action' => 'manage', 'pending_for_registration')); ?>)
 						</h4>
 
@@ -200,7 +200,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
-							<i class="icon-star red"></i>
+							<i class="icon-tasks red"></i>
 							Cases with Pending Actions (<?php echo $this->Html->link('View All', array('controller' => 'users', 'action' => 'getCasesWithPendingActionsAll'));
 					?>)
 						</h4>
@@ -250,7 +250,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
-							<i class="icon-bullhorn red"></i>
+							<i class="icon-calendar red"></i>
 							Cases with No Proceeding Date (<?php echo $this->Html->link('View All', array('controller' => 'users', 'action' => 'getCasesWithNoNextDateAll'));
 					?>)
 						</h4>
@@ -295,7 +295,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
-							<i class="icon-bullhorn red"></i>
+							<i class="icon-check red"></i>
 							Decided Cases Alert (<?php echo $this->Html->link('View All', array('controller' => 'users', 'action' => 'getDecidedCasesAll')); ?>)
 						</h4>
 
@@ -344,7 +344,7 @@
 				<div class="widget-box transparent">
 					<div class="widget-header widget-header-flat">
 						<h4 class="widget-title lighter">
-							<i class="icon-bullhorn red"></i>
+							<i class="icon-bell red"></i>
 							Pending Todos (<?php echo $this->Html->link('View All', array('controller' => 'Todos', 'action' => 'index'));
 					?>)
 						</h4>
