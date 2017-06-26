@@ -34,7 +34,7 @@ class CaseCivilMiscsController extends AppController
         $fields = [];
 
         $criteria = ['status' => $status, 'CaseCivilMisc.user_id' => $this->Session->read('UserInfo.uid')];
-        $containCriteria = [];
+        $containCriteria = ['is_deleted' => false];
         if (!empty($this->request->data)) {
             foreach ($this->request->data['CaseCivilMisc'] as $key => $value) {
                 if (!empty($value)) {
@@ -75,6 +75,7 @@ class CaseCivilMiscsController extends AppController
             $this->Paginator->settings['contain'] = array('ClientCase' => array('conditions' => array($containCriteria)));
         }
         $this->set('paginateLimit', LIMIT);
+        $this->CaseCivilMisc->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
         $records = $this->Paginator->paginate('CaseCivilMisc', $criteria);
         /*foreach ($records as $key => $value) {
             if (!empty($value['CaseCivilMisc']['attachment'])) {
@@ -105,7 +106,7 @@ class CaseCivilMiscsController extends AppController
                 $this->CaseCivilMisc->validationErrors['computer_file_no'] = ['Please enter valid computer_file_no'];
             } else {
                 // Get case ID for the given Computer File No
-                $caseData = $this->CaseCivilMisc->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CaseCivilMisc']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                $caseData = $this->CaseCivilMisc->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CaseCivilMisc']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false)));
                 if (!empty($caseData)) {
                     $this->request->data['CaseCivilMisc']['user_id'] = $this->Session->read('UserInfo.uid');
                     $this->request->data['CaseCivilMisc']['client_case_id'] = $caseData['ClientCase']['id'];
@@ -182,7 +183,7 @@ class CaseCivilMiscsController extends AppController
             if ($this->request->is(array('post', 'put'))) {
                 // If computer file_no has been updated then find the associated case_id and update in CM/CRM
                 if ($cmData['ClientCase']['computer_file_no'] != $this->request->data['CaseCivilMisc']['computer_file_no']) {
-                    $caseData = $this->CaseCivilMisc->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CaseCivilMisc']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                    $caseData = $this->CaseCivilMisc->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CaseCivilMisc']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false)));
                     if (!empty($caseData)) {
                         $this->request->data['CaseCivilMisc']['client_case_id'] = $caseData['ClientCase']['id'];
                     } else {
@@ -253,7 +254,8 @@ class CaseCivilMiscsController extends AppController
         $this->layout = 'basic';
         $this->pageTitle = 'CM/CRM Details';
         $this->set('pageTitle', $this->pageTitle);
-        $cmData = $this->CaseCivilMisc->find('first', array('contain' => array('ClientCase'),'conditions' => array('CaseCivilMisc.user_id' => $this->Session->read('UserInfo.uid'), 'CaseCivilMisc.id' => $id)));
+        $this->CaseCivilMisc->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+        $cmData = $this->CaseCivilMisc->find('first', array('contain' => array('ClientCase' => array('conditions' => array('is_deleted' => false))),'conditions' => array('CaseCivilMisc.user_id' => $this->Session->read('UserInfo.uid'), 'CaseCivilMisc.id' => $id)));
         if (!empty($cmData)) {
             // Get S3 url for the attachment if it was uploaded
             if (!empty($cmData['CaseCivilMisc']['attachment'])) {
@@ -315,12 +317,17 @@ class CaseCivilMiscsController extends AppController
 
         $caseDetails = $this->_getCaseDetails($caseId);
 
-        $this->CaseCivilMisc->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-        $caseCivilMiscs = $this->CaseCivilMisc->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'application_date DESC'));
+        if (!empty($caseDetails)) {
+            $this->CaseCivilMisc->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+            $caseCivilMiscs = $this->CaseCivilMisc->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'application_date DESC'));
 
-        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
-        $this->set('show_add', true);
-        $this->set(compact('caseDetails', 'caseId', 'caseCivilMiscs'));
+            // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+            $this->set('show_add', true);
+            $this->set(compact('caseDetails', 'caseId', 'caseCivilMiscs'));
+        } else {
+            $this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
+            return $this->redirect(array('controller' => 'cases', 'action' => 'manage'));
+        }
     }
 
     private function _getCaseDetails($caseId)

@@ -34,7 +34,7 @@ class DispatchesController extends AppController
         $fields = [];
 
         $criteria = [];
-        $containCriteria = [];
+        $containCriteria = ['is_deleted' => false];
         if (!empty($this->request->data)) {
             foreach ($this->request->data['Dispatch'] as $key => $value) {
                 if (!empty($value)) {
@@ -73,6 +73,12 @@ class DispatchesController extends AppController
         }
         $this->set('paginateLimit', LIMIT);
         $records = $this->Paginator->paginate('Dispatch', $criteria);
+        foreach ($records as $key => $value) {
+            if (!empty($value['Dispatch']['client_case_id']) && empty($value['ClientCase']['id'])) {
+                unset($records[$key]);
+            }
+        }
+        $records = array_values($records);
         /*foreach ($records as $key => $value) {
             if (!empty($value['Dispatch']['attachment'])) {
                 $records[$key]['Dispatch']['attachment'] = $this->Aws->getObjectUrl($value['Dispatch']['attachment']);
@@ -99,7 +105,7 @@ class DispatchesController extends AppController
         if ($this->request->is('post')) {
             if (!empty($this->request->data['Dispatch']['computer_file_no'])) {
                 // Get case ID for the given Computer File No
-                $caseData = $this->Dispatch->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['Dispatch']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                $caseData = $this->Dispatch->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['Dispatch']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false)));
                 if (!empty($caseData)) {
                     $this->request->data['Dispatch']['client_case_id'] = $caseData['ClientCase']['id'];
                 } else {
@@ -181,7 +187,7 @@ class DispatchesController extends AppController
 
                 // If computer file_no has been updated then find the associated case_id and update in CM/CRM
                 if ($dispatchData['ClientCase']['computer_file_no'] != $this->request->data['Dispatch']['computer_file_no'] && !empty($this->request->data['Dispatch']['computer_file_no'])) {
-                    $caseData = $this->Dispatch->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['Dispatch']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                    $caseData = $this->Dispatch->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['Dispatch']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false)));
                     if (!empty($caseData)) {
                         $this->request->data['Dispatch']['client_case_id'] = $caseData['ClientCase']['id'];
                     } else {
@@ -277,8 +283,8 @@ class DispatchesController extends AppController
         $this->layout = 'basic';
         $this->pageTitle = 'Dispatch Details';
         $this->set('pageTitle', $this->pageTitle);
-        $dispatchData = $this->Dispatch->find('first', array('contain' => array('ClientCase'), 'conditions' => array('Dispatch.user_id' => $this->Session->read('UserInfo.uid'), 'Dispatch.id' => $id)));
-        if (!empty($dispatchData)) {
+        $dispatchData = $this->Dispatch->find('first', array('contain' => array('ClientCase' => array('conditions' => array('is_deleted' => false))), 'conditions' => array('Dispatch.user_id' => $this->Session->read('UserInfo.uid'), 'Dispatch.id' => $id)));
+        if (!empty($dispatchData) && (!empty($dispatchData['Dispatch']['client_case_id']) && !empty($dispatchData['ClientCase']['id']))) {
             // Get S3 url for the attachment if it was uploaded
             if (!empty($dispatchData['Dispatch']['attachment'])) {
                 $dispatchData['Dispatch']['attachment'] = $this->Aws->getObjectUrl($dispatchData['Dispatch']['attachment']);
@@ -312,12 +318,17 @@ class DispatchesController extends AppController
 
         $caseDetails = $this->_getCaseDetails($caseId);
 
-        $this->Dispatch->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-        $Dispatches = $this->Dispatch->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId))), 'conditions' => array('client_case_id' => $caseId, 'Dispatch.user_id' => $this->Session->read('UserInfo.uid'))));
+        if (!empty($caseDetails)) {
+            $this->Dispatch->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+            $Dispatches = $this->Dispatch->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'is_deleted' => false))), 'conditions' => array('client_case_id' => $caseId, 'Dispatch.user_id' => $this->Session->read('UserInfo.uid'))));
 
-        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
-        $this->set('show_add', true);
-        $this->set(compact('caseDetails', 'caseId', 'Dispatches'));
+            // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+            $this->set('show_add', true);
+            $this->set(compact('caseDetails', 'caseId', 'Dispatches'));
+        } else {
+            $this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
+            return $this->redirect(array('controller' => 'cases', 'action' => 'manage'));
+        }
     }
 
     private function _getCaseDetails($caseId)

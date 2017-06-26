@@ -34,7 +34,7 @@ class TodosController extends AppController
         $fields = [];
 
         $criteria = [];
-        $containCriteria = [];
+        $containCriteria = ['is_deleted' => false];
         if (!empty($this->request->data)) {
             foreach ($this->request->data['Todo'] as $key => $value) {
                 if (!empty($value)) {
@@ -73,6 +73,12 @@ class TodosController extends AppController
         }
         $this->set('paginateLimit', LIMIT);
         $records = $this->Paginator->paginate('Todo', $criteria);
+        foreach ($records as $key => $value) {
+            if (!empty($value['Todo']['client_case_id']) && empty($value['ClientCase']['id'])) {
+                unset($records[$key]);
+            }
+        }
+        $records = array_values($records);
 
         // To see if the page has been accessed from case detail page or dispatches main page then only show add button
         $this->set('show_add', false);
@@ -93,7 +99,7 @@ class TodosController extends AppController
         if ($this->request->is('post')) {
             if (!empty($this->request->data['Todo']['computer_file_no'])) {
                 // Get case ID for the given Computer File No
-                $caseData = $this->Todo->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['Todo']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                $caseData = $this->Todo->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['Todo']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false)));
                 if (!empty($caseData)) {
                     $this->request->data['Todo']['client_case_id'] = $caseData['ClientCase']['id'];
                 } else {
@@ -157,7 +163,7 @@ class TodosController extends AppController
 
                 // If computer file_no has been updated then find the associated case_id and update in CM/CRM
                 if ($TodoData['ClientCase']['computer_file_no'] != $this->request->data['Todo']['computer_file_no'] && !empty($this->request->data['Todo']['computer_file_no'])) {
-                    $caseData = $this->Todo->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['Todo']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                    $caseData = $this->Todo->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['Todo']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false)));
                     if (!empty($caseData)) {
                         $this->request->data['Todo']['client_case_id'] = $caseData['ClientCase']['id'];
                     } else {
@@ -244,8 +250,8 @@ class TodosController extends AppController
         $this->layout = 'basic';
         $this->pageTitle = 'Todo Details';
         $this->set('pageTitle', $this->pageTitle);
-        $TodoData = $this->Todo->find('first', array('contain' => array('ClientCase'), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'Todo.id' => $id)));
-        if (!empty($TodoData)) {
+        $TodoData = $this->Todo->find('first', array('contain' => array('ClientCase' => array('conditions' => array('is_deleted' => false))), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'Todo.id' => $id)));
+        if (!empty($TodoData) && (!empty($TodoData['Todo']['client_case_id']) && !empty($TodoData['ClientCase']['id']))) {
             $this->set('Todo', $TodoData);
 
             // To see if the page has been accessed from case detail page or dispatches main page
@@ -307,12 +313,17 @@ class TodosController extends AppController
 
         $caseDetails = $this->_getCaseDetails($caseId);
 
-        $this->Todo->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-        $Todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'completion_date DESC'));
+        if (!empty($caseDetails)) {
+            $this->Todo->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+            $Todos = $this->Todo->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId), 'order' => 'completion_date DESC'));
 
-        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
-        $this->set('show_add', true);
-        $this->set(compact('caseDetails', 'caseId', 'Todos'));
+            // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+            $this->set('show_add', true);
+            $this->set(compact('caseDetails', 'caseId', 'Todos'));
+        } else {
+            $this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
+            return $this->redirect(array('controller' => 'cases', 'action' => 'manage'));
+        }
     }
 
     private function _getCaseDetails($caseId)

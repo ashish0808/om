@@ -216,7 +216,8 @@ class ClientCasesComponent extends Component
 		return $clientCase->find('first', array(
 			'conditions' => array(
 				'ClientCase.id' => $caseId,
-				'ClientCase.user_id' => $userId
+				'ClientCase.user_id' => $userId,
+				'is_deleted' => false
 			)
 		));
 	}

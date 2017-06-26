@@ -34,7 +34,7 @@ class CasePaymentsController extends AppController
         $fields = [];
 
         $criteria = [];
-        $containCriteria = [];
+        $containCriteria = ['is_deleted' => false];
         if (!empty($this->request->data)) {
             foreach ($this->request->data['CasePayment'] as $key => $value) {
                 if (!empty($value)) {
@@ -74,6 +74,13 @@ class CasePaymentsController extends AppController
         $this->set('paginateLimit', LIMIT);
         $records = $this->Paginator->paginate('CasePayment', $criteria);
 
+        foreach ($records as $key => $value) {
+            if (!empty($value['CasePayment']['client_case_id']) && empty($value['ClientCase']['id'])) {
+                unset($records[$key]);
+            }
+        }
+        $records = array_values($records);
+
         // To see if the page has been accessed from case detail page or dispatches main page then only show add button
         $this->set('show_add', false);
         $this->set('Expenses', $records);
@@ -93,7 +100,7 @@ class CasePaymentsController extends AppController
         if ($this->request->is('post')) {
             if (!empty($this->request->data['CasePayment']['computer_file_no'])) {
                 // Get case ID for the given Computer File No
-                $caseData = $this->CasePayment->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CasePayment']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                $caseData = $this->CasePayment->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CasePayment']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false)));
                 if (!empty($caseData)) {
                     $this->request->data['CasePayment']['client_case_id'] = $caseData['ClientCase']['id'];
                 } else {
@@ -164,7 +171,7 @@ class CasePaymentsController extends AppController
 
                 // If computer file_no has been updated then find the associated case_id and update in CM/CRM
                 if ($CasePaymentData['ClientCase']['computer_file_no'] != $this->request->data['CasePayment']['computer_file_no'] && !empty($this->request->data['CasePayment']['computer_file_no'])) {
-                    $caseData = $this->CasePayment->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CasePayment']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'))));
+                    $caseData = $this->CasePayment->ClientCase->find('first', array('conditions' => array('computer_file_no' => $this->request->data['CasePayment']['computer_file_no'], 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false)));
                     if (!empty($caseData)) {
                         $this->request->data['CasePayment']['client_case_id'] = $caseData['ClientCase']['id'];
                     } else {
@@ -245,8 +252,9 @@ class CasePaymentsController extends AppController
         $this->layout = 'basic';
         $this->pageTitle = 'Expense Details';
         $this->set('pageTitle', $this->pageTitle);
-        $CasePaymentData = $this->CasePayment->find('first', array('contain' => array('ClientCase', 'PaymentMethod'), 'conditions' => array('CasePayment.user_id' => $this->Session->read('UserInfo.uid'), 'CasePayment.id' => $id)));
-        if (!empty($CasePaymentData)) {
+        $CasePaymentData = $this->CasePayment->find('first', array('contain' => array('ClientCase' => array('conditions' => array('is_deleted' => false)), 'PaymentMethod'), 'conditions' => array('CasePayment.user_id' => $this->Session->read('UserInfo.uid'), 'CasePayment.id' => $id)));
+
+        if (!empty($CasePaymentData) && (!empty($CasePaymentData['CasePayment']['client_case_id']) && !empty($CasePaymentData['ClientCase']['id']))) {
             $this->set('CasePayment', $CasePaymentData);
 
             // To see if the page has been accessed from case detail page or dispatches main page
@@ -275,12 +283,17 @@ class CasePaymentsController extends AppController
 
         $caseDetails = $this->_getCaseDetails($caseId);
 
-        $this->CasePayment->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-        $Expenses = $this->CasePayment->find('all', array('contain' => array('PaymentMethod', 'ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId, 'type' => 'expense'), 'order' => 'date_of_payment DESC'));
+        if (!empty($caseDetails)) {
+            $this->CasePayment->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+            $Expenses = $this->CasePayment->find('all', array('contain' => array('PaymentMethod', 'ClientCase' => array('conditions' => array('ClientCase.id' => $caseId, 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false))), 'conditions' => array('client_case_id' => $caseId, 'type' => 'expense'), 'order' => 'date_of_payment DESC'));
 
-        // To see if the page has been accessed from case detail page or dispatches main page then only show add button
-        $this->set('show_add', true);
-        $this->set(compact('caseDetails', 'caseId', 'Expenses'));
+            // To see if the page has been accessed from case detail page or dispatches main page then only show add button
+            $this->set('show_add', true);
+            $this->set(compact('caseDetails', 'caseId', 'Expenses'));
+        } else {
+            $this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
+            return $this->redirect(array('controller' => 'cases', 'action' => 'manage'));
+        }
     }
 
     private function _getCaseDetails($caseId)

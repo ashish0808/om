@@ -59,7 +59,7 @@ class CaseProceedingsController extends AppController
         }
 
         $this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-        $CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => $criteria));
+        $CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false))), 'conditions' => $criteria));
 
         // Find todos for the given date
         $this->loadModel('Todo');
@@ -91,7 +91,7 @@ class CaseProceedingsController extends AppController
 		if(isset($this->request->data['submitBtn']) && ($this->request->data['submitBtn']=='both' || $this->request->data['submitBtn']=='proceedings')) {
 
 			$this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-			$CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => $criteria));
+			$CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false))), 'conditions' => $criteria));
 
 			$this->set('CaseProceedings', $CaseProceedings);
 		}
@@ -230,10 +230,15 @@ class CaseProceedingsController extends AppController
         $date = date('Y-m-d');
         $caseDetails = $this->_getCaseDetails($caseId);
 
-        $this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-        $CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('ClientCase.id' => $caseId, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId)));
+        if (!empty($caseDetails)) {
+            $this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
+            $CaseProceedings = $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('Court', 'conditions' => array('ClientCase.id' => $caseId, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('client_case_id' => $caseId)));
 
-        $this->set(compact('caseDetails', 'caseId', 'CaseProceedings', 'date', 'pageType'));
+            $this->set(compact('caseDetails', 'caseId', 'CaseProceedings', 'date', 'pageType'));
+        } else {
+            $this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
+            return $this->redirect(array('controller' => 'cases', 'action' => 'manage'));
+        }
     }
 
     public function add($caseId = null)
@@ -245,8 +250,8 @@ class CaseProceedingsController extends AppController
         $this->loadModel('ClientCase');
         $clientCase = $this->ClientCase->find('first', array('conditions' => array('ClientCase.id' => $caseId, 'user_id' => $this->Session->read('UserInfo.uid')), 'contain' => array('Court')));
         if (empty($clientCase)) {
-            $this->Flash->error(__('Please select the right case to add history.'));
-            return $this->redirect(Router::url($this->referer(), true));
+            $this->Flash->error(__("This case doesn't exist or deleted.Please select the right case to add history."));
+            return $this->redirect(array('controller' => 'CaseProceedings', 'action' => 'manage'));
         }
 
         if (!empty($this->request->data)) {
