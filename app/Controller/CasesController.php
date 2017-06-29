@@ -1164,9 +1164,9 @@ class CasesController extends AppController
 
 	public function checkCaseDetails($caseDetails)
 	{
-		if(isset($caseDetails['ClientCase']['user_id']) && $caseDetails['ClientCase']['user_id']!=$this->Session->read('UserInfo.lawyer_id')) {
+		if((isset($caseDetails['ClientCase']['user_id']) && $caseDetails['ClientCase']['user_id']!=$this->Session->read('UserInfo.lawyer_id')) || !empty($caseDetails['ClientCase']['is_deleted'])) {
 
-			$this->Flash->error(__('Access denied'));
+			$this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
 
 			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
 		}

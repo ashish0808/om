@@ -76,9 +76,9 @@ class ConnectCasesController extends AppController
 		    }
 	    } else {
 
-		    $this->Flash->error(__('Access denied'));
+		    $this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
 
-		    return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+			return $this->redirect(array('controller' => 'cases', 'action' => 'manage'));
 	    }
 
 	    $this->set('caseDetails', $caseDetails);
@@ -180,9 +180,9 @@ class ConnectCasesController extends AppController
 			}
 		} else {
 
-			$this->Flash->error(__('Access denied'));
+			$this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
 
-			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+			return $this->redirect(array('controller' => 'cases', 'action' => 'manage'));
 		}
 
 		$this->set('selectChild', $selectChild);
@@ -236,9 +236,9 @@ class ConnectCasesController extends AppController
 			return $this->redirect(array('controller' => 'ConnectCases', 'action' => 'manage', $caseId));
 		} else {
 
-			$this->Flash->error(__('Access denied'));
+			$this->Flash->error(__("The selected case doesn't exist or deleted. Please, try with valid record."));
 
-			return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+			return $this->redirect(array('controller' => 'cases', 'action' => 'manage'));
 		}
 	}
 
