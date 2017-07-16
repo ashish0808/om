@@ -82,12 +82,17 @@ class UsersController extends AppController
      */
     public function dashboard()
     {
-        //echo '<pre>'; print_r($this->Session->read()); die;
         $this->layout = 'basic';
         $this->pageTitle = 'Dashboard';
         $this->set('pageTitle', $this->pageTitle);
     }
 
+    public function admin_dashboard()
+    {
+        $this->layout = 'admin';
+        $this->pageTitle = 'Dashboard';
+        $this->set('pageTitle', $this->pageTitle);
+    }
 
     public function getCasesForDashboard()
     {
@@ -361,8 +366,57 @@ class UsersController extends AppController
 		}
 
 		$this->set('resetKey', $resetKey);
-	}
-}
+  }
+  
+    public function admin_manage()
+    {
+      if ($this->request->isAjax()) {
+            $this->layout = 'ajax';
+        } else {
+            $this->layout = 'admin';
+        }
+        $this->pageTitle = 'Manage Users';
+        $this->set('pageTitle', $this->pageTitle);
 
+        $fields = [];
+
+        $criteria = [];
+        if (!empty($this->request->data)) {
+            foreach ($this->request->data['User'] as $key => $value) {
+                if (!empty($value)) {
+                    $criteria[$key] = $value;
+                    $this->request->params['named'][$key] = $value;
+                }
+            }
+        }
+
+        if (!empty($this->request->params['named'])) {
+            foreach ($this->request->params['named'] as $key => $value) {
+                if (!in_array($key, ['page', 'sort', 'direction'])) {
+                    if (!empty($value)) {
+                        $criteria[$key] = $value;
+                        $this->request->data['User'][$key] = $value;
+                    }
+                }
+            }
+        }
+
+        if (empty($criteria)) {
+            $criteria = '1=1';
+        }
+
+        $this->Paginator->settings = array(
+            'page' => 1,
+            'limit' => LIMIT,
+            'fields' => $fields,
+            'order' => array('User.created' => 'desc'),
+            'conditions' => array('User.user_type' => 2),
+        );
+        
+        $this->set('paginateLimit', LIMIT);
+        $records = $this->Paginator->paginate('User', $criteria);
+        $this->set('Users', $records);
+    }
+}
 //ALTER TABLE `users` ADD `forgot_password_key` VARCHAR(100) NOT NULL AFTER `is_forgot`, ADD `forgot_password_time` DATETIME NOT NULL AFTER `forgot_password_key`;
 //ALTER TABLE `users` CHANGE `forgot_password_time` `forgot_password_time` DATETIME NULL;
