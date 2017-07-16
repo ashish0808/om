@@ -65,12 +65,9 @@ class CasePaymentsController extends AppController
             'fields' => $fields,
             'order' => array("CasePayment.date_of_payment" => "DESC"),
             'conditions' => array('CasePayment.user_id' => $this->Session->read('UserInfo.uid'), 'type' => 'expense'),
-            'contain' => array('ClientCase', 'PaymentMethod'),
+            'contain' => array('ClientCase' => array('conditions' => array($containCriteria)), 'PaymentMethod'),
         );
 
-        if (!empty($containCriteria)) {
-            $this->Paginator->settings['contain'] = array('ClientCase' => array('conditions' => array($containCriteria)));
-        }
         $this->set('paginateLimit', LIMIT);
         $records = $this->Paginator->paginate('CasePayment', $criteria);
 
@@ -254,7 +251,10 @@ class CasePaymentsController extends AppController
         $this->set('pageTitle', $this->pageTitle);
         $CasePaymentData = $this->CasePayment->find('first', array('contain' => array('ClientCase' => array('conditions' => array('is_deleted' => false)), 'PaymentMethod'), 'conditions' => array('CasePayment.user_id' => $this->Session->read('UserInfo.uid'), 'CasePayment.id' => $id)));
 
-        if (!empty($CasePaymentData) && (!empty($CasePaymentData['CasePayment']['client_case_id']) && !empty($CasePaymentData['ClientCase']['id']))) {
+        if (empty($CasePaymentData) || (!empty($CasePaymentData['CasePayment']['client_case_id']) && empty($CasePaymentData['ClientCase']['id']))) {
+            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
+            return $this->redirect(Router::url($this->referer(), true));
+        } else {
             $this->set('CasePayment', $CasePaymentData);
 
             // To see if the page has been accessed from case detail page or dispatches main page
@@ -263,10 +263,6 @@ class CasePaymentsController extends AppController
             if (!empty($referer_url_params['pass'])) {
                 $this->set('caseId', $referer_url_params['pass'][0]);
             }
-        } else {
-            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
-
-            return $this->redirect(Router::url($this->referer(), true));
         }
     }
 
