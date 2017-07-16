@@ -52,8 +52,25 @@ class AppController extends Controller {
 
 		    $this->redirect(array('controller' => 'users', 'action' => 'login'));
 	    }
+	    
+	    $this->checkAdminAccess();
 
-        parent::beforeFilter();
+      parent::beforeFilter();
+    }
+    
+    public function checkAdminAccess()
+    {
+      $user_type = $this->Session->read('UserInfo.user_type');
+      $currentUrl = $this->params['controller'].'/'.$this->params['action'];
+	    $currentUrl = strtolower($currentUrl);
+	    $currentController = strtolower($this->params['controller']);
+      
+      if($user_type == 1 && (!isset($this->params['prefix']) || $this->params['prefix']!='admin') && $currentUrl != 'users/logout' && $currentController != 'admins') {
+      
+        //echo 444; die;
+      
+        return $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'admin' => true));
+      }    
     }
 
     public function generateToken()
@@ -117,9 +134,9 @@ class AppController extends Controller {
 	    if(!$this->isUserLoggedIn()) {
 
 		    return false;
-	    }
-
-        return true;
+	    }	    
+      
+      return true;
     }
 
     public function dateTimeSqlFormat($dateTime)

@@ -207,13 +207,15 @@
                             <i class="icon-cog"></i>
                             Settings
                         </a>
-                    </li>-->
+                    </li>-->                   
+                    <?php if($this->Session->read('UserInfo.user_type')!=1){ ?>
                     <li>
                     	<?php echo $this->Html->link('<i class="icon-user"></i> Change Password', array('controller'=>'users','action'=>'change_password'), array('escape' => false))?>
-                    </li>
+                    </li>                    
                     <li class="divider"></li>
+                    <?php } ?>                    
                     <li>
-                        <?php echo $this->Html->link('<i class="icon-off"></i> Logout', array('controller'=>'users','action'=>'logout'), array('escape' => false))?>
+                        <?php echo $this->Html->link('<i class="icon-off"></i> Logout', array('controller'=>'users','action'=>'logout', 'admin' => false), array('escape' => false))?>
                     </li>
                 </ul>
             </li>
