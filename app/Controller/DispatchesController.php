@@ -284,7 +284,10 @@ class DispatchesController extends AppController
         $this->pageTitle = 'Dispatch Details';
         $this->set('pageTitle', $this->pageTitle);
         $dispatchData = $this->Dispatch->find('first', array('contain' => array('ClientCase' => array('conditions' => array('is_deleted' => false))), 'conditions' => array('Dispatch.user_id' => $this->Session->read('UserInfo.uid'), 'Dispatch.id' => $id)));
-        if (!empty($dispatchData) && (!empty($dispatchData['Dispatch']['client_case_id']) && !empty($dispatchData['ClientCase']['id']))) {
+        if (empty($dispatchData) || (!empty($dispatchData['Dispatch']['client_case_id']) && empty($dispatchData['ClientCase']['id']))) {
+            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
+            return $this->redirect(Router::url($this->referer(), true));
+        } else {
             // Get S3 url for the attachment if it was uploaded
             if (!empty($dispatchData['Dispatch']['attachment'])) {
                 $dispatchData['Dispatch']['attachment'] = $this->Aws->getObjectUrl($dispatchData['Dispatch']['attachment']);
@@ -297,10 +300,6 @@ class DispatchesController extends AppController
             if (!empty($referer_url_params['pass'])) {
                 $this->set('caseId', $referer_url_params['pass'][0]);
             }
-        } else {
-            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
-
-            return $this->redirect(Router::url($this->referer(), true));
         }
     }
 

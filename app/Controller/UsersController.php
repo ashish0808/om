@@ -47,9 +47,9 @@ class UsersController extends AppController
                             $this->User->id = $userDetails['User']['id'];
                             $userInfo['User']['last_login'] = time(); //date(Configure::read('DB_DATE_FORMAT'));
                             $userInfo['User']['last_login_ip'] = $_SERVER['REMOTE_ADDR'];
-	                        $userInfo['User']['is_forgot'] = 0;
-	                        $userInfo['User']['forgot_password_key'] = '';
-	                        $userInfo['User']['forgot_password_time'] = NULL;
+                            $userInfo['User']['is_forgot'] = 0;
+                            $userInfo['User']['forgot_password_key'] = '';
+                            $userInfo['User']['forgot_password_time'] = null;
                             $this->User->save($userInfo, array('validate' => false));
 
                             $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
@@ -102,28 +102,28 @@ class UsersController extends AppController
         $pending_for_filing_count = 0;
         $pending_for_refiling_count = 0;
         $pending_for_registration_count = 0;
-        
+
         $pending_for_filing_data = [];
         $pending_for_refiling_data = [];
         $pending_for_registration_data = [];
 
-        $caseData = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING_FOR_FILING, PENDING_FOR_REFILING, PENDING_FOR_REGISTRATION), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid')), 'order' => 'limitation_expires_on asc'));
+        $caseData = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING_FOR_FILING, PENDING_FOR_REFILING, PENDING_FOR_REGISTRATION), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false), 'order' => 'limitation_expires_on asc'));
         if (!empty($caseData)) {
             foreach ($caseData as $key => $value) {
                 if ($value['ClientCase']['case_status'] == PENDING_FOR_FILING) {
                     if ($pending_for_filing_count < 5) {
                         $pending_for_filing_data[] = $caseData[$key];
-                        $pending_for_filing_count++;
+                        ++$pending_for_filing_count;
                     }
-                } else if ($value['ClientCase']['case_status'] == PENDING_FOR_REFILING) {
+                } elseif ($value['ClientCase']['case_status'] == PENDING_FOR_REFILING) {
                     if ($pending_for_refiling_count < 5) {
                         $pending_for_refiling_data[] = $caseData[$key];
-                        $pending_for_refiling_count++;
+                        ++$pending_for_refiling_count;
                     }
-                } else if ($value['ClientCase']['case_status'] == PENDING_FOR_REGISTRATION) {
+                } elseif ($value['ClientCase']['case_status'] == PENDING_FOR_REGISTRATION) {
                     if ($pending_for_registration_count < 5) {
                         $pending_for_registration_data[] = $caseData[$key];
-                        $pending_for_registration_count++;
+                        ++$pending_for_registration_count;
                     }
                 }
             }
@@ -155,18 +155,19 @@ class UsersController extends AppController
     private function __getDecidedCases($limit)
     {
         $this->loadModel('ClientCase');
-        $records = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(DECIDED), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'decided_procedure_completed' => false, 'certified_copy_required' => true), 'limit' => $limit));
+        $records = $this->ClientCase->find('all', array('conditions' => array('case_status' => array(DECIDED), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'decided_procedure_completed' => false, 'certified_copy_required' => true, 'is_deleted' => false), 'limit' => $limit));
         if (!empty($records)) {
             foreach ($records as $key => $value) {
                 if (empty($value['ClientCase']['certified_copy_applied_date'])) {
                     $records[$key]['ClientCase']['message'] = 'Apply Certified Copy';
-                } else if (empty($value['ClientCase']['certified_copy_received_date'])) {
+                } elseif (empty($value['ClientCase']['certified_copy_received_date'])) {
                     $records[$key]['ClientCase']['message'] = 'Receive Certified Copy';
-                } else if (!$value['ClientCase']['is_order_supplied_to_party']) {
+                } elseif (!$value['ClientCase']['is_order_supplied_to_party']) {
                     $records[$key]['ClientCase']['message'] = 'Supply Certified Copy to Client';
                 }
             }
         }
+
         return $records;
     }
 
@@ -192,7 +193,8 @@ class UsersController extends AppController
     private function __getCasesWithPendingActions($limit)
     {
         $this->loadModel('ClientCase');
-        return $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING, ADMITTED), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'OR' => array('is_ememo_filed' => false, 'is_paper_book' => false, 'is_diary_entry' => false, 'is_letter_communication' => false, 'is_lcr' => false)), 'limit' => $limit));
+
+        return $this->ClientCase->find('all', array('conditions' => array('case_status' => array(PENDING, ADMITTED), 'ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'OR' => array('is_ememo_filed' => false, 'is_paper_book' => false, 'is_diary_entry' => false, 'is_letter_communication' => false, 'is_lcr' => false, 'is_deleted' => false)), 'limit' => $limit));
     }
 
     public function getCasesWithNoNextDate()
@@ -214,10 +216,12 @@ class UsersController extends AppController
         $this->set('pageTitle', 'Cases with No Proceeding Date');
     }
 
-    private function __getCasesWithNoNextDate($limit) {
+    private function __getCasesWithNoNextDate($limit)
+    {
         $this->loadModel('CaseProceeding');
         $this->CaseProceeding->bindModel(array('belongsTo' => array('ClientCase' => array('type' => 'INNER'))));
-        return $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.case_status' => array(PENDING), 'is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid')))), 'conditions' => array('proceeding_status' => 'pending', 'next_date_of_hearing' => null, 'date_of_hearing <' => date('Y-m-d')), 'limit' => $limit));
+
+        return $this->CaseProceeding->find('all', array('contain' => array('ClientCase' => array('conditions' => array('ClientCase.case_status' => array(PENDING), 'is_main_case' => true, 'user_id' => $this->Session->read('UserInfo.uid'), 'is_deleted' => false))), 'conditions' => array('proceeding_status' => 'pending', 'next_date_of_hearing' => null, 'date_of_hearing <' => date('Y-m-d')), 'limit' => $limit));
     }
 
     public function getTodos()
@@ -231,142 +235,129 @@ class UsersController extends AppController
         $this->set('todos_count', $todos_count);
     }
 
-	function change_password()
-	{
-		$this->layout = 'basic';
-		$this->pageTitle = 'Change Password';
-		$this->set("pageTitle", $this->pageTitle);
+    public function change_password()
+    {
+        $this->layout = 'basic';
+        $this->pageTitle = 'Change Password';
+        $this->set('pageTitle', $this->pageTitle);
 
-		if (!empty($this->data)) {
+        if (!empty($this->data)) {
+            $this->User->set($this->request->data);
 
-			$this->User->set($this->request->data);
+            $this->User->validate = $this->User->validateChangePassword;
+            if ($this->User->validate) {
+                $saveData = array();
 
-			$this->User->validate = $this->User->validateChangePassword;
-			if ($this->User->validate) {
+                $saveData['User'] = array(
+                    'id' => $this->data['User']['id'],
+                    'user_pwd' => $this->data['User']['new'],
+                );
 
-				$saveData = array();
+                if ($this->User->save($saveData)) {
+                    $this->Flash->success(__('Password has been changed.'));
+                    $this->redirect(array('controller' => 'Users', 'action' => 'change_password'));
+                }
+            }
+        } else {
+            $this->data = $this->User->findById($this->Session->read('UserInfo.uid'));
+        }
+    }
 
-				$saveData['User'] = array(
-					'id' => $this->data['User']['id'],
-					'user_pwd' => $this->data['User']['new']
-				);
+    public function forgot_password()
+    {
+        $this->layout = 'login';
+        $this->pageTitle = SITE_NAME;
+        $this->set('pageTitle', $this->pageTitle);
+        $this->set('token', $this->generateToken());
 
-				if ($this->User->save($saveData)) {
+        App::import('model', 'User');
+        $userModel = new User();
 
-					$this->Flash->success(__('Password has been changed.'));
-					$this->redirect(array('controller' => 'Users', 'action' => 'change_password'));
-				}
-			}
-		} else {
-			$this->data = $this->User->findById($this->Session->read('UserInfo.uid'));
-		}
-	}
+        if (!$this->Session->read('uid')) {
+            if ($this->request->data) {
+                $this->User->set($this->request->data);
 
-	public function forgot_password()
-	{
-		$this->layout = 'login';
-		$this->pageTitle = SITE_NAME;
-		$this->set('pageTitle', $this->pageTitle);
-		$this->set('token', $this->generateToken());
+                $this->User->validate = $this->User->validateForgotPassword;
+                if ($this->User->validate) {
+                    $userDetails = $userModel->getDetails('first', array('User.email' => $this->request->data['User']['forgot_email']), array('id', 'first_name', 'last_name', 'email', 'user_type'));
 
-		App::import('model', 'User');
-		$userModel = new User();
+                    if ($userDetails) {
+                        $forgot_password_key = md5($userDetails['User']['email'].'_'.time());
+                        $this->SendEmail = $this->Components->load('SendEmail');
 
-		if (!$this->Session->read('uid')) {
+                        $resetPasswordUrl = Router::url([
+                            'controller' => 'users',
+                            'action' => 'reset_password',
+                            $forgot_password_key,
+                        ], true);
 
-			if ($this->request->data) {
+                        $emailData = array('User' => $userDetails['User'], 'forgotPasswordKey' => $resetPasswordUrl);
+                        $this->SendEmail->send($emailData, 'FORGOT_PASSWORD');
 
-				$this->User->set($this->request->data);
+                        $userInfo = array();
+                        $userInfo['User']['id'] = $userDetails['User']['id'];
+                        $userInfo['User']['is_forgot'] = 1;
+                        $userInfo['User']['forgot_password_key'] = $forgot_password_key;
+                        $userInfo['User']['forgot_password_time'] = date('Y-m-d H:i:s');
 
-				$this->User->validate = $this->User->validateForgotPassword;
-				if ($this->User->validate) {
+                        $userModel->updateUserInfo($userInfo, 'User');
+                        $this->Flash->success(__('Email sent successfully'));
+                    } else {
+                        $this->Flash->error(__('The user could not be found. Please fill the correct information'));
+                    }
+                }
 
-					$userDetails = $userModel->getDetails('first', array('User.email' => $this->request->data['User']['forgot_email']), array('id', 'first_name', 'last_name', 'email', 'user_type'));
+                $this->redirect(array('controller' => 'users', 'action' => 'forgot_password'));
+            }
+        } else {
+            $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+            exit();
+        }
+    }
 
-					if ($userDetails) {
-						$forgot_password_key = md5($userDetails['User']['email'].'_'.time());
-						$this->SendEmail = $this->Components->load('SendEmail');
+    public function reset_password($resetKey)
+    {
+        $this->layout = 'login';
+        $this->pageTitle = SITE_NAME;
+        $this->set('pageTitle', $this->pageTitle);
 
-						$resetPasswordUrl = Router::url([
-							'controller' => 'users',
-							'action' => 'reset_password',
-							$forgot_password_key
-						], true);
+        if (!$this->Session->read('uid')) {
+            //echo date("Y-m-d H:i:s"); die;
+            App::import('model', 'User');
+            $userModel = new User();
+            $userDetails = $userModel->getDetails('first', array(
+                'User.forgot_password_key' => $resetKey,
+            ), array('id', 'forgot_password_time'));
 
-						$emailData = array('User' => $userDetails['User'], 'forgotPasswordKey' => $resetPasswordUrl);
-						$this->SendEmail->send($emailData, 'FORGOT_PASSWORD');
+            if (empty($userDetails) || empty($userDetails['User']['forgot_password_time']) || (strtotime($userDetails['User']['forgot_password_time']) < strtotime(date('Y-m-d H:i:s', strtotime('-2 hours'))))) {
+                $this->Flash->error(__('Invalid URL'));
+                $this->redirect(array('controller' => 'users', 'action' => 'login'));
+            }
 
-						$userInfo = array();
-						$userInfo['User']['id'] = $userDetails['User']['id'];
-						$userInfo['User']['is_forgot'] = 1;
-						$userInfo['User']['forgot_password_key'] = $forgot_password_key;
-						$userInfo['User']['forgot_password_time'] = date("Y-m-d H:i:s");
+            if ($this->request->data) {
+                $this->User->set($this->request->data);
 
-						$userModel->updateUserInfo($userInfo, 'User');
-						$this->Flash->success(__('Email sent successfully'));
-					} else {
+                $this->User->validate = $this->User->validateResetPassword;
+                if ($this->User->validate) {
+                    $userInfo = array();
+                    $userInfo['User']['id'] = $userDetails['User']['id'];
+                    $userInfo['User']['user_pwd'] = $this->data['User']['new'];
+                    $userInfo['User']['is_forgot'] = 0;
+                    $userInfo['User']['forgot_password_key'] = '';
+                    $userInfo['User']['forgot_password_time'] = null;
 
-						$this->Flash->error(__('The user could not be found. Please fill the correct information'));
-					}
-				}
-
-				$this->redirect(array('controller' => 'users', 'action' => 'forgot_password'));
-			}
-		} else {
-			$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
-			exit();
-		}
-	}
-
-	public function reset_password($resetKey)
-	{
-		$this->layout = 'login';
-		$this->pageTitle = SITE_NAME;
-		$this->set('pageTitle', $this->pageTitle);
-
-		if (!$this->Session->read('uid')) {
-
-			//echo date("Y-m-d H:i:s"); die;
-
-			App::import('model', 'User');
-			$userModel = new User();
-			$userDetails = $userModel->getDetails('first', array(
-				'User.forgot_password_key' => $resetKey
-			), array('id', 'forgot_password_time'));
-
-			if(empty($userDetails) || empty($userDetails['User']['forgot_password_time']) || (strtotime($userDetails['User']['forgot_password_time']) < strtotime(date("Y-m-d H:i:s", strtotime('-2 hours'))))) {
-
-				$this->Flash->error(__('Invalid URL'));
-				$this->redirect(array('controller' => 'users', 'action' => 'login'));
-			}
-
-			if ($this->request->data) {
-
-				$this->User->set($this->request->data);
-
-				$this->User->validate = $this->User->validateResetPassword;
-				if ($this->User->validate) {
-
-					$userInfo = array();
-					$userInfo['User']['id'] = $userDetails['User']['id'];
-					$userInfo['User']['user_pwd'] = $this->data['User']['new'];
-					$userInfo['User']['is_forgot'] = 0;
-					$userInfo['User']['forgot_password_key'] = '';
-					$userInfo['User']['forgot_password_time'] = NULL;
-
-					if ($this->User->save($userInfo)) {
-
-						$this->Flash->success(__('Password has been changed'));
-					}
-				}
-			}
-		} else {
-			$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
-			exit();
-		}
+                    if ($this->User->save($userInfo)) {
+                        $this->Flash->success(__('Password has been changed'));
+                    }
+                }
+            }
+        } else {
+            $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+            exit();
+        }
 
 		$this->set('resetKey', $resetKey);
-  }
+    }
   
     public function admin_manage()
     {

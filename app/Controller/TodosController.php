@@ -251,7 +251,10 @@ class TodosController extends AppController
         $this->pageTitle = 'Todo Details';
         $this->set('pageTitle', $this->pageTitle);
         $TodoData = $this->Todo->find('first', array('contain' => array('ClientCase' => array('conditions' => array('is_deleted' => false))), 'conditions' => array('Todo.user_id' => $this->Session->read('UserInfo.uid'), 'Todo.id' => $id)));
-        if (!empty($TodoData) && (!empty($TodoData['Todo']['client_case_id']) && !empty($TodoData['ClientCase']['id']))) {
+        if (empty($TodoData) || (!empty($TodoData['Todo']['client_case_id']) && empty($TodoData['ClientCase']['id']))) {
+            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
+            return $this->redirect(Router::url($this->referer(), true));
+        } else {
             $this->set('Todo', $TodoData);
 
             // To see if the page has been accessed from case detail page or dispatches main page
@@ -260,10 +263,6 @@ class TodosController extends AppController
             if (!empty($referer_url_params['pass'])) {
                 $this->set('caseId', $referer_url_params['pass'][0]);
             }
-        } else {
-            $this->Flash->error(__("The selected record doesn't exist. Please, try with valid record."));
-
-            return $this->redirect(Router::url($this->referer(), true));
         }
     }
 
