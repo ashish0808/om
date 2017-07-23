@@ -1289,15 +1289,17 @@ class CasesController extends AppController
 		$this->loadModel('ClientCase');
 		$caseData = $this->ClientCase->find('first', array('conditions' => array('ClientCase.user_id' => $this->Session->read('UserInfo.uid'), 'ClientCase.id' => $id)));
 		if (!empty($caseData)) {
-
+		
 			if ($this->request->is(array('get', 'delete'))) {
 
 				$caseInfo = array();
 				$caseInfo['ClientCase']['id'] = $id;
 				$caseInfo['ClientCase']['is_deleted'] = 1;
+				$caseInfo['ClientCase']['parent_case_id'] = NULL;
 
 				if ($this->ClientCase->save($caseInfo)) {
-
+				
+					$this->ClientCase->updateAll(array('ClientCase.parent_case_id' => NULL), array('ClientCase.parent_case_id'=> $id));				
 					$this->Flash->success(__('Case has been deleted successfully.'));
 				} else {
 					$this->Flash->error(__('Case could not be deleted. Please, try again.'));

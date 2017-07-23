@@ -1,7 +1,7 @@
 <?php
 class AdminsController extends AppController
 {
-    public $components = array('RequestHandler');
+    public $components = array('RequestHandler', 'Flash');
     //public $helpers = array('Validation','Js');
     public $helpers = array('Js' => array('Jquery'));
 
@@ -22,19 +22,11 @@ class AdminsController extends AppController
 
     public function manageLawyers()
     {
-        if ($this->RequestHandler->isAjax()) {
-            //Configure::write('debug', 0);
-            //$this->autoRender = false;
+        if ($this->request->isAjax()) {
             $this->layout = 'ajax';
-        }else{
+        } else {
             $this->layout = 'admin';
         }
-		
-		/*if($this->request->isAjax()){
-			$this->render('forgot_password','ajax');
-		}else{
-			$this->redirect(array('controller' => 'users', 'action' => 'login'));
-		}*/
 
         $this->loadModel('User');
 
@@ -43,20 +35,6 @@ class AdminsController extends AppController
 
         $conditions = array('User.user_type' => 2, 'User.is_deleted' => 0);
         $fields = array();
-        /*$this->paginate = array('limit' => LIMIT,'conditions'=>$conditions,'fields'=>$fields,'order'=>'User.id desc');
-        $records = $this->paginate('User');
-        $this->set('records',$records);*/
-
-
-        /*$this->User->bindModel(
-                array('belongsTo' => array(
-                    'Role' => array(
-                        'className' => 'Role',
-                        'foreignKey'   => 'role_id'
-                    )
-                )
-            )
-        );*/
 
         if (isset($this->data['User']['status']) && !empty($this->data['User']['status'])) {
             $this->lawyersBulkAction($this->data['User']['status']);
@@ -81,11 +59,7 @@ class AdminsController extends AppController
                 }
             }
         }
-
-        /*$urlString = "/";
-        if (isset($this->params['pass'][0]) && !empty($this->params['pass'][0])) {
-            $urlString .= $this->params['pass'][0] . "/";
-        }*/
+        
         $criteria = "";
         $criteria .= " User.user_type=2 AND User.is_deleted=0";
         if (isset($this->data['User']) || !empty($this->params['named'])) {
@@ -124,12 +98,12 @@ class AdminsController extends AppController
             //'contain' => array('Customer' => array('Country', 'State', 'City'))
         );
         $records = $this->Paginator->paginate('User', $criteria);
-		//echo '<pre>'; print_r($records); die;
+        
         $this->set('records', $records);
         $this->set('paginateLimit', $paginateLimit);
     }
 
-    public function addLawyer()
+    public function addLawyerOld()
     {
         $this->layout = 'admin';
         $this->pageTitle = 'Add Lawyer';
@@ -243,8 +217,58 @@ class AdminsController extends AppController
 			}
 		}
     }
+    
+    public function addLawyer()
+    {
+      $this->layout = 'admin';
+      $this->pageTitle = 'Add Lawyer';
+      $this->set("pageTitle", $this->pageTitle);
+      $this->loadModel('User');		
+	    if($this->request->data){
+	       
+        $this->User->set($this->request->data);
+		    if ($this->User->validates()) {
+        		    
+			    $this->request->data['User']['user_type'] = 2;				
+			    $this->request->data['User']['created_by'] = $this->Session->read('UserInfo.uid');
+			    if ($this->User->save($this->request->data)) {
+			    
+						$this->Flash->success(__('Lawyer added successfully.'));
+						$this->redirect(array('controller' => 'admins', 'action' => 'manageLawyers'));					
+				  }
+			  }
+		  }
+    }
+    
+    public function editLawyer($id)
+    {
+        $this->layout = 'admin';
+        $this->pageTitle = 'Edit Lawyer';
+        $this->set("pageTitle", $this->pageTitle);
 
-	public function editLawyer($id)
+        $this->loadModel('User');		
+    		if($this->request->data){
+    
+    			$this->User->set($this->request->data);    			
+    			if ($this->User->validates()) {
+    			
+    				$this->request->data['User']['created_by'] = $this->Session->read('UserInfo.uid');
+    				if ($this->User->save($this->request->data)) {
+    					
+    					$this->Flash->success(__('Lawyer updated successfully.'));    						
+    					$this->redirect(array('controller' => 'admins', 'action' => 'manageLawyers'));
+    				}
+    			}
+    		} else {
+          
+            $this->request->data = $this->User->read(null, $id);
+        }
+        
+	      $this->set('id',$id);
+    }
+    
+
+	public function editLawyerOld($id)
     {
         $this->layout = 'admin';
         $this->pageTitle = 'Edit Lawyer';
@@ -331,10 +355,13 @@ class AdminsController extends AppController
 		$this->User->id = $id;
 		$data['User']['is_deleted'] = 1;
 		if($this->User->save($data,array('validate'=>false))) {
-			$this->Session->setFlash(LAWYER_DELETED);
+			
+			$this->Flash->success(__('Lawyer deleted successfully.'));
 		} else {
-			$this->Session->setFlash(ERROR_OCCURRED);
+		
+		  $this->Flash->error(__('Lawyer could not be deleted. Please, try again.'));
 		}
+		
 		$this->redirect($this->referer());
 	}
 }

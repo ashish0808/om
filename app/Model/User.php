@@ -20,22 +20,20 @@ class User extends AppModel {
 	 */
     public $validate = array(
         'first_name' => array(
-            'NotEmpty' => array(
-                'rule' => array('notEmpty'),
-                'message' => 'Please enter first name',
-                'last' => true,
-            ),
+            'required' => array(
+      				'rule' => 'notBlank',
+      				'message' => 'Please enter first name',
+      			),
             'ValidFirstName' => array(
                 'rule' => array('custom', "/^[a-zA-Z']*$/i"),
                 'message' => 'You cannot use special characters in first name',
             ),
         ),
         'last_name' => array(
-            'NotEmpty' => array(
-                'rule' => array('notEmpty'),
-                'message' => 'Please enter last name',
-                'last' => true,
-            ),
+            'required' => array(
+      				'rule' => 'notBlank',
+      				'message' => 'Please enter last name',
+      			),
             'ValidLastName' => array(
                 'rule' => array('custom', "/^[a-zA-Z']*$/i"),
                 'message' => 'You cannot use special characters in last name',
@@ -43,20 +41,16 @@ class User extends AppModel {
         ),
         'email' => array(
             'email' => array(
-                'on' => 'create',
                 'rule' => 'email',
                 'message' => 'Please enter valid email address',
                 'required' => true,
-                'allowEmpty' => false,
-                'last' => true,
+                'allowEmpty' => false
             ),
             'unique' => array(
-                'on' => 'create',
                 'rule' => 'isUnique',
                 'message' => 'This Email already exist',
                 'required' => true,
-                'allowEmpty' => false,
-                'last' => true,
+                'allowEmpty' => false
             ),
         ),
         'user_pwd' => array(
@@ -66,7 +60,7 @@ class User extends AppModel {
                 'message' => 'Password must be mimimum 5 characters long',
             ),
             'rule1' => array(
-                'rule' => 'notEmpty',
+                'rule' => 'notBlank',
                 'allowEmpty' => false,
                 'message' => 'Please enter a password',
             ),
@@ -83,7 +77,7 @@ class User extends AppModel {
         ),
         'confirm_password' => array(
             'ruleName' => array(
-                'rule' => 'notEmpty',
+                'rule' => 'notBlank',
                 'message' => 'Please enter confirm password',
                 'last' => true,
             ),

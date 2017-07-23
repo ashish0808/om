@@ -67,9 +67,16 @@ class AppController extends Controller {
       
       if($user_type == 1 && (!isset($this->params['prefix']) || $this->params['prefix']!='admin') && $currentUrl != 'users/logout' && $currentController != 'admins') {
       
-        //echo 444; die;
+        $this->Session->setFlash('<span class="setFlash error">Unauthorized access.</span>');
       
         return $this->redirect(array('controller' => 'users', 'action' => 'dashboard', 'admin' => true));
+      }
+      
+      if($user_type != 1 && ((isset($this->params['prefix']) && $this->params['prefix']=='admin') || $currentController == 'admins')) {      
+        
+        $this->Session->setFlash('<span class="setFlash error">Unauthorized access.</span>');
+        
+        return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
       }    
     }
 

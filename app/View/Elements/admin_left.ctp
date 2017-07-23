@@ -54,7 +54,7 @@
     <?php
     $userMain = '';
     $userSub = '';
-    if ($this->params['controller'] == 'Users' && $this->params['prefix'] == 'admin') {
+    if ($this->params['controller'] == 'admins') {
         $userMain = 'open';
         $userSub = 'style="display:block;"';
     }
@@ -62,7 +62,7 @@
     <li class="<?php echo $userMain; ?>">
         <a href="#" class="dropdown-toggle">
             <i class="icon-user"></i>
-            <span class="menu-text"> Users </span>
+            <span class="menu-text"> Lawyers </span>
             <b class="arrow icon-angle-down"></b>
         </a>
 

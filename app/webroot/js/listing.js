@@ -8,6 +8,9 @@
 function changeCheckboxStatus(formObj)
 {
 	selectAll = formObj.elements['selectAll'];
+	
+	alert(selectAll)
+	
 	var len = "";
 	if(formObj.elements['box[]']){
 	len = formObj.elements['box[]'].length;
@@ -127,10 +130,13 @@ function isRecordSelected(className, selectRecordDivID, confirmMsgDivID, formNam
 /**Function By Ashish Starts**/
 function updateRecords(dval,frmName){
   if(dval > 0 || dval != ''){
-    var dealre = promptCheckOne(frmName,dval);
+  
+    jQuery('#' + frmName).submit();
+  
+    /*var dealre = promptCheckOne(frmName,dval);
     if(dealre){
       jQuery('#' + frmName).submit();
-    }
+    }*/
   }
 }
 
@@ -186,5 +192,19 @@ function promptCheckOne(frmName,doAction)
 function setPagingLimit(frmName)
 {
   jQuery('#' + frmName).submit();
-}
+}                            
+
+
+
+$("body").delegate( "#checkallBoxes", "change", function(event) {
+
+    if($(this).is(':checked')) {
+    
+        $('.rowsCheckbox').prop('checked', true);
+    } else {
+    
+        $('.rowsCheckbox').prop('checked', false);
+    }
+});
+
 /**Function By Ashish Ends**/

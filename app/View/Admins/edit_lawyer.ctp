@@ -21,32 +21,8 @@
 			<?php echo $this->Form->input('User.last_name', array('label' => false, 'div' => false, 'id' => 'form-field-1', 'placeholder' => 'Last Name', "required" => "required")); ?>
 		</div>
 	</div>
-
-	<div class="space-4"></div>
-
-	<div class="form-group">
-		<label class="col-sm-3 control-label no-padding-right" for="form-field-dob"> DOB </label>
-		<div class="col-sm-4">
-			<div class="input-group">
-				<?php echo $this->Form->hidden('Profile.id', array('label' => false, 'div' => false)); ?>
-				<?php echo $this->Form->input('Profile.dob', array('label' => false, 'type' => 'text', 'div' => false, 'class' => 'date-picker', 'placeholder' => 'DOB', 'id' => 'id-date-picker-1', 'data-date-format' => 'dd-mm-yyyy', "class" => "form-control datepicker", "required" => "required")); ?>
-				<span class="input-group-addon">
-					<i class="icon-calendar bigger-110"></i>
-				</span>
-			</div>
-		</div>
-	</div>
-
-	<div class="space-4"></div>
-
-	<div class="form-group">
-		<label class="col-sm-3 control-label no-padding-right" for="form-input-mobile"> Mobile </label>
-		<div class="col-sm-9">
-			<?php echo $this->Form->input('Profile.mobile', array('label' => false, 'div' => false, 'class' => 'col-xs-10 col-sm-5', 'placeholder' => 'Mobile')); ?>
-		</div>
-	</div>
-
-	<div class="space-4"></div>
+  
+  <div class="space-4"></div>
 
 	<div class="form-group">
 		<label class="col-sm-3 control-label no-padding-right" for="form-field-email">Email</label>
@@ -54,54 +30,6 @@
 			<?php echo $this->Form->input('User.email', array('label' => false, 'div' => false, 'error' => false, 'class' => 'col-xs-10 col-sm-5', 'placeholder' => 'Email', "required" => "required")); ?>
 			<div class="clear"></div>
 			<?php echo $this->Form->error('User.email'); ?>
-		</div>
-	</div>
-
-	<div class="space-4"></div>
-	
-	<div class="form-group">
-		<label class="col-sm-3 control-label no-padding-right" for="form-field-address1">Address 1</label>
-		<div class="col-sm-9">
-			<?php echo $this->Form->input('Profile.street_address_1', array('label' => false, 'div' => false, 'class' => 'col-xs-10 col-sm-5', 'placeholder' => 'Address 1')); ?>
-		</div>
-	</div>
-
-	<div class="space-4"></div>
-	
-	<div class="form-group">
-		<label class="col-sm-3 control-label no-padding-right" for="form-field-address2">Address 2</label>
-		<div class="col-sm-9">
-			<?php echo $this->Form->input('Profile.street_address_2', array('label' => false, 'div' => false, 'class' => 'col-xs-10 col-sm-5', 'placeholder' => 'Address 2')); ?>
-		</div>
-	</div>
-
-	<div class="space-4"></div>
-	
-	<div class="form-group">
-		<label class="col-sm-3 control-label no-padding-right" for="form-field-country">Country</label>
-		<div class="col-sm-9">
-			<?php echo $this->Form->input('Profile.country', array('options' => array('1'=>'India'), 'empty' => '--Select Country--', 'label' => false, 'div' => false, 'autocomplete' => 'off', 'data-placeholder' => 'Choose a Country', 'class' => 'col-xs-10 col-sm-5')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label class="col-sm-3 control-label no-padding-right" for="form-field-state">State</label>
-		<div class="col-sm-9">
-			<?php echo $this->Form->input('Profile.state', array('options' => array('1'=>'Punjab'), 'empty' => '--Select State--', 'label' => false, 'div' => false, 'class' => 'col-xs-10 col-sm-5', 'autocomplete' => 'off', 'data-placeholder' => 'Choose a State')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label class="col-sm-3 control-label no-padding-right" for="form-field-city">City</label>
-		<div class="col-sm-9">
-			<?php echo $this->Form->input('Profile.city', array('options' => array('1'=>'Chandigarh'), 'empty' => '--Select City--', 'label' => false, 'div' => false, 'class' => 'col-xs-10 col-sm-5', 'autocomplete' => 'off', 'data-placeholder' => 'Choose a City')); ?>
-		</div>
-	</div>
-
-	<div class="form-group">
-		<label class="col-sm-3 control-label no-padding-right" for="form-field-zip">Zip</label>
-		<div class="col-sm-9">
-		<?php echo $this->Form->input('Profile.zip', array('label' => false, 'div' => false, 'class' => 'col-xs-10 col-sm-5', 'placeholder' => 'Zip')); ?>
 		</div>
 	</div>
 	
@@ -120,16 +48,3 @@
 </div><!-- /.col -->
 </div><!-- /.row -->
 </div><!-- /.page-content -->
-<script type="text/javascript">
-	$(document).ready(function() {
-		$('.datepicker').datepicker({
-			format: "yyyy-mm-dd",
-			todayBtn: false,
-			orientation: "bottom right",
-			autoclose: true,
-			startDate: '-100y',
-			endDate: '-18y',
-			todayHighlight: true
-		});
-	});
-</script>
