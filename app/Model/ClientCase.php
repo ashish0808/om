@@ -103,16 +103,12 @@ class ClientCase extends AppModel {
 				'message' => 'Please enter limitation expiry date',
 			)
 		),
-		/*'case_status' => array(
+		'case_status' => array(
 			'rule1' => array(
 				'rule' => array('validateFileNumber', 'is_existing'),
 				'message' => 'Please select case status',
-			),
-			'uniqueRule' => array(
-				'rule' => array('validateUniqueFileNumber', 'user_id'),
-				'message' => 'File number already registered'
 			)
-		),*/
+		),
 		'engaged_on' => array(
 			'required' => array(
 				'rule' => 'notBlank',

@@ -581,7 +581,7 @@ class CasesController extends AppController
 				$this->ClientCases = $this->Components->load('ClientCases');
 
 				$this->request->data['ClientCase']['user_id'] = $this->getLawyerId();
-				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase']);
+				$data = $this->ClientCases->prepareAddCaseData($this->request->data['ClientCase'], $caseDetails);
 
 				if($caseDetails['ClientCase']['completed_step'] > 1) {
 

@@ -199,7 +199,7 @@
 			<div class="col-sm-12 col-xs-12 hide caseStatusManual">
 				<label class="col-sm-4 control-label no-padding-right" for="form-field-dob"><span class="required">*</span> Status: </label>
 				<div class="col-sm-8">
-					<?php echo $this->Form->input('ClientCase.case_status', array('options' => $caseStatuses, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'autocomplete' => 'off', 'disabled' => 'disabled')); ?>
+					<?php echo $this->Form->input('ClientCase.case_status', array('options' => $caseStatuses, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'col-sm-12 col-xs-12', 'disabled' => 'disabled')); ?>
 					<div class="error-message editBasicDetailsError clear" id="error_case_status"></div>
 				</div>
 			</div>

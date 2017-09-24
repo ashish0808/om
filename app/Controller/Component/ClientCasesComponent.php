@@ -4,7 +4,7 @@ App::uses('Component', 'Controller');
 
 class ClientCasesComponent extends Component
 {
-	public function prepareAddCaseData($data)
+	public function prepareAddCaseData($data, $caseDetails = NULL)
 	{
 		$data['completed_step'] = 1;
 
@@ -14,10 +14,10 @@ class ClientCasesComponent extends Component
 		}
 
 		$data['complete_case_number'] = $this->generateCaseNumber($data);
-
-		if(!isset($data['case_status']) || empty($data['case_status'])) {
-
-			if(isset($data['date_fixed'])) {
+		
+		if((!isset($data['case_status']) || empty($data['case_status'])) && (isset($data['is_existing']) && $data['is_existing'] == 0)) {
+			
+			if(isset($data['date_fixed']) && $this->existingCaseStatusChecks($caseDetails)) {
 
 				if(isset($data['client_type']) && $data['client_type']=='respondent') {
 
@@ -56,6 +56,29 @@ class ClientCasesComponent extends Component
 		$data = $this->updateEssentialWorks($data);
 
 		return $data;
+	}
+	
+	public function existingCaseStatusChecks($caseDetails)
+	{
+		if(!empty($caseDetails['ClientCase']['case_status'])) {
+			
+			App::import('Model','CaseStatus');
+			$caseStatusObj = new CaseStatus();
+
+			$caseStatusData = $caseStatusObj->find('first', array(
+				'conditions' => array(
+					'id' => $caseDetails['ClientCase']['case_status']
+				),
+				'fields' => array('status')
+			));
+			
+			if(!empty($caseStatusData['CaseStatus']['status']) && in_array($caseStatusData['CaseStatus']['status'], array('pending_for_registration'))) {
+
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	public function updateEssentialWorks($data)
