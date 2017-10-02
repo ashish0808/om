@@ -45,6 +45,12 @@ $(document).ready(function(){
     certifiedCopyRequiredFields();
 
     var isExistingCase = $("input[name='data[ClientCase][is_existing]']:checked").val();
+	
+	if(isExistingCase === undefined) {
+		
+		var isExistingCase = $(".hiddenCaseType").val();
+	}
+	
     getFileNumberField(isExistingCase);
 });
 

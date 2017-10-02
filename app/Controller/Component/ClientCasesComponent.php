@@ -72,7 +72,7 @@ class ClientCasesComponent extends Component
 				'fields' => array('status')
 			));
 			
-			if(!empty($caseStatusData['CaseStatus']['status']) && in_array($caseStatusData['CaseStatus']['status'], array('pending_for_registration'))) {
+			if(!empty($caseStatusData['CaseStatus']['status']) && !in_array($caseStatusData['CaseStatus']['status'], array('pending_for_filing'))) {
 
 				return false;
 			}

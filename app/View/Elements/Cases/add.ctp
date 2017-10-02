@@ -1,3 +1,5 @@
+<?php 
+if(empty($caseDetails['ClientCase'])){ ?>
 <div class="row">
 	<div class="col-sm-6">
 		<div class="form-group">
@@ -39,6 +41,13 @@
 		</div>
 	</div>
 </div>
+<?php }else{
+	if(!empty($caseDetails['ClientCase']['is_existing'])) {
+		echo '<input class="hiddenCaseType" name="data[ClientCase][is_existing]" type="hidden" value="1" />';
+	} else {
+		echo '<input class="hiddenCaseType" name="data[ClientCase][is_existing]" type="hidden" value="0" />';
+	}
+} ?>
 <div class="row">
 	<div class="col-sm-6">
 		<div class="form-group">
