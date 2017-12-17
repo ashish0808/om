@@ -69,6 +69,7 @@
             <div class="toolbar clearfix">
 				<div>
 					<?php echo $this->Html->link("<i class='icon-arrow-left'></i> I forgot my password", array('controller'=>'users','action'=>'forgot_password'), array('class' => 'forgot-password-link', "escape" => false)); ?>
+					<?php echo $this->Html->link("<i class='icon-arrow-left'></i> Register!", array('controller'=>'users','action'=>'register'), array('class' => 'forgot-password-link', "escape" => false)); ?>
 				</div>
             </div>
         </div>

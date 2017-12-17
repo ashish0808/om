@@ -76,6 +76,97 @@ class UsersController extends AppController
         $this->redirect(array('controller' => 'users', 'action' => 'login'));
         exit();
     }
+	
+	public function register()
+    {
+		//ALTER TABLE `users` ADD `register_key` VARCHAR(100) NULL AFTER `forgot_password_key`;
+		//ALTER TABLE `users` ADD `plan_expiry_date` DATETIME NULL AFTER `register_key`;
+		
+        $this->layout = 'login';
+        $this->pageTitle = 'Register';
+        $this->set('pageTitle', $this->pageTitle);
+        $this->set('token', $this->generateToken());
+		
+		$this->loadModel('User');
+		
+        if (!$this->Session->read('uid')) {
+            if ($this->request->data) {
+                $this->User->set($this->request->data);
+				if ($this->User->validates()) {
+					
+					$registerKey = md5($this->request->data['User']['email'].'_'.time());
+					
+					$this->request->data['User']['register_key'] = $registerKey;
+					$this->request->data['User']['status'] = 2;
+					$this->request->data['User']['user_type'] = 2;				
+					$this->request->data['User']['created_by'] = NULL;
+					if ($this->User->save($this->request->data)) {
+						
+						$this->SendEmail = $this->Components->load('SendEmail');
+
+						$activateAccountUrl = Router::url([
+							'controller' => 'users',
+							'action' => 'activate',
+							$registerKey,
+						], true);
+
+						$emailData = array('User' => $this->request->data['User'], 'registerKey' => $activateAccountUrl);
+						$this->SendEmail->send($emailData, 'ACTIVATE_ACCOUNT');
+					
+						$this->Flash->success(__('Please check your email to confirm your account registration.'));
+						$this->redirect(array('controller' => 'users', 'action' => 'register'));
+					}
+				}
+            }
+        } else {
+            $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+            exit();
+        }
+    }
+	
+	public function activate($activateKey)
+    {
+        $this->layout = 'login';
+        $this->pageTitle = SITE_NAME;
+        $this->set('pageTitle', $this->pageTitle);
+
+        if (!$this->Session->read('uid')) {
+            //echo date("Y-m-d H:i:s"); die;
+            App::import('model', 'User');
+            $userModel = new User();
+            $userDetails = $userModel->getDetails('first', array(
+                'User.register_key' => $activateKey,
+            ), array('id', 'status', 'last_login'));
+
+            if (empty($userDetails) || !empty($userDetails['User']['last_login']) || $userDetails['User']['status'] != 2) {
+                
+				$this->Flash->error(__('Invalid URL'));
+            } else {
+
+				$userInfo = array();
+				$userInfo['User']['id'] = $userDetails['User']['id'];
+				$userInfo['User']['status'] = 1;
+				$userInfo['User']['register_key'] = '';
+				
+				if ($this->User->save($userInfo, false)) {
+					
+					$this->Uc = $this->Components->load('User');
+					$this->Uc->addDemoPlan($userDetails['User']['id']);
+					
+					$this->Flash->success(__('Account activated, please login!'));
+				} else {
+					
+					$this->Flash->error(__('Unable to activate account, please contact admin!'));
+				}
+            }
+        } else {
+            $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+            exit();
+        }
+
+		$this->redirect(array('controller' => 'users', 'action' => 'login'));
+		exit();
+    }
 
     /**
      * Displays Dashboard Page as per the User Role.
@@ -408,6 +499,39 @@ class UsersController extends AppController
         $records = $this->Paginator->paginate('User', $criteria);
         $this->set('Users', $records);
     }
+	
+	public function update_subscription()
+	{
+		$this->layout = 'basic';
+        $this->pageTitle = 'Update Subscription';
+        $this->set('pageTitle', $this->pageTitle);
+		
+		$this->loadModel('Plan');
+		$plansData = $this->Plan->find('all', array('conditions' => array('slug !=' => 'demo'), 'order' => 'id asc'));
+		$this->set('plansData', $plansData);
+	}
+	
+	public function update_subscription_action($planId)
+	{
+		if ($this->Session->read('UserInfo.lawyer_id')) {
+			
+			$this->Uc = $this->Components->load('User');
+			$result = $this->Uc->updateSubscription($this->Session->read('UserInfo.lawyer_id'), $planId);
+			
+			if($result == true) {
+				
+				$this->Flash->success(__('Subscription updated successfully.'));
+			} else {
+				
+				$this->Flash->error(__('Invalid access or data'));
+			}
+		} else {
+			
+			$this->Flash->error(__('Invalid access or data'));
+		}
+		
+		$this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+	}
 }
 //ALTER TABLE `users` ADD `forgot_password_key` VARCHAR(100) NOT NULL AFTER `is_forgot`, ADD `forgot_password_time` DATETIME NOT NULL AFTER `forgot_password_key`;
 //ALTER TABLE `users` CHANGE `forgot_password_time` `forgot_password_time` DATETIME NULL;

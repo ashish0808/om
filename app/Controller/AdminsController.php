@@ -226,18 +226,21 @@ class AdminsController extends AppController
       $this->loadModel('User');		
 	    if($this->request->data){
 	       
-        $this->User->set($this->request->data);
+			$this->User->set($this->request->data);
 		    if ($this->User->validates()) {
         		    
 			    $this->request->data['User']['user_type'] = 2;				
 			    $this->request->data['User']['created_by'] = $this->Session->read('UserInfo.uid');
 			    if ($this->User->save($this->request->data)) {
-			    
-						$this->Flash->success(__('Lawyer added successfully.'));
-						$this->redirect(array('controller' => 'admins', 'action' => 'manageLawyers'));					
-				  }
-			  }
-		  }
+					
+					$this->Uc = $this->Components->load('User');
+					$this->Uc->addDemoPlan($this->User->id, $this->Session->read('UserInfo.uid'));
+						
+					$this->Flash->success(__('Lawyer added successfully.'));
+					$this->redirect(array('controller' => 'admins', 'action' => 'manageLawyers'));					
+				}
+			}
+		}
     }
     
     public function editLawyer($id)

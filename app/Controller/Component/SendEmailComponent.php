@@ -21,6 +21,22 @@ class SendEmailComponent extends Component {
 		            ->send();
 
                 break;
+				
+			case 'ACTIVATE_ACCOUNT':
+
+                App::uses('CakeEmail', 'Network/Email');
+
+                $Email = new CakeEmail();
+	            $Email->config('default');
+	            $Email->template('activate_account', 'basic')
+		            ->emailFormat('html')
+		            ->to($data['User']['email'])
+		            ->from(array('ashish.chopra0808@gmail.com' => 'Office Management'))
+		            ->subject('Office Management - Activate Account')
+		            ->viewVars(array('data' => $data))
+		            ->send();
+
+                break;
         }
     }
 }

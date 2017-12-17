@@ -54,8 +54,10 @@ class AppController extends Controller {
 	    }
 	    
 	    $this->checkAdminAccess();
+		
+		//$this->checkUserSubscription(); //Uncomment to check with user subscription
 
-      parent::beforeFilter();
+		parent::beforeFilter();
     }
     
     public function checkAdminAccess()
@@ -79,6 +81,28 @@ class AppController extends Controller {
         return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
       }    
     }
+	
+	public function checkUserSubscription()
+	{
+		$user_type = $this->Session->read('UserInfo.user_type');
+		if($user_type == 2) {
+			
+			$userId = $this->Session->read('UserInfo.uid');
+			
+			//$allowedActions = array('users/dashboard', 'dispatches/index', 'todos/index');
+			$allowedActions = array();
+			
+			$currentUrl = $this->params['controller'].'/'.$this->params['action'];
+			$currentUrl = strtolower($currentUrl);
+			
+			if(!empty($allowedActions) && !in_array($currentUrl, $allowedActions)) {
+				
+				$this->Session->setFlash('<span class="setFlash error">Unauthorized access.</span>');
+        
+				return $this->redirect(array('controller' => 'users', 'action' => 'dashboard'));
+			}
+		}
+	}
 
     public function generateToken()
     {
@@ -133,7 +157,8 @@ class AppController extends Controller {
 
     public function checkUserAccess($currentUrl)
     {
-	    if($currentUrl == 'users/login' || $currentUrl == 'users/forgot_password' || $currentUrl == 'users/reset_password') {
+		$allowedActions = array('users/login', 'users/forgot_password', 'users/reset_password', 'users/register', 'users/activate');
+	    if(in_array($currentUrl, $allowedActions)) {
 
 		    return true;
 	    }
