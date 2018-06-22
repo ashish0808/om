@@ -503,8 +503,21 @@ class UsersController extends AppController
 	public function update_subscription()
 	{
 		$this->layout = 'basic';
-        $this->pageTitle = 'Update Subscription';
+        $this->pageTitle = 'Subscription Detail';
         $this->set('pageTitle', $this->pageTitle);
+		
+		$this->loadModel('User');
+		$userDetails = $this->User->find('first', array('conditions' => array('id' => $this->Session->read('UserInfo.lawyer_id'))));
+		
+		$subscriptionUpdateCheck = false;
+		if(!empty($userDetails)) {
+			
+			$this->Uc = $this->Components->load('User');
+			$subscriptionUpdateCheck = $this->Uc->subscriptionUpdateCheck($userDetails);
+		}
+		$this->set('subscriptionUpdateCheck', $subscriptionUpdateCheck);
+		
+		//pr($userDetails); die;
 		
 		$this->loadModel('Plan');
 		$plansData = $this->Plan->find('all', array('conditions' => array('slug !=' => 'demo'), 'order' => 'id asc'));

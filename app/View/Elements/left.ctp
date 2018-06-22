@@ -235,6 +235,17 @@
             </li>
         </ul>
     </li>
+	<?php
+    $updateSubscriptionMain = '';
+    if($this->params['controller'] == 'Users' && $this->params['action'] != 'updateSubscription')
+    {
+        $updateSubscriptionMain = 'active';
+    }
+    ?>
+    <li class="<?php echo $updateSubscriptionMain; ?>">
+        <?php echo $this->Html->link('<i class="icon-tag"></i> Subscription ', array('controller'=>'Users','action'=>'update_subscription'), array('escape' => false))?>
+    </li>
+	
     <li class="<?php echo $caseDisptachMain; ?>">
         <?php echo $this->Html->link('<i class="icon-off"></i> Logout ', array('controller'=>'users','action'=>'logout'), array('escape' => false))?>
     </li>
