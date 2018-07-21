@@ -119,10 +119,13 @@ class CasesController extends AppController
 			$records = $this->Paginator->paginate('ClientCase', $criteriaStr);
 		}
 
-		$caseStatuses = $this->CaseStatus->find('all', array(
+		/*$caseStatuses = $this->CaseStatus->find('all', array(
 			'conditions' => array(
 				"NOT" => array( "CaseStatus.status" => array('decided', 'not_with_us') )
 			),
+			'fields' => array('id', 'status')
+		));*/
+		$caseStatuses = $this->CaseStatus->find('all', array(
 			'fields' => array('id', 'status')
 		));
 		$caseStatusesArr = array();
@@ -141,6 +144,14 @@ class CasesController extends AppController
 			'order' => 'name ASC'
 		));
 		$this->set("caseTypes", $caseTypes);
+
+		$this->loadModel('UserCompany');
+		$userCompanies = $this->UserCompany->find('list', array(
+			'conditions' => array('user_id' => $this->getLawyerId()),
+			'fields' => array('UserCompany.id', 'UserCompany.name'),
+			'order' => 'name ASC'
+		));
+		$this->set("userCompanies", $userCompanies);
 
 		$this->set('listType', $listType);
 		$this->set('records', $records);
@@ -212,6 +223,7 @@ class CasesController extends AppController
 
 			// define table cells
 			$table = array(
+				array('label' => 'Reference No', 'filter' => true),
 				array('label' => 'Case Number', 'filter' => true),
 				array('label' => 'Computer File No.', 'filter' => true),
 				array('label' => 'Case Title', 'filter' => true),
@@ -268,6 +280,10 @@ class CasesController extends AppController
 					$feeSettled = $record['ClientCase']['fee_settled'];
 				}
 
+				if(isset($record['ClientCase']['reference_no'])) {
+					$referenceNo = $record['ClientCase']['reference_no'];
+				}
+
 				if(isset($record['ClientCase']['payment_received'])) {
 
 					$paymentReceived = $record['ClientCase']['payment_received'];
@@ -279,6 +295,7 @@ class CasesController extends AppController
 				}
 
 				$this->PhpExcel->addTableRow(array(
+					$record['ClientCase']['$referenceNo'],
 					$record['ClientCase']['complete_case_number'],
 					$record['ClientCase']['computer_file_no'],
 					$record['ClientCase']['case_title'] ? $record['ClientCase']['case_title']: "Miscellaneous",
@@ -1183,6 +1200,7 @@ class CasesController extends AppController
 		$this->ClientCase->contain('CaseStatus', 'CaseType', 'CaseProceeding', 'CaseFiling', 'Dispatch');
 		//$this->ClientCase->contain('CasePayment', 'CasePayment.PaymentMethod', 'CaseFiling', 'CaseStatus');
 		$caseDetails = $this->ClientCase->read(null, $caseId);
+		// echo "<pre>";print_r($caseDetails);die;
 		$this->checkCaseDetails($caseDetails);
 		$this->set('caseDetails',$caseDetails);
 

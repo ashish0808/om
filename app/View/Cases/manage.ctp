@@ -150,6 +150,14 @@ echo $this->Form->create('ClientCase',array('url' => '/Cases/manage','id'=>'Case
 							<div class="col-sm-3 col-xs-12">
 								<div class="form-group">
 									<div class="col-sm-12 col-xs-12">
+										<label class="col-xs-12 control-label no-padding-right">Company: </label>
+										<?php echo $this->Form->input('ClientCase.user_companies_id', array('options' => $userCompanies, 'empty' => '--Select--', 'label' => false, 'div' => false, 'class' => 'select2 col-sm-12 col-xs-12', 'autocomplete' => 'off')); ?>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-3 col-xs-12">
+								<div class="form-group">
+									<div class="col-sm-12 col-xs-12">
 										<label class="col-xs-12 control-label no-padding-right">&nbsp;</label>
 										<label class="col-xs-12 control-label no-padding-right">
 

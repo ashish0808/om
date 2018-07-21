@@ -50,8 +50,16 @@
 																</tr>
 																<tr>
 																	<td class="details-field">
-																		<span class="view-label">Party Name: </span>
-																		<?php echo $caseDetails['ClientCase']['party_name']; ?>
+																		<?php
+																		if ($caseDetails['ClientCase']['user_companies_id'] !== null) { ?>
+																			<span class="view-label">Company Name: </span>
+																		<?php
+																		} else { ?>
+																			<span class="view-label">Party Name: </span>
+																		<?php
+																		}
+																		echo $caseDetails['ClientCase']['party_name'];
+																		?>
 																	</td>
 																	<td></td>
 																	<td class="details-field">
@@ -104,16 +112,16 @@
 																	</td>
 																</tr>
 																<tr>
-																	<td colspan="3" class="details-field">
+																	<td class="details-field">
 																		<span class="view-label">Client Address: </span>
 																		<?php echo $caseDetails['ClientCase']['client_address1'].' '.$caseDetails['ClientCase']['client_address2']; ?>
 																	</td>
-																</tr>
-																<tr>
+																	<td></td>
 																	<td class="details-field">
 																		<span class="view-label">Client Email: </span> <?php echo $caseDetails['ClientCase']['client_email']; ?>
 																	</td>
-																	<td></td>
+																</tr>
+																<tr>
 																	<td class="details-field">
 																		<span class="view-label">Client Phone: </span>
 																		<?php echo $caseDetails['ClientCase']['client_phone'];
@@ -121,12 +129,20 @@
 																		 	echo ', '.$caseDetails['ClientCase']['client_phone2'];
 																		 } ?>
 																	</td>
-																</tr>
-																<tr>
+																	<td></td>
 																	<td class="details-field">
 																		<span class="view-label">Date Fixed: </span>
 																		<?php $clientCaseHelper = $this->Helpers->load('ClientCase');
 																		echo $clientCaseHelper->getLastHearing($pendingProceeding); ?>
+																	</td>
+																</tr>
+																<tr>
+																	<td class="details-field">
+																		<span class="view-label">Fee Status: </span>
+																		 <?php if(!empty($caseDetails['ClientCase']['payment_status'])) {
+																		 	echo $caseDetails['ClientCase']['payment_status'];
+																		 }
+																		 ?>
 																	</td>
 																	<td></td>
 																	<td class="details-field">

@@ -146,3 +146,5 @@ define('ADMITTED', '5');
 define('DECIDED', '6');
 define('RESERVED', '7');
 define('NOT_WITH_US', '8');
+
+ini_set('memory_limit', '512M');
